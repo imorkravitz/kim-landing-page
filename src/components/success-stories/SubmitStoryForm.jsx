@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,17 +22,16 @@ export default function SubmitStoryForm({ onSuccess }) {
   const [beforeImage, setBeforeImage] = useState(null);
   const [afterImage, setAfterImage] = useState(null);
 
-  const handleImageUpload = async (file, type) => {
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+  // פונקציה המדמה העלאת תמונה (יוצרת URL מקומי לתצוגה)
+  const handleImageUpload = (file, type) => {
+    if (file) {
+      const localUrl = URL.createObjectURL(file);
       if (type === 'before') {
-        setBeforeImage(file_url);
+        setBeforeImage(localUrl);
       } else {
-        setAfterImage(file_url);
+        setAfterImage(localUrl);
       }
-      toast.success('התמונה הועלתה בהצלחה');
-    } catch (error) {
-      toast.error('שגיאה בהעלאת התמונה');
+      toast.success('התמונה נטענה לתצוגה מקדימה');
     }
   };
 
@@ -47,30 +45,27 @@ export default function SubmitStoryForm({ onSuccess }) {
 
     setIsSubmitting(true);
     
-    await base44.entities.SuccessStory.create({
-      ...formData,
-      age: formData.age ? parseInt(formData.age) : null,
-      weight_lost: formData.weight_lost ? parseFloat(formData.weight_lost) : null,
-      duration_months: formData.duration_months ? parseInt(formData.duration_months) : null,
-      before_image: beforeImage,
-      after_image: afterImage,
-      status: 'pending'
-    });
-    
-    setSubmitted(true);
-    setIsSubmitting(false);
-    if (onSuccess) onSuccess();
+    // סימולציה של שליחה לשרת (המתנה של 2 שניות)
+    setTimeout(() => {
+      console.log("Form Data Submitted (Mock):", { ...formData, beforeImage, afterImage });
+      
+      setSubmitted(true);
+      setIsSubmitting(false);
+      toast.success('הסיפור נשלח בהצלחה!');
+      
+      if (onSuccess) onSuccess();
+    }, 2000);
   };
 
   if (submitted) {
     return (
-      <div className="text-center py-12">
+      <div className="text-center py-12 animate-in fade-in zoom-in duration-500">
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle2 className="w-10 h-10 text-green-600" />
         </div>
         <h3 className="text-2xl font-bold text-gray-900 mb-3">תודה על השיתוף!</h3>
         <p className="text-gray-600 max-w-md mx-auto">
-          הסיפור שלך נשלח בהצלחה ויפורסם לאחר אישור. 
+          הסיפור שלך נשלח בהצלחה ויפורסם לאחר אישור הצוות. 
           אנחנו שמחים לשמוע על ההצלחה שלך! 💚
         </p>
       </div>
@@ -134,40 +129,50 @@ export default function SubmitStoryForm({ onSuccess }) {
         <div className="space-y-4">
           <div>
             <Label>תמונת לפני</Label>
-            <div className="mt-1 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#8B7F4B] transition-colors">
+            <div className="mt-1 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#8B7F4B] transition-colors relative overflow-hidden group">
               {beforeImage ? (
-                <img src={beforeImage} alt="לפני" className="w-full h-24 object-cover rounded-lg" />
+                <>
+                  <img src={beforeImage} alt="לפני" className="w-full h-24 object-cover rounded-lg" />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
+                    <span className="text-white text-xs">לחצי להחלפה</span>
+                  </div>
+                </>
               ) : (
-                <label className="cursor-pointer flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-2">
                   <Upload className="w-6 h-6 text-gray-400" />
                   <span className="text-sm text-gray-500">העלי תמונה</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => e.target.files[0] && handleImageUpload(e.target.files[0], 'before')}
-                  />
-                </label>
+                </div>
               )}
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={(e) => e.target.files[0] && handleImageUpload(e.target.files[0], 'before')}
+              />
             </div>
           </div>
           <div>
             <Label>תמונת אחרי</Label>
-            <div className="mt-1 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#8B7F4B] transition-colors">
+            <div className="mt-1 border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#8B7F4B] transition-colors relative overflow-hidden group">
               {afterImage ? (
-                <img src={afterImage} alt="אחרי" className="w-full h-24 object-cover rounded-lg" />
+                <>
+                  <img src={afterImage} alt="אחרי" className="w-full h-24 object-cover rounded-lg" />
+                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
+                    <span className="text-white text-xs">לחצי להחלפה</span>
+                  </div>
+                </>
               ) : (
-                <label className="cursor-pointer flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-2">
                   <Upload className="w-6 h-6 text-gray-400" />
                   <span className="text-sm text-gray-500">העלי תמונה</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => e.target.files[0] && handleImageUpload(e.target.files[0], 'after')}
-                  />
-                </label>
+                </div>
               )}
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={(e) => e.target.files[0] && handleImageUpload(e.target.files[0], 'after')}
+              />
             </div>
           </div>
         </div>
@@ -223,14 +228,19 @@ export default function SubmitStoryForm({ onSuccess }) {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-[#8B7F4B] hover:bg-[#6d6339] text-white py-6 text-lg rounded-xl"
+        className="w-full bg-[#8B7F4B] hover:bg-[#6d6339] text-white py-6 text-lg rounded-xl shadow-lg transition-all"
       >
         {isSubmitting ? (
-          <Loader2 className="w-5 h-5 ml-2 animate-spin" />
+          <>
+            <Loader2 className="w-5 h-5 ml-2 animate-spin" />
+            שולח...
+          </>
         ) : (
-          <Send className="w-5 h-5 ml-2" />
+          <>
+            <Send className="w-5 h-5 ml-2" />
+            שלחי את הסיפור שלי
+          </>
         )}
-        שלחי את הסיפור שלי
       </Button>
 
       <p className="text-xs text-gray-500 text-center">
