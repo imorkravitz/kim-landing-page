@@ -72,7 +72,8 @@ export default function ProblemSolutionSection() {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             הדרך החכמה לתזונה <span className="text-[#8B7F4B]">שאת מחפשת</span>
           </h2>
-          <p className="text-xl text-gray-500">עם גישת 80:20</p>
+          <p className="text-xl text-gray-500 mb-2">עם גישת 80:20</p>
+          <p className="text-lg text-gray-600">80% עקביות פשוטה, 20% גמישות - בלי קיצוניות</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
