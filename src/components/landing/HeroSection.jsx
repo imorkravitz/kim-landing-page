@@ -41,10 +41,10 @@ export default function HeroSection() {
             {/* Main Headline */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#8B7F4B] leading-[1.1] mb-6">
               לנהל את התזונה שלכם,{" "}
-              {/* הוספתי כאן את ה-class 'block' */}
               <span className="block whitespace-nowrap text-[#333333]">
                 לרדת במשקל ולשמור על התוצאות
               </span>
+              <span className="block text-2xl md:text-3xl mt-3 text-[#8B7F4B]">בלי דיאטות קיצוניות</span>
             </h1>
             
             {/* Subtitle */}
@@ -87,7 +87,7 @@ export default function HeroSection() {
                   size="lg" 
                   className="bg-[#8B7F4B] text-white px-10 py-7 text-xl font-bold rounded-full shadow-[0_4px_6px_-1px_rgba(139,127,75,0.5)] hover:bg-[#968a56] hover:-translate-y-[2px] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.4)] active:translate-y-[1px] active:shadow-none transition-all duration-200 font-['Rubik']"
                 >
-                  שירות הלקוחות שלנו בווצאפ
+                  קבעי ייעוץ חינם עכשיו
                 </Button>
               </a>
               
