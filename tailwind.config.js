@@ -6,8 +6,11 @@ module.exports = {
     extend: {
         // --- כאן הוספתי את הפונט שלך ---
         fontFamily: {
-            gveret: ['"Gveret Levin Alef"', 'sans-serif'],
-            calibri: ['"Calibri"', 'sans-serif'],
+            sans:      ['"Assistant"', 'sans-serif'],  // global body default
+            assistant: ['"Assistant"', 'sans-serif'],
+            heebo:     ['"Heebo"', 'sans-serif'],
+            gveret:    ['"Gveret Levin Alef"', 'sans-serif'],
+            calibri:   ['"Calibri"', 'sans-serif'],
             calibri_bold: ['"Calibri bold"', 'sans-serif'],
         },
         // --------------------------------

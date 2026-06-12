@@ -1,12 +1,106 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Star, GraduationCap, Stethoscope } from 'lucide-react';
+import { Star, GraduationCap } from 'lucide-react';
 // @ts-ignore
 import kim_pic from '../../assets/images/kim-whiteshirt-trasparent5.png';
 
+/* ── WhatsApp mock chat card ── */
+function WaChat({ messages, name, avatar, className = '' }) {
+  return (
+    <div className={`w-64 rounded-2xl overflow-hidden shadow-2xl ${className}`} style={{ fontFamily: 'Rubik, sans-serif' }}>
+      {/* Header */}
+      <div className="flex items-center gap-2 px-3 py-2" style={{ background: '#075E54' }}>
+        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+          style={{ background: '#128C7E' }}>{avatar}</div>
+        <div>
+          <p className="text-white text-xs font-semibold leading-none">{name}</p>
+          <p className="text-green-200 text-[10px] mt-0.5">מחובר/ת</p>
+        </div>
+        <div className="mr-auto flex gap-1.5">
+          <div className="w-1 h-1 rounded-full bg-white/50" /><div className="w-1 h-1 rounded-full bg-white/50" /><div className="w-1 h-1 rounded-full bg-white/50" />
+        </div>
+      </div>
+      {/* Chat bg */}
+      <div className="px-3 py-3 space-y-2" style={{ background: '#ECE5DD', direction: 'rtl' }}>
+        {messages.map((m, i) => (
+          <div key={i} className={`flex ${m.from === 'kim' ? 'justify-start' : 'justify-end'}`}>
+            <div className="max-w-[85%] px-3 py-1.5 rounded-xl text-[11px] leading-relaxed shadow-sm"
+              style={{ background: m.from === 'kim' ? '#fff' : '#DCF8C6', color: '#333' }}>
+              <p>{m.text}</p>
+              <p className="text-[9px] text-gray-400 text-left mt-0.5">{m.time} {m.from !== 'kim' && '✓✓'}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const leftChats = [
+  {
+    name: 'מיכל כ.',
+    avatar: 'מ',
+    messages: [
+      { from: 'kim', text: 'בוקר טוב מיכל! איך הולך השבוע? 🌿', time: '09:12' },
+      { from: 'user', text: 'קים!! ירדתי עוד 1.8 ק״ג השבוע 😭🎉 לא מאמינה', time: '09:15' },
+      { from: 'user', text: 'ובלי להרגיש שאני על דיאטה בכלל. אוכלת הכל!', time: '09:15' },
+      { from: 'kim', text: 'כל הכבוד!! זה בדיוק המטרה 🙌💚', time: '09:17' },
+    ],
+  },
+  {
+    name: 'שירה ל.',
+    avatar: 'ש',
+    messages: [
+      { from: 'user', text: 'רציתי להגיד לך תודה ענקית 🙏 3 חודשים איתך ו-9 ק"ג פחות', time: '21:05' },
+      { from: 'user', text: 'הרגשתי תמיד שיש מישהי שמאמינה בי ✨', time: '21:06' },
+      { from: 'kim', text: 'זה כל הכיף שלי! את עשית את כל העבודה 💪', time: '21:09' },
+    ],
+  },
+];
+
+const rightChats = [
+  {
+    name: 'נועה א.',
+    avatar: 'נ',
+    messages: [
+      { from: 'user', text: 'קים אני חייבת לספר לך!! לבשתי את השמלה שלא נכנסתי אליה 2 שנים 😭💃', time: '14:32' },
+      { from: 'kim', text: 'וואו!! זה רגע שאי אפשר לשכוח 🥹🎊', time: '14:35' },
+      { from: 'user', text: 'לא האמנתי שזה יקרה לי. תודה על הסבלנות 💛', time: '14:36' },
+    ],
+  },
+  {
+    name: 'רותם מ.',
+    avatar: 'ר',
+    messages: [
+      { from: 'user', text: 'שבוע 6 ו-5 ק"ג פחות! וכל הבדיקות השתפרו 🩺', time: '08:50' },
+      { from: 'kim', text: 'הכי חשוב שהגוף מרגיש טוב 🌱', time: '08:53' },
+      { from: 'user', text: 'אף פעם לא חשבתי שדיאטה יכולה להרגיש כך... ממש תודה', time: '08:54' },
+    ],
+  },
+];
+
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#e9e4ce]">
+    <section className="relative min-h-screen overflow-visible bg-[#e9e4ce]">
+
+      {/* ── Floating WhatsApp chats – LEFT (desktop only) ── */}
+      <div className="hidden lg:flex flex-col gap-5 absolute left-4 xl:left-8 top-1/2 -translate-y-1/2 z-20" style={{ opacity: 0.6 }}>
+        {leftChats.map((c, i) => (
+          <WaChat key={i} {...c}
+            className={i % 2 === 0 ? 'rotate-[-2deg]' : 'rotate-[1.5deg]'}
+          />
+        ))}
+      </div>
+
+      {/* ── Floating WhatsApp chats – RIGHT (desktop only) ── */}
+      <div className="hidden lg:flex flex-col gap-5 absolute right-4 xl:right-8 top-1/2 -translate-y-1/2 z-20" style={{ opacity: 0.6 }}>
+        {rightChats.map((c, i) => (
+          <WaChat key={i} {...c}
+            className={i % 2 === 0 ? 'rotate-[2deg]' : 'rotate-[-1.5deg]'}
+          />
+        ))}
+      </div>
+
           {/* Image on the left - Desktop */}
                 <div className="absolute inset-y-0 left-0 w-1/2 hidden lg:flex items-end justify-center">
                   <img 
@@ -41,10 +135,12 @@ export default function HeroSection() {
             {/* Main Headline */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#8B7F4B] leading-[1.1] mb-6">
               לנהל את התזונה שלכם,{" "}
-              <span className="block whitespace-nowrap text-[#333333]">
-                לרדת במשקל ולשמור על התוצאות
+              <span className="">
+                לאכול הכל,{" "}
               </span>
-              <span className="block text-2xl md:text-3xl mt-3 text-[#8B7F4B]">בלי דיאטות קיצוניות</span>
+              <span className="block whitespace-nowrap text-[#333333]">
+                לרדת במשקל ולשמור על התוצאות.
+              </span>
             </h1>
             
             {/* Subtitle */}
@@ -60,20 +156,11 @@ export default function HeroSection() {
                     <div className="bg-[#8B7F4B]/10 p-1.5 rounded-full shrink-0">
                       <GraduationCap className="w-5 h-5 text-[#8B7F4B]" />
                     </div>
-                    <span className="font-semibold text-base md:text-lg">בוגרת החוג לתזונה, האוניברסיטה העברית</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[#333333]">
-                    <div className="bg-[#8B7F4B]/10 p-1.5 rounded-full shrink-0">
-                      <Stethoscope className="w-5 h-5 text-[#8B7F4B]" />
-                    </div>
-                    <span className="font-semibold text-base md:text-lg">סטודנטית לרפואה, אוניברסיטת תל אביב</span>
+                    <span className="font-semibold text-base md:text-lg">בוגרת תואר ראשון בתזונה, האוניברסיטה העברית</span>
                   </div>
                 </div>
               </div>
 
-              <p className="text-lg text-[#333333]">
-                השיטה שתעזור לך לאכול בריא ומאוזן, ללא דיאטות קיצוניות
-              </p>
             </div>
 
             {/* CTA Button */}
@@ -87,7 +174,7 @@ export default function HeroSection() {
                   size="lg" 
                   className="bg-[#8B7F4B] text-white px-10 py-7 text-xl font-bold rounded-full shadow-[0_4px_6px_-1px_rgba(139,127,75,0.5)] hover:bg-[#968a56] hover:-translate-y-[2px] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.4)] active:translate-y-[1px] active:shadow-none transition-all duration-200 font-['Rubik']"
                 >
-                  קבעי ייעוץ חינם עכשיו
+                 לקביעת יעוץ חינם עכשיו
                 </Button>
               </a>
               

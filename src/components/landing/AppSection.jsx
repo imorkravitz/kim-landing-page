@@ -96,7 +96,7 @@ export default function AppSection() {
           <p className="text-lg text-gray-600">הכלי המושלם למסע התזונתי שלך</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-start mb-16">
+        <div className="grid lg:grid-cols-2 gap-36 items-start mb-16">
           {/* Left Side - Phone Mockups */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}

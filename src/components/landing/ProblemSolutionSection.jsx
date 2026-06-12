@@ -63,13 +63,14 @@ export default function ProblemSolutionSection() {
   ];
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      className="py-20 md:py-28 bg-white"
+      className="py-16 md:py-24 min-h-[100vh]"
+      style={{ background: 'transparent' }}
     >
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-gveret text-gray-900 mb-4">
             הדרך החכמה לתזונה <span className="text-[#8B7F4B]">שאת מחפשת</span>
           </h2>
           <p className="text-xl text-gray-500 mb-2">עם גישת 80:20</p>

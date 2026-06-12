@@ -198,7 +198,7 @@ export default function PricingSection() {
                   </h4>
                   <ul className="space-y-3 text-right">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm md:text-base text-gray-700">
+                      <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
                         <span className="text-[#8B7F4B] mt-1.5">•</span>
                         <span className="flex-1">{feature}</span>
                       </li>
@@ -220,12 +220,6 @@ export default function PricingSection() {
             </div>
           ))}
         </div>
-
-        <p className="text-center text-gray-600 mt-12 text-base font-medium max-w-3xl mx-auto">
-          *עלות תוכנית פרונטלית בתוספת 20 ₪ לחודש.
-          <br />
-          הקליניקה שלנו בכתובת ילדי טהרן 5, ראשון לציון - הולמס פלייס
-        </p>
       </div>
     </section>
   );

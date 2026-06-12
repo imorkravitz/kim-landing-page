@@ -1,17 +1,21 @@
 import React from 'react';
 import { Instagram, MessageCircle, Phone, MapPin } from 'lucide-react';
 
+// @ts-ignore
+import Logo from '../../assets/icons/KIM - LOGO 2.png';
+
+
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-16">
+    <footer className="bg-[#f7f4e9] text-white py-16">
       <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto text-right">
+        <div className="grid md:grid-cols-3 gap-12 max-w-5xl text-right">
           {/* Logo & Description */}
           <div>
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_691cc3bcb50ab4a43494e846/515c2fe4e_KIM-LOGO2.png"
+              src={Logo}
               alt="KIM Logo"
-              className="h-96 mb-8 brightness-0 invert"
+              className="h-90 mb-8"
             />
             <p className="text-gray-400 leading-relaxed">
               תזונה מאפשרת – הקליניקה של קים גפסון. 
@@ -21,7 +25,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-lg mb-4">קישורים מהירים</h4>
+            <h4 className="font-bold text-lg mb-4 text-gray-800">קישורים מהירים</h4>
             <ul className="space-y-3 text-gray-400">
               <li>
                 <a 
@@ -71,7 +75,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-bold text-lg mb-4">יצירת קשר</h4>
+            <h4 className="font-bold text-lg mb-4 text-gray-800">יצירת קשר</h4>
             <ul className="space-y-3 text-gray-400">
               <li className="flex items-start gap-2">
                 <MapPin className="w-5 h-5 shrink-0 mt-0.5" />

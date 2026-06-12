@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 import SEOHead from '@/components/SEOHead';
-import HeroSection from '@/components/landing/HeroSection';
+import ScrollStorySection from '@/components/landing/ScrollStorySection';
 import ProblemSolutionSection from '@/components/landing/ProblemSolutionSection';
 import FeaturesSection from '@/components/landing/FeaturesSection';
+import ScrollVideoBackground from '@/components/landing/ScrollVideoBackground';
 import PricingSection from '@/components/landing/PricingSection';
 import ProcessSection from '@/components/landing/ProcessSection';
 import AppSection from '@/components/landing/AppSection';
@@ -17,6 +18,7 @@ import Footer from '@/components/landing/Footer';
 import ScrollToTop from '@/components/landing/ScrollToTop';
 import AccessibilityWidget from '@/components/landing/AccessibilityWidget';
 import FloatingCTA from '@/components/landing/FloatingCTA';
+import ScrollProgressBar from '@/components/landing/ScrollProgressBar';
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -84,12 +86,8 @@ export default function Home() {
         
         @media (max-width: 768px) {
           html {
-            scroll-snap-type: y mandatory;
-          }
-          
-          section {
-            scroll-snap-align: start;
-            scroll-snap-stop: normal;
+            /* proximity keeps mobile usable without fighting the sticky scroll section */
+            scroll-snap-type: y proximity;
           }
         }
         
@@ -115,19 +113,13 @@ export default function Home() {
         }
       `}</style>
       
-      <HeroSection />
+      <ScrollStorySection />
       
-      <AnimatedSection>
+      <ScrollVideoBackground>
         <ProblemSolutionSection />
-      </AnimatedSection>
-      
-      <AnimatedSection>
         <FeaturesSection />
-      </AnimatedSection>
-      
-      <AnimatedSection>
         <ProcessSection />
-      </AnimatedSection>
+      </ScrollVideoBackground>
       
       <AnimatedSection>
         <PricingSection />
@@ -160,6 +152,7 @@ export default function Home() {
       <Footer />
       
       {/* Fixed Elements */}
+      <ScrollProgressBar />
       <ScrollToTop />
       <AccessibilityWidget />
       <FloatingCTA />

@@ -61,13 +61,14 @@ export default function ProcessSection() {
   ];
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      className="py-20 md:py-28 bg-white"
+      className="py-10 md:py-16 min-h-[55vh] md:min-h-[85vh]"
+      style={{ background: 'transparent' }}
     >
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 md:mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-gveret text-gray-900 mb-4">
             איך זה עובד?
           </h2>
           <p className="text-xl text-gray-500">4 צעדים פשוטים לתהליך תזונה מוצלח</p>
@@ -78,7 +79,7 @@ export default function ProcessSection() {
             {/* Connecting Line */}
             <div className="hidden md:block absolute top-14 right-[12%] left-[12%] h-1 bg-gradient-to-l from-[#8B7F4B] via-[#A69B6A] to-[#B8AD7E] rounded-full" />
             
-            <div className="grid md:grid-cols-4 gap-6 lg:gap-10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-10">
               {steps.map((step, index) => (
                 <div
                   key={step.number}
@@ -96,9 +97,9 @@ export default function ProcessSection() {
                     </div>
                     
                     {/* Icon Container with realistic shadow */}
-                    <div className={`w-24 h-24 mx-auto rounded-3xl ${step.color} flex items-center justify-center mb-5 shadow-xl relative overflow-hidden`}>
+                    <div className={`w-16 h-16 md:w-24 md:h-24 mx-auto rounded-2xl md:rounded-3xl ${step.color} flex items-center justify-center mb-3 md:mb-5 shadow-xl relative overflow-hidden`}>
                       <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
-                      <step.icon className="w-12 h-12 text-white relative z-10" />
+                      <step.icon className="w-8 h-8 md:w-12 md:h-12 text-white relative z-10" />
                     </div>
                   </div>
                   
@@ -112,7 +113,7 @@ export default function ProcessSection() {
 
         <div className="text-center mt-14">
           <a 
-            href="https://docs.google.com/forms/d/15RGuDOWZBWZVHRFyj82fFAonv6NNN8CrhAJ6pfJVGbI/edit" 
+            href="https://tinyurl.com/nutrition-diary" 
             target="_blank" 
             rel="noopener noreferrer"
           >
