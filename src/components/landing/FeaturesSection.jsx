@@ -50,7 +50,7 @@ export default function FeaturesSection() {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-gveret text-gray-900 mb-3">
             מה מייחד אותנו?
           </h2>
-          <p className="text-lg text-gray-500 max-w-xl">
+          <p className="text-lg font-bold text-gray-500 max-w-xl">
             ליווי מקצועי ואישי שמתאים בדיוק לסגנון החיים שלך
           </p>
         </div>
@@ -79,7 +79,7 @@ export default function FeaturesSection() {
               <h3 className="text-base font-bold text-gray-900 mb-1.5">
                 {feature.title}
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <p className="text-gray-500 text-m leading-relaxed">
                 {feature.description}
               </p>
             </div>

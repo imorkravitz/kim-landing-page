@@ -5,7 +5,6 @@
       "name": "kim-landing",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "cwd": ".",
       "port": 5173
     }
   ]

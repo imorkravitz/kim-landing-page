@@ -331,7 +331,7 @@ export default function TestimonialsSection() {
             כשהמסגרת חכמה והליווי עקבי = <span className="text-[#8B7F4B]">רואים שינוי</span>
           </h2>
           <p className="text-xl text-slate-700 max-w-3xl mx-auto">
-            התוצאות מדברות בעד עצמן. צילומי מסך אמיתיים משיחות עם מטופלות שהצליחו לשנות את אורח החיים שלהן
+            התוצאות מדברות בעד עצמן.<br></br> צילומי מסך ושיתופים של לקוחות מרוצים שהצליחו לשנות את אורח החיים שלהם
           </p>
         </motion.div>
 

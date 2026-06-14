@@ -19,7 +19,7 @@ import kimHero from '../../assets/images/kim-hero.png';
 // @ts-ignore
 import kimLogo from '../../assets/icons/KIM - LOGO 2.png';
 // @ts-ignore
-import kimIcon from '../../assets/icons/kim-icon-1.png';
+import kimIcon from '../../assets/images/kim-icon-whatsapp.png';
 // @ts-ignore
 import animatedVideo from '../../assets/videos/animated.mp4';
 
@@ -78,20 +78,21 @@ const TEXT  = '#333333';
 const PHASE_STARTS = [0, 0.15, 0.29, 0.43, 0.60, 0.78];
 const ease = [0.25, 0.1, 0.25, 1];
 
-// Phase wrapper: crossfade only (no y-shift) — keeps AnimatePresence mode="sync"
-// smooth without a blank gap between phases.
+// Phase wrapper: subtle y-lift + crossfade — cinematic without jarring jumps.
+// Exit is faster (0.20s) so the incoming phase doesn't wait long.
 const pageVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.50, ease } },
-  exit:    { opacity: 0, transition: { duration: 0.22, ease: 'easeIn' } },
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0,  transition: { duration: 0.60, ease } },
+  exit:    { opacity: 0, y: -8, transition: { duration: 0.20, ease: 'easeIn' } },
 };
 // Stagger gives the text-children a gentle rise-in without fighting the exit
 const stagger = {
-  animate: { transition: { staggerChildren: 0.10, delayChildren: 0.10 } },
+  initial: {},
+  animate: { transition: { staggerChildren: 0.10, delayChildren: 0.12 } },
 };
 const item = {
   initial: { opacity: 0, y: 14 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.48, ease } },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.50, ease } },
 };
 
 /**
@@ -363,14 +364,15 @@ function PhaseHero() {
               href="https://wa.link/ntdrz1"
               target="_blank"
               rel="noopener noreferrer"
-              className="block"
+              aria-label="קביעת ייעוץ חינם עם קים בוואטסאפ"
+              className="block sm:inline-block w-full sm:w-auto"
               whileHover={{ y: -4, scale: 1.05, filter: 'drop-shadow(0 8px 24px rgba(139,127,75,0.50))' }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: 'spring', stiffness: 320, damping: 18 }}
             >
               <Button
                 className="rounded-full px-8 py-6 text-lg font-bold text-white min-h-[48px]
-                           shadow-[0_4px_20px_rgba(139,127,75,0.35)]"
+                           shadow-[0_4px_20px_rgba(139,127,75,0.35)] w-full sm:w-auto"
                 style={{ background: BRAND }}
               >
                 לקביעת יעוץ חינם עכשיו
@@ -490,17 +492,17 @@ function PhaseBusyLife() {
 
           <PhaseHeading>
             החיים שלך עמוסים.<br/>
-            <Accent>אין זמן לתזונה.</Accent>
+            <Accent>השיטה שלנו מותאמת לזה.</Accent>
           </PhaseHeading>
           <motion.p variants={item} className="text-xl text-gray-600 leading-relaxed mb-6">
-            עבודה, ילדים, לחץ — ובסוף האכילה מתפרקת.<br/>
-            השיטה של קים בנויה בדיוק לחיים האלה.
+            עבודה, ילדים, אירועים, חופשות ורגעים שבהם האכילה יוצאת מהאיזון.<br/>
+            בדיוק בשביל זה בנינו שיטה שלא דורשת ממך לעצור את החיים, אלא ללמוד איך להתנהל בתוכם.
           </motion.p>
           <motion.div variants={item} className="flex flex-col gap-3">
-            {['תפריט שמתאים לחיים שלך, לא להפך', 'גמישות — כי שלמות לא קיימת', 'ליווי כשזה קשה הכי'].map((t, i) => (
+            {['תוכנית אישית שמתאימה לחיים שלך, לא להפך', 'גמישות יומיומית — בלי דרישה לשלמות', 'ליווי צמוד ברגעים שבהם הכי קל לוותר', 'כלים לאכילה מאוזנת גם במסעדות, חופשות וסופי שבוע', 'שיטה שמלמדת אותך לשמור על התוצאות לאורך זמן'].map((t, i) => (
               <div key={i} className="flex items-center gap-3" dir="rtl">
                 <CheckCircle2 className="w-5 h-5 shrink-0" style={{ color: BRAND }} />
-                <span className="text-sm font-semibold text-[#333]">{t}</span>
+                <span className="text-m font-semibold text-[#333]">{t}</span>
               </div>
             ))}
           </motion.div>
@@ -794,7 +796,7 @@ function PhaseRing() {
           />
           {/* Centre labels */}
           <text x="100" y="95" textAnchor="middle" fill={BRAND} fontSize="24" fontWeight="900" fontFamily="Calibri,sans-serif">80:20</text>
-          <text x="100" y="114" textAnchor="middle" fill="#aaa" fontSize="9" fontFamily="Calibri,sans-serif">הגישה שלנו</text>
+          <text x="100" y="114" textAnchor="middle" fill="#6e6e6e" font-bold fontSize="12" fontFamily="Heebo">הגישה שלנו</text>
         </svg>
 
         {/* Legend below the ring — no absolute overflow */}
@@ -1211,53 +1213,225 @@ const chatBubbles = [
   { text: 'זה חלק מהדרך. ממשיכות מהארוחה הבאה 🌿',   isKim: true  },
 ];
 
-// Timestamps for the chat bubbles
+// const chatBubbles = [
+//   { text: 'תאריך 23.3 משקל 67.5',      isKim: true  },
+//   { text: 'תאריך 29.3 משקל 66.6',      isKim: true  },
+//   { text: 'ירידה של 900 גרם אלופה!!! 🎉🎉🎉',      isKim: true  },
+//   { text: 'אני לא מפספסת ארוחות',              isKim: false },
+//   { text: 'שימי לב שאם יש לך ארוחה יותר גדולה במהלך היום - לדייק בארוחה שבאה',   isKim: true  },
+// ];
+
 const CHAT_TIMES = ['10:32', '10:33', '10:45', '10:46'];
 
-function ChatWidget({ bubbles, compact = false }) {
+/* Three bouncing dots — WhatsApp typing indicator */
+function TypingDots() {
   return (
-    <div className={`rounded-2xl overflow-hidden shadow-2xl border border-gray-200/60 ${compact ? '' : ''}`}>
-      {/* WhatsApp header — always solid */}
-      <div className="flex items-center gap-3 px-4 py-3" style={{ background: '#075E54' }}>
-        <img src={kimIcon} alt="Kim" className="w-8 h-8 rounded-full object-cover ring-2 ring-white/30 shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-white text-sm font-semibold leading-tight">קים גפסון</p>
-          <p className="text-[11px] leading-tight" style={{ color: '#80CBC4' }}>מחוברת עכשיו</p>
-        </div>
-        <div className="w-2 h-2 rounded-full bg-green-400 shrink-0" />
-      </div>
-      {/* Chat area */}
-      <div className={`flex flex-col gap-2 ${compact ? 'px-3 py-3' : 'px-3 py-4'}`}
-        style={{ background: '#ECE5DD' }}>
-        {bubbles.map(({ text, isKim }, i) => (
-          <motion.div
-            key={i}
-            className={`flex ${isKim ? 'justify-start' : 'justify-end'}`}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 + i * 0.22, duration: 0.35, ease }}
-          >
-            <div
-              className="max-w-[82%] px-3 py-2 shadow-sm"
-              style={{
-                background: isKim ? '#FFFFFF' : '#DCF8C6',
-                borderRadius: isKim ? '0 12px 12px 12px' : '12px 0 12px 12px',
-              }}
-            >
-              {isKim && (
-                <p className="text-[10px] font-bold mb-0.5" style={{ color: '#075E54' }}>קים</p>
-              )}
-              <p className={`${compact ? 'text-[12px]' : 'text-[13px]'} text-[#333] leading-snug`} dir="rtl">
-                {text}
-              </p>
-              <div className={`flex items-center gap-1 mt-0.5 ${isKim ? 'justify-start' : 'justify-end'}`}>
-                <span className="text-[9px] text-gray-400">{CHAT_TIMES[i]}</span>
-                {!isKim && <span className="text-[10px]" style={{ color: '#53BDEB' }}>✓✓</span>}
+    <div className="flex gap-[3px] items-center px-0.5 py-[3px]">
+      {[0, 1, 2].map((i) => (
+        <motion.div
+          key={i}
+          className="w-[5px] h-[5px] rounded-full"
+          style={{ background: '#aaa' }}
+          animate={{ y: [0, -4, 0] }}
+          transition={{ duration: 0.65, delay: i * 0.16, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Realistic iPhone + WhatsApp mockup — shell identical to AppPhoneMockup ── */
+function WaPhoneMockup({ compact = false }) {
+  const W = compact ? 200 : 258;
+  const H = compact ? 390 : 510;
+  const R = compact ? 36 : 44;
+  const fs = compact ? 9.5 : 11.5;
+
+  // State-driven sequential message reveal — each message enters DOM one by one
+  const [shown, setShown]   = useState(0);
+  const [typing, setTyping] = useState(false);
+
+  useEffect(() => {
+    setShown(0);
+    setTyping(false);
+    const ts = [
+      setTimeout(() => setShown(1),                             350),   // user msg 1
+      setTimeout(() => setTyping(true),                         750),   // kim typing…
+      setTimeout(() => { setTyping(false); setShown(2); },      1250),  // kim msg 1
+      setTimeout(() => setShown(3),                             1900),  // user msg 2
+      setTimeout(() => setTyping(true),                         2300),  // kim typing…
+      setTimeout(() => { setTyping(false); setShown(4); },      2800),  // kim msg 2
+    ];
+    return () => ts.forEach(clearTimeout);
+  }, []);
+
+  return (
+    <div style={{ position: 'relative', width: W, flexShrink: 0 }}>
+
+      {/* ── iPhone shell ── */}
+      <div style={{
+        width: W, height: H,
+        borderRadius: R,
+        background: 'linear-gradient(160deg, #2e2e2e 0%, #181818 100%)',
+        padding: `${compact ? 10 : 13}px ${compact ? 6 : 8}px`,
+        boxShadow: [
+          '0 48px 100px rgba(0,0,0,0.48)',
+          '0 16px 32px rgba(0,0,0,0.22)',
+          '0 0 0 1.5px rgba(255,255,255,0.09)',
+          'inset 0 1px 0 rgba(255,255,255,0.09)',
+        ].join(','),
+        position: 'relative',
+        overflow: 'visible',
+        flexShrink: 0,
+      }}>
+
+        {/* Dynamic Island */}
+        <div style={{
+          position: 'absolute', top: 13, left: '50%',
+          transform: 'translateX(-50%)',
+          width: 86, height: 24,
+          background: '#090909', borderRadius: 14, zIndex: 30,
+        }} />
+
+        {/* Power button */}
+        <div style={{ position: 'absolute', top: 108, right: -3, width: 3, height: 52, background: '#353535', borderRadius: '0 3px 3px 0' }} />
+        {/* Vol up */}
+        <div style={{ position: 'absolute', top: 86, left: -3, width: 3, height: 36, background: '#353535', borderRadius: '3px 0 0 3px' }} />
+        {/* Vol down */}
+        <div style={{ position: 'absolute', top: 130, left: -3, width: 3, height: 36, background: '#353535', borderRadius: '3px 0 0 3px' }} />
+
+        {/* ── Screen ── */}
+        <div style={{
+          width: '100%', height: '100%',
+          borderRadius: R - 10,
+          overflow: 'hidden',
+          background: '#ECE5DD',
+          position: 'relative',
+          display: 'flex', flexDirection: 'column',
+        }}>
+
+          {/* WA Header */}
+          <div dir="rtl" style={{
+            display: 'flex', alignItems: 'center', gap: compact ? 5 : 7,
+            padding: `${compact ? 26 : 32}px ${compact ? 7 : 10}px 5px`,
+            background: '#075E54', flexShrink: 0,
+          }}>
+            <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: compact ? 13 : 16, marginLeft: 1 }}>‹</span>
+            <img
+              src={kimIcon}
+              alt="Kim"
+              style={{ width: compact ? 24 : 30, height: compact ? 24 : 30, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.25)' }}
+            />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ margin: 0, color: '#fff', fontSize: compact ? 10 : 12, fontWeight: 700, lineHeight: 1.2 }}>קים גפסון</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4CAF50', flexShrink: 0 }} />
+                <p style={{ margin: 0, color: '#80CBC4', fontSize: compact ? 8 : 9.5, lineHeight: 1 }}>מחוברת עכשיו</p>
               </div>
             </div>
-          </motion.div>
-        ))}
+          </div>
+
+          {/* ── Chat messages ── */}
+          <div dir="rtl" style={{
+            flex: 1, padding: '3px 5px',
+            display: 'flex', flexDirection: 'column', gap: 3,
+            justifyContent: 'flex-end', overflowY: 'hidden',
+          }}>
+
+            <AnimatePresence initial={false}>
+              {chatBubbles.slice(0, shown).map(({ text, isKim }, i) => (
+                <motion.div
+                  key={i}
+                  style={{ display: 'flex', justifyContent: isKim ? 'flex-start' : 'flex-end', alignItems: 'flex-end', gap: 4 }}
+                  initial={{ opacity: 0, y: 10, scale: 0.90 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {isKim && (
+                    <img src={kimIcon} alt="Kim"
+                      style={{ width: compact ? 18 : 22, height: compact ? 18 : 22, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, marginBottom: 2 }}
+                    />
+                  )}
+                  <div style={{
+                    maxWidth: '82%',
+                    background: isKim ? '#ffffff' : '#DCF8C6',
+                    borderRadius: isKim ? '3px 10px 10px 10px' : '10px 3px 10px 10px',
+                    padding: '3px 7px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.09)',
+                  }}>
+                    {isKim && (
+                      <p style={{ margin: '0 0 1px', fontSize: compact ? 7 : 8.5, fontWeight: 700, color: '#075E54' }}>קים</p>
+                    )}
+                    <p style={{ margin: 0, fontSize: fs, color: '#333', lineHeight: 1.45 }}>{text}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 3, marginTop: 2, justifyContent: 'flex-end' }}>
+                      <span style={{ fontSize: compact ? 6 : 7.5, color: '#aaa' }}>{CHAT_TIMES[i]}</span>
+                      {!isKim && <span style={{ fontSize: compact ? 7 : 9, color: '#53BDEB' }}>✓✓</span>}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+
+              {typing && (
+                <motion.div
+                  key="typing"
+                  style={{ display: 'flex', justifyContent: 'flex-start' }}
+                  initial={{ opacity: 0, scale: 0.85, y: 6 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.85, y: 6 }}
+                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div style={{ background: '#fff', borderRadius: '3px 10px 10px 10px', boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}>
+                    <TypingDots />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Input bar */}
+          <div dir="rtl" style={{
+            display: 'flex', alignItems: 'center', gap: compact ? 4 : 6,
+            padding: `${compact ? 5 : 6}px ${compact ? 5 : 7}px ${compact ? 6 : 9}px`,
+            background: '#F0F0F0', flexShrink: 0,
+          }}>
+            <div style={{
+              flex: 1, background: '#fff', borderRadius: 16,
+              padding: `${compact ? 3 : 5}px ${compact ? 8 : 10}px`,
+              fontSize: compact ? 7.5 : 9, color: '#bbb',
+              textAlign: 'right',
+            }}>הקלידי הודעה...</div>
+            <div style={{
+              width: compact ? 22 : 28, height: compact ? 22 : 28,
+              borderRadius: '50%', background: '#075E54',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              <span style={{ color: '#fff', fontSize: compact ? 10 : 12 }}>↑</span>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Kim online badge — floats top-right, appears after messages settle */}
+      <motion.div
+        dir="rtl"
+        style={{
+          position: 'absolute',
+          top: compact ? -12 : -14,
+          right: compact ? -14 : -20,
+          background: '#fff',
+          borderRadius: 18,
+          padding: compact ? '5px 9px' : '7px 12px',
+          boxShadow: '0 8px 28px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.05)',
+          display: 'flex', alignItems: 'center', gap: 6,
+          whiteSpace: 'nowrap', zIndex: 40,
+        }}
+        initial={{ opacity: 0, scale: 0.78, y: -6 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ delay: 3.2, type: 'spring', stiffness: 340, damping: 22 }}
+      >
+        <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#4CAF50', flexShrink: 0 }} />
+        <p style={{ margin: 0, fontSize: compact ? 9 : 10.5, fontWeight: 600, color: '#333' }}>קים מחוברת עכשיו</p>
+      </motion.div>
     </div>
   );
 }
@@ -1266,28 +1440,28 @@ function PhaseSupport() {
   return (
     <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
 
-      {/* ── Desktop: WhatsApp widget — solid, bottom-left, clear of Kim's face ── */}
+      {/* ── Desktop: iPhone WA mockup in left column ── */}
       <motion.div
-        className="absolute hidden lg:block z-10 pointer-events-none"
-        style={{ left: '3%', bottom: '18%', width: 272 }}
-        initial={{ opacity: 0, y: 24, scale: 0.93 }}
+        className="absolute hidden lg:flex items-center justify-center pointer-events-none z-10"
+        style={{ left: '6%', top: '30%', transform: 'translateY(-50%)' }}
+        initial={{ opacity: 0, y: 36, scale: 0.88 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.1, ease: [0.34, 1.1, 0.64, 1] }}
+        transition={{ duration: 0.65, delay: 0.08, ease: [0.34, 1.2, 0.64, 1] }}
       >
-        <ChatWidget bubbles={chatBubbles} />
+        <WaPhoneMockup />
       </motion.div>
 
       <ContentPanel>
         <motion.div variants={stagger} initial="initial" animate="animate">
 
-          {/* Mobile-only: compact chat preview — 2 bubbles to keep height short */}
-          <motion.div variants={item} className="lg:hidden mb-2">
-            <ChatWidget bubbles={chatBubbles.slice(0, 2)} compact />
+          {/* Mobile: compact iPhone WA mockup — centered before heading */}
+          <motion.div variants={item} className="lg:hidden flex justify-center mb-5">
+            <WaPhoneMockup compact />
           </motion.div>
 
           <PhaseHeading>ליווי יומיומי.<br/><Accent>כל יום.</Accent></PhaseHeading>
           <motion.p variants={item} className="hidden sm:block text-lg text-gray-600 leading-relaxed mb-4 lg:mb-5">
-            וואצפ ישיר עם התזונאית שלך, תגובה אנושית ותמיכה מלאה בתהליך ובמטרות שלך.
+            וואטסאפ ישיר עם התזונאית שלך, תגובה אנושית ותמיכה מלאה בתהליך ובמטרות שלך.
           </motion.p>
           <motion.div variants={item} className="flex flex-col gap-2 lg:gap-2.5 mb-3 lg:mb-7">
             {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות'].map((f) => (
@@ -1298,15 +1472,24 @@ function PhaseSupport() {
             ))}
           </motion.div>
           <motion.div variants={item}>
-            <a href="https://wa.link/ntdrz1" target="_blank" rel="noopener noreferrer">
+            <motion.a
+              href="https://wa.link/ntdrz1"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="קביעת ייעוץ חינם עם קים בוואטסאפ"
+              className="block sm:inline-block"
+              whileHover={{ y: -4, scale: 1.05, filter: 'drop-shadow(0 8px 24px rgba(139,127,75,0.50))' }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 18 }}
+            >
               <Button
                 className="rounded-full px-8 py-6 text-lg font-bold text-white min-h-[48px]
-                           shadow-[0_4px_20px_rgba(139,127,75,0.4)] hover:-translate-y-[2px] transition-all duration-200"
+                           shadow-[0_4px_20px_rgba(139,127,75,0.35)] w-full sm:w-auto"
                 style={{ background: BRAND }}
               >
                 קבעי ייעוץ חינם עכשיו
               </Button>
-            </a>
+            </motion.a>
           </motion.div>
         </motion.div>
       </ContentPanel>
@@ -1454,13 +1637,18 @@ export default function ScrollStorySection() {
           </AnimatePresence>
         </div>
 
-        {/* ── Phase dots ── */}
+        {/* ── Phase dots — layout-animated pill expansion ── */}
         <div className="absolute bottom-[52px] left-1/2 -translate-x-1/2 flex gap-2 z-30">
           {phases.map((_, i) => (
-            <div
+            <motion.div
               key={i}
-              className="rounded-full h-1.5 transition-all duration-500"
-              style={{ width: i === phase ? 22 : 6, background: i === phase ? BRAND : `${BRAND}38` }}
+              layout
+              className="rounded-full h-1.5"
+              animate={{
+                width:      i === phase ? 22 : 6,
+                background: i === phase ? BRAND : `${BRAND}40`,
+              }}
+              transition={{ type: 'spring', stiffness: 380, damping: 28 }}
             />
           ))}
         </div>
@@ -1473,7 +1661,7 @@ export default function ScrollStorySection() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ delay: 1.2, duration: 0.5 }}
             >
-              <span className="text-s font-medium" style={{ color: `${BRAND}80` }}>גללי לגלות</span>
+              <span className="text-sm font-medium" style={{ color: `${BRAND}80` }}>גללי לגלות</span>
               <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}>
                 <ChevronDown className="w-5 h-5" style={{ color: `${BRAND}70` }} />
               </motion.div>

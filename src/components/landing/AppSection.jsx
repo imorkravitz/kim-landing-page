@@ -77,7 +77,7 @@ export default function AppSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">הכירו את אפליקציית Liveat</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">הכירי את אפליקציית Liveat</h2>
           <div className="w-16 h-1 bg-[#8B7F4B] mx-auto rounded-full mb-8"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             האפליקציה הייחודית שפותחה במיוחד עבור המטופלות שלי
