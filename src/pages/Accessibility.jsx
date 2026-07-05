@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 
 const BRAND = '#8B7F4B';
@@ -15,16 +17,27 @@ export default function Accessibility() {
         description="הצהרת הנגישות של אתר תזונה מאפשרת"
       />
       <div className="container mx-auto px-6 py-16 max-w-3xl">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 mb-8 text-sm font-medium underline-offset-4 hover:underline"
+          style={{ color: BRAND }}
+        >
+          <ArrowRight className="w-4 h-4" />
+          חזרה לדף הבית
+        </Link>
+
         <h1 className="text-3xl md:text-4xl font-heading text-gray-900 mb-8">
           הצהרת נגישות
         </h1>
 
         <div className="space-y-6 text-gray-600 leading-relaxed">
           <p>
-            אנו ב<strong>תזונה מאפשרת</strong> רואים חשיבות רבה במתן שירות שוויוני
-            לכלל הגולשות והגולשים, ופועלים להנגשת האתר בהתאם לתקנות שוויון זכויות
-            לאנשים עם מוגבלות (התאמות נגישות לשירות), תשע"ג-2013, ולתקן הישראלי
-            (ת"י 5568) המבוסס על הנחיות WCAG 2.1 ברמה AA.
+            אתר <strong>"תזונה מאפשרת"</strong> של{' '}
+            <strong>קים גפסון קרביץ</strong> — דיאטנית קלינית, והצוות המקצועי
+            שלה, רואה חשיבות רבה במתן שירות שוויוני לכלל הגולשות והגולשים.
+            אנו פועלים להנגשת האתר בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות
+            (התאמות נגישות לשירות), תשע"ג-2013, ולתקן הישראלי (ת"י 5568) המבוסס
+            על הנחיות WCAG 2.1 ברמה AA.
           </p>
 
           <h2 className="text-xl font-bold text-gray-900 pt-2">התאמות הנגישות באתר</h2>
@@ -56,7 +69,7 @@ export default function Accessibility() {
           </p>
 
           <p className="text-sm text-gray-400 pt-4">
-            הצהרה זו עודכנה לאחרונה: יוני 2026
+            הצהרה זו עודכנה לאחרונה: יולי 2026
           </p>
         </div>
       </div>
