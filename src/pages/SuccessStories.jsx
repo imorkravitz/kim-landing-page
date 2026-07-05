@@ -9,9 +9,9 @@ import SubmitStoryForm from '@/components/success-stories/SubmitStoryForm';
 import SEOHead from '@/components/SEOHead';
 
 // ייבוא תמונות (וודא שהן קיימות בתיקייה, אחרת הקוד ישתמש בפלייסהולדר)
-import img1 from '@/assets/patientsSuccess/1.png';
-import img2 from '@/assets/patientsSuccess/2.png';
-import img3 from '@/assets/patientsSuccess/3.png';
+import img1 from '@/assets/patientsSuccess/1.webp';
+import img2 from '@/assets/patientsSuccess/2.webp';
+import img3 from '@/assets/patientsSuccess/3.webp';
 // ניתן לייבא תמונות נוספות לפי הצורך
 
 const WhatsAppIcon = ({ className }) => (

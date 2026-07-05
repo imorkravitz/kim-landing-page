@@ -44,21 +44,23 @@ export const TestimonialsColumn = ({
                 // הוספתי transform-gpu כדי להכריח שימוש בכרטיס מסך
                 className="transform-gpu p-4 rounded-3xl border border-[#8B7F4B]/20 bg-white shadow-lg shadow-[#8B7F4B]/5 max-w-xs w-full transition-transform duration-200"
               >
-                <div className="mb-4 overflow-hidden rounded-2xl bg-gray-100">
+                <div className={`overflow-hidden rounded-2xl bg-gray-100 ${role ? 'mb-4' : ''}`}>
                   <img
                     src={image || "/placeholder.svg"}
-                    alt={`הצלחה של ${role}`}
+                    alt={role ? `הצלחה של ${role}` : 'סיפור הצלחה של מטופלת'}
                     className="w-full h-auto object-cover block"
                     loading="eager" // חשוב! טוען את התמונות מיד כדי למנוע קפיצות בגובה
                     draggable="false" // מונע גרירה של התמונה עצמה
                   />
                 </div>
 
-                <div className="text-center">
-                  <div className="text-sm text-[#8B7F4B] font-bold bg-[#8B7F4B]/10 rounded-full px-3 py-1 inline-block">
-                    {role}
+                {role && (
+                  <div className="text-center">
+                    <div className="text-sm text-[#8B7F4B] font-bold bg-[#8B7F4B]/10 rounded-full px-3 py-1 inline-block">
+                      {role}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             ))}
           </React.Fragment>
