@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, MessageCircle, Phone, MapPin } from 'lucide-react';
+import { Instagram, MessageCircle, Phone, MapPin, Smartphone } from 'lucide-react';
 
 // @ts-ignore
 import Logo from '../../assets/icons/KIM - LOGO 2.png';
@@ -32,8 +32,9 @@ export default function Footer() {
                   href="https://onelink.to/zter3n"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-white transition-colors flex items-center gap-2"
                 >
+                  <Smartphone className="w-4 h-4" />
                   הורדת אפליקציית Liveat
                 </a>
               </li>
