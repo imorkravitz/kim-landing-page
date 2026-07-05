@@ -44,7 +44,7 @@ export default function CalculatorSection() {
     
     if (bmi < 18.5) {
       category = 'תת משקל';
-      color = 'text-blue-500';
+      color = 'text-[#8B7F4B]';
     } else if (bmi < 25) {
       category = 'משקל תקין';
       color = 'text-green-500';

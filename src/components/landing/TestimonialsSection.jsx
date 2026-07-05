@@ -324,7 +324,7 @@ export default function TestimonialsSection() {
         >
           <div className="flex justify-center mb-4">
           </div>
-          <h2 className="text-4xl md:text-5xl font-heading text-slate-900 mb-6">
+          <h2 className="text-4xl md:text-5xl font-heading text-gray-900 mb-6">
             כשהמסגרת חכמה והליווי עקבי - <span className="text-[#8B7F4B]">השינוי מגיע</span>
           </h2>
           <p className="text-xl text-slate-700 max-w-3xl mx-auto">
