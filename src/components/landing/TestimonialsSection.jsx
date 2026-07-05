@@ -101,47 +101,47 @@ const testimonials = [
   {
     text: "",
     image: img1,
-    role: 'ירדה 12 ק"ג ב-4 חודשים',
+    role: "",
   },
   {
     text: "",
     image: img2,
-    role: "שיפור במדדי הדם",
+    role: "",
   },
   {
     text: "",
     image: img3,
-    role: "למדה לאכול נכון",
+    role: "",
   },
   {
     text: "",
     image: img4,
-    role: 'ירדה 8 ק"ג ב-3 חודשים',
+    role: "",
   },
   {
     text: "",
     image: img5,
-    role: "שינוי אורח חיים מלא",
+    role: "",
   },
   {
     text: "",
     image: img6,
-    role: "למדה להכין אוכל בריא",
+    role: "",
   },
   {
     text: "",
     image: img7,
-    role: 'ירדה 15 ק"ג ב-6 חודשים',
+    role: "",
   },
   {
     text: "",
     image: img8,
-    role: "התגברה על אכילה רגשית",
+    role: "",
   },
   {
     text: "",
     image: img9,
-    role: "שינתה את התזונה של כל המשפחה",
+    role: "",
   },
 
   // --- תמונות חדשות (10-25) ---
