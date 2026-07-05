@@ -62,11 +62,15 @@ export default function ScrollVideoBackground({ children }) {
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // object-cover: fills full 100vw × 100vh, edges crop evenly
+      // object-cover: fills full 100vw × 100vh, edges crop
       const scale = Math.max(cssW / vw, cssH / vh);
       const dw = Math.round(vw * scale);
       const dh = Math.round(vh * scale);
-      const dx = Math.round((cssW - dw) / 2);
+      // Stethoscope sits on the right side of the video frame.
+      // On mobile (<768px) shift the crop window right (posX→1) so it stays
+      // visible throughout the scroll, matching the desktop experience.
+      const posX = cssW < 768 ? 0.88 : 0.5;
+      const dx = Math.round((cssW - dw) * posX);
       const dy = Math.round((cssH - dh) / 2);
 
       // White fill — video's white areas are seamlessly invisible on white BG
@@ -151,8 +155,13 @@ export default function ScrollVideoBackground({ children }) {
             display: 'block',
             width: '100%',
             height: '100%',
-            // no mix-blend-mode — white bg means video renders naturally
           }}
+        />
+        {/* Mobile-only white fade — sits above the canvas but inside z:-1 layer,
+            softening the video so overlaid text stays fully legible */}
+        <div
+          className="absolute inset-0 lg:hidden"
+          style={{ background: 'rgba(255,255,255,0.72)', pointerEvents: 'none' }}
         />
       </div>
 

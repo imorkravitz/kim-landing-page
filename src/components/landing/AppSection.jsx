@@ -40,23 +40,13 @@ const features = [
   {
     icon: User,
     title: "ליווי אישי מתמיד",
-    description: "קשר ישיר עם קים דרך האפליקציה"
+    description: "קשר ישיר עם התזונאית דרך האפליקציה"
   },
   {
     icon: BarChart3,
-    title: "דוחות מפורטים",
+    title: "מעקב משקל חכם",
     description: "גרפים ומדדים למעקב אחר ההתקדמות"
   },
-  {
-    icon: Clock,
-    title: "מעקב BMR ומטבוליזם",
-    description: "חישוב מדויק של קצב חילוף החומרים"
-  },
-  {
-    icon: Zap,
-    title: "מעקב משקל חכם",
-    description: "גרף התקדמות עם ניתוח מגמות"
-  }
 ];
 
 export default function AppSection() {
@@ -77,7 +67,7 @@ export default function AppSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">הכירי את אפליקציית Liveat</h2>
+          <h2 className="text-4xl md:text-5xl font-heading text-gray-900 mb-6">הכירי את אפליקציית Liveat</h2>
           <div className="w-16 h-1 bg-[#8B7F4B] mx-auto rounded-full mb-8"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             האפליקציה הייחודית שפותחה במיוחד עבור המטופלות שלי
@@ -179,7 +169,7 @@ export default function AppSection() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="space-y-6 order-1 lg:order-2"
           >
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-right">איך האפליקציה עוזרת לי בתהליך?</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-right">איך האפליקציה עוזרת לך בתהליך?</h3>
 
             <div className="space-y-4">
               {features.map((feature, index) => (

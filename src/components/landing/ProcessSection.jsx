@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ClipboardList, Calendar, Smartphone } from 'lucide-react';
+import { ClipboardList, Calendar, Smartphone, MessageCircle } from 'lucide-react';
 
 const WhatsAppIcon = ({ className }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor">
@@ -34,28 +34,28 @@ export default function ProcessSection() {
       number: '1',
       icon: ClipboardList,
       title: 'מילוי שאלון אישי',
-      description: 'שאלון מקיף לאיסוף מידע והתאמת דיאטנית קלינית',
+      description: 'שאלון קצר שיעזור לנו להבין את השגרה, ההעדפות, המטרות והאתגרים שלך.',
       color: 'bg-[#8B7F4B]'
     },
     {
       number: '2',
       icon: Calendar,
       title: 'בניית תפריט מותאם',
-      description: 'תפריט אישי המותאם לסגנון החיים והעדפות שלך',
+      description: 'תוכנית אישית שנבנית לפי החיים שלך — לא לפי תפריט גנרי.',
       color: 'bg-[#A69B6A]'
     },
     {
       number: '3',
       icon: WhatsAppIcon,
-      title: 'ליווי יומי בוואטסאפ',
-      description: 'תמיכה צמודה, עצות ומענה לכל שאלה בזמן אמת',
+      title: 'ליווי יומי בווצאפ',
+      description: 'מענה אישי, פידבק מקצועי ותמיכה בזמן אמת לאורך התהליך.',
       color: 'bg-[#25D366]'
     },
     {
       number: '4',
       icon: Smartphone,
-      title: 'מעקב ויעדים באפליקציה',
-      description: 'מעקב פשוט ומדויק עם גרפים ויעדים ברורים',
+      title: 'מעקב ודיוקים באפליקציה',
+      description: 'צילום ארוחות, מעקב אחר ההתקדמות ודיוקים שיעזרו לך להבין מה עובד עבורך.',
       color: 'bg-[#B8AD7E]'
     }
   ];
@@ -67,11 +67,46 @@ export default function ProcessSection() {
       style={{ background: 'transparent' }}
     >
       <div className="container mx-auto px-6">
+
+        {/* ── RESULT block — moved from ProblemSolutionSection ── */}
+        <div
+          className="rounded-3xl p-7 md:p-10 text-center mb-12"
+          style={{
+            background: 'rgba(139,127,75,0.07)',
+            border: '1px solid rgba(139,127,75,0.13)',
+          }}
+        >
+          <h3
+            className="text-2xl md:text-3xl font-heading text-gray-900 mb-3 leading-snug"
+            style={{ textWrap: 'balance' }}
+          >
+            תזונה שמרגישה כמו חיים —{' '}
+            <span style={{ color: '#8B7F4B' }}>כמו החיים האמיתיים</span>
+          </h3>
+          <p className="text-gray-600 text-base leading-relaxed mb-8 max-w-md mx-auto">
+            אלפי נשים ששינו את מערכת היחסים עם אוכל ולמדו לנהל את התזונה שלהן בצורה שמתאימה לחיים.
+          </p>
+          <a href="https://wa.link/ntdrz1" target="_blank" rel="noopener noreferrer">
+            <button
+              className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
+              style={{
+                background: '#25D366',
+                boxShadow: '0 4px 16px rgba(37,211,102,0.30)',
+              }}
+            >
+              <WhatsAppIcon className="w-5 h-5" />
+              בואי לדבר איתנו בווצאפ
+            </button>
+          </a>
+        </div>
+
         <div className="text-center mb-8 md:mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-gveret text-gray-900 mb-4">
-            איך זה עובד?
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-gray-900 mb-4" style={{ textWrap: 'balance' }}>
+            מהרגע שהשארת פרטים — אנחנו איתך
           </h2>
-          <p className="text-xl text-gray-500">4 צעדים פשוטים לתהליך תזונה מוצלח</p>
+          <p className="text-xl text-gray-500">
+            4 צעדים פשוטים לתהליך שמותאם <strong style={{ color: '#8B7F4B' }}>אליך</strong>
+          </p>
         </div>
 
         <div className="max-w-5xl mx-auto">
@@ -122,7 +157,7 @@ export default function ProcessSection() {
               className="bg-[#8B7F4B] text-white px-10 py-6 text-lg rounded-full shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[#6d6339] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
             >
               <ClipboardList className="w-5 h-5 ml-2" />
-              מילוי שאלון התאמה
+              לקביעת ייעוץ התאמה חינם
             </Button>
           </a>
         </div>

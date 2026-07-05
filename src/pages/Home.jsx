@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
 import ScrollStorySection from '@/components/landing/ScrollStorySection';
 import ProblemSolutionSection from '@/components/landing/ProblemSolutionSection';
-import FeaturesSection from '@/components/landing/FeaturesSection';
 import ScrollVideoBackground from '@/components/landing/ScrollVideoBackground';
 import PricingSection from '@/components/landing/PricingSection';
 import ProcessSection from '@/components/landing/ProcessSection';
@@ -65,7 +64,7 @@ export default function Home() {
     <div dir="rtl" className="min-h-screen bg-white font-piki page-transition">
       <SEOHead 
         title="קים גפסון | תזונה מאפשרת - דיאטנית קלינית"
-        description="קים גפסון - דיאטנית קלינית מוסמכת עם 12 שנות ניסיון. ליווי תזונתי אישי לנשים עם גישת 80:20, התמחות בגניקולוגיה ורפואת נשים, אפליקציית Liveat ותמיכה יומית בוואטסאפ."
+        description="קים גפסון - דיאטנית קלינית מוסמכת עם 12 שנות ניסיון. ליווי תזונתי אישי לנשים עם גישת 80:20, התמחות בגניקולוגיה ורפואת נשים, אפליקציית Liveat ותמיכה יומית בווצאפ."
       />
       <style>{`
         @font-face {
@@ -117,7 +116,6 @@ export default function Home() {
       
       <ScrollVideoBackground>
         <ProblemSolutionSection />
-        <FeaturesSection />
         <ProcessSection />
       </ScrollVideoBackground>
       

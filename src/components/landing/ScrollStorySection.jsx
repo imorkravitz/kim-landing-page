@@ -135,7 +135,7 @@ function PhaseHeading({ children }) {
   return (
     <motion.h2
       variants={item}
-      className="text-3xl md:text-5xl lg:text-6xl font-black leading-tight mb-4 lg:mb-5"
+      className="text-3xl md:text-5xl lg:text-6xl font-heading leading-tight mb-4 lg:mb-5"
       style={{ color: TEXT }}
       dir="rtl"
     >
@@ -326,14 +326,14 @@ function PhaseHero() {
           <motion.h1
             variants={item}
             dir="rtl"
-            className="text-2xl sm:text-3xl md:text-5xl font-black leading-[1.15] mb-3 lg:mb-5"
+            className="text-3xl sm:text-4xl md:text-5xl font-heading leading-[1.15] mb-3 lg:mb-5"
           >
             <span style={{ color: BRAND }}>
-              לנהל את התזונה שלכם,
+              לנהל את התזונה שלכם
             </span>
             <br></br>
             <span style={{ color: BRAND }}>
-              לאכול הכל,
+              לאכול הכל
             </span>{' '}
 
             <span className="block" style={{ color: TEXT }}>לרדת במשקל <br></br>ולשמור על התוצאות.</span>
@@ -364,7 +364,7 @@ function PhaseHero() {
               href="https://wa.link/ntdrz1"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="קביעת ייעוץ חינם עם קים בוואטסאפ"
+              aria-label="קביעת ייעוץ חינם עם קים בווצאפ"
               className="block sm:inline-block w-full sm:w-auto"
               whileHover={{ y: -4, scale: 1.05, filter: 'drop-shadow(0 8px 24px rgba(139,127,75,0.50))' }}
               whileTap={{ scale: 0.97 }}
@@ -410,7 +410,7 @@ function PhaseHero() {
 
           </motion.div>
 
-          {/* Stats — hidden on mobile to save vertical space */}
+          {/* Stats — desktop only; hero content is tight on mobile */}
           <motion.div variants={item} className="hidden lg:flex gap-6 border-t border-[#8B7F4B]/20 pt-4" dir="rtl">
             <div className="flex items-center gap-2">
               <div className="text-xs text-gray-500 font-medium leading-tight">שנות<br/>ניסיון</div>
@@ -439,9 +439,21 @@ const lifestyleItems = [
   { src: imgStressCalendar, label: 'ריבוי משימות',     style: { left: '50%', top: '55%' }, delay: 0.12 },
 ];
 
+// Mobile positions — 3 left / 3 right, all within the top 42vh (Kim's strip height)
+const mobileLifestylePositions = [
+  { left: '4%',  top: '3%'  },
+  { right: '4%', top: '7%'  },
+  { left: '2%',  top: '20%' },
+  { right: '3%', top: '22%' },
+  { left: '4%',  top: '37%' },
+  { right: '4%', top: '36%' },
+];
+
 function PhaseBusyLife() {
   return (
     <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+
+      {/* Desktop: lifestyle items floating around Kim */}
       {lifestyleItems.map(({ src, label, style, delay }, i) => (
         <motion.div
           key={i}
@@ -451,7 +463,6 @@ function PhaseBusyLife() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 0.25 + delay, duration: 0.5, ease }}
         >
-          {/* Transparent PNG — 2× size */}
           <img
             src={src}
             alt={label}
@@ -466,46 +477,74 @@ function PhaseBusyLife() {
           </span>
         </motion.div>
       ))}
-      <ContentPanel>
-        <motion.div variants={stagger} initial="initial" animate="animate">
-          {/* Mobile-only: 2-row icon grid */}
-          <motion.div variants={item} className="lg:hidden mb-6 pt-2">
-            <div className="flex items-center justify-center gap-4 mb-3">
-              {lifestyleItems.slice(0, 3).map(({ src, label }, i) => (
-                <div key={i} className="flex flex-col items-center gap-1">
-                  <img src={src} alt={label} className="w-16 h-16 object-contain"
-                    style={{ filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.18))' }} />
-                  <span className="text-xs font-semibold text-gray-500">{label}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center justify-center gap-4">
-              {lifestyleItems.slice(3, 6).map(({ src, label }, i) => (
-                <div key={i} className="flex flex-col items-center gap-1">
-                  <img src={src} alt={label} className="w-16 h-16 object-contain"
-                    style={{ filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.18))' }} />
-                  <span className="text-xs font-semibold text-gray-500">{label}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
 
-          <PhaseHeading>
-            החיים שלך עמוסים.<br/>
-            <Accent>השיטה שלנו מותאמת לזה.</Accent>
-          </PhaseHeading>
-          <motion.p variants={item} className="text-xl text-gray-600 leading-relaxed mb-6">
+      {/* Mobile: lifestyle items scattered around Kim in the top 42vh */}
+      {lifestyleItems.map(({ src, label, delay }, i) => (
+        <motion.div
+          key={`mob-${i}`}
+          className="absolute flex flex-col items-center gap-0.5 lg:hidden"
+          style={{ ...mobileLifestylePositions[i], zIndex: 5 }}
+          initial={{ opacity: 0, scale: 0.6, y: 14 }}
+          animate={{ opacity: 0.9, scale: 1, y: 0 }}
+          transition={{ delay: 0.2 + delay, duration: 0.45, ease }}
+        >
+          <img
+            src={src}
+            alt={label}
+            className="w-14 h-14 object-contain"
+            style={{ filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.18))' }}
+          />
+          <span className="text-[9px] font-semibold bg-white/72 px-1.5 py-0.5 rounded-full text-gray-600 leading-none">
+            {label}
+          </span>
+        </motion.div>
+      ))}
+
+      <ContentPanel mobilePt="pt-[44vh]">
+        <motion.div variants={stagger} initial="initial" animate="animate">
+
+          {/* Mobile heading */}
+          <motion.h2
+            variants={item}
+            className="text-3xl font-heading leading-tight mb-3 lg:hidden"
+            style={{ color: TEXT }}
+            dir="rtl"
+          >
+            החיים שלך עמוסים<br/>
+            <span style={{ color: BRAND }}>השיטה שלנו מותאמת לזה.</span>
+          </motion.h2>
+          <div className="hidden lg:block">
+            <PhaseHeading>
+              החיים שלך עמוסים<br/>
+              <Accent>השיטה שלנו מותאמת לזה.</Accent>
+            </PhaseHeading>
+          </div>
+
+          {/* Desktop paragraph — full */}
+          <motion.p variants={item} className="hidden lg:block text-xl text-gray-600 leading-relaxed mb-6">
             עבודה, ילדים, אירועים, חופשות ורגעים שבהם האכילה יוצאת מהאיזון.<br/>
-            בדיוק בשביל זה בנינו שיטה שלא דורשת ממך לעצור את החיים, אלא ללמוד איך להתנהל בתוכם.
+            בדיוק בשביל זה בניתי שיטה שלא דורשת ממך לעצור את החיים, אלא ללמוד איך להתנהל בתוכם.
           </motion.p>
-          <motion.div variants={item} className="flex flex-col gap-3">
-            {['תוכנית אישית שמתאימה לחיים שלך, לא להפך', 'גמישות יומיומית — בלי דרישה לשלמות', 'ליווי צמוד ברגעים שבהם הכי קל לוותר', 'כלים לאכילה מאוזנת גם במסעדות, חופשות וסופי שבוע', 'שיטה שמלמדת אותך לשמור על התוצאות לאורך זמן'].map((t, i) => (
-              <div key={i} className="flex items-center gap-3" dir="rtl">
-                <CheckCircle2 className="w-5 h-5 shrink-0" style={{ color: BRAND }} />
-                <span className="text-m font-semibold text-[#333]">{t}</span>
+          {/* Mobile paragraph — condensed to one sentence */}
+          <motion.p variants={item} className="lg:hidden text-lg text-gray-600 leading-relaxed mb-2">
+            בדיוק בשביל זה בנינו שיטה שלא דורשת ממך לעצור את החיים, אלא ללמוד להתנהל בתוכם.
+          </motion.p>
+
+          <motion.div variants={item} className="flex flex-col gap-1.5 lg:gap-3">
+            {[
+              'תוכנית אישית שמתאימה לחיים שלך, לא להפך',
+              'גמישות יומיומית וגיוון תזונתי',
+              'ליווי צמוד ברגעים שבהם הכי קל לוותר',
+              'כלים לאכילה מאוזנת גם במסעדות, חופשות וסופי שבוע',
+              'שיטה שמלמדת אותך לשמור על התוצאות לאורך זמן',
+            ].map((t, i) => (
+              <div key={i} className="flex items-center gap-2 lg:gap-3" dir="rtl">
+                <CheckCircle2 className="w-4 h-4 lg:w-5 lg:h-5 shrink-0" style={{ color: BRAND }} />
+                <span className="text-base lg:text-lg font-semibold text-[#333]">{t}</span>
               </div>
             ))}
           </motion.div>
+
         </motion.div>
       </ContentPanel>
     </motion.div>
@@ -664,12 +703,40 @@ function ScrollVideoPlayer({ plateProgress }) {
 function PhasePlate() {
   return (
     <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-      <ContentPanel>
+      <ContentPanel mobilePt="pt-[47vh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
-          <PhaseHeading>הכל<br/><Accent>מתחיל בצלחת.</Accent></PhaseHeading>
-          <motion.p variants={item} className="text-xl text-gray-600 leading-relaxed">
-            תזונה מאפשרת ללא הימנעות.<br/>נלמד אותך לנהל את התזונה גם ביומיום,
-            <br/>גם בחופשה, גם במסעדה ובכל סיטואציה
+          <motion.h2
+            variants={item}
+            className="text-3xl font-heading leading-tight mb-3 lg:hidden"
+            style={{ color: TEXT }}
+            dir="rtl"
+          >
+            הכל <Accent>מתחיל בצלחת.</Accent>
+          </motion.h2>
+          <div className="hidden lg:block">
+            <PhaseHeading>הכל<br/><Accent>מתחיל בצלחת.</Accent></PhaseHeading>
+          </div>
+          <motion.p
+            variants={item}
+            style={{
+              lineHeight: 1.8,
+              fontSize: 'clamp(1rem, 4vw, 1.4rem)',
+              color: '#555',
+              textWrap: 'pretty',
+              maxWidth: 520,
+            }}
+          >
+            במקום עוד תפריט נוקשה שקשה להחזיק לאורך זמן — <br></br>
+             נלמד אותך איך לבנות צלחת שמתאימה לחיים האמיתיים שלך.{' '}
+            בבית, בעבודה,{' '}
+            <strong style={{ color: BRAND, fontWeight: 800 }}>במסעדה</strong>,{' '}
+            <strong style={{ color: BRAND, fontWeight: 800 }}>בחופשה</strong>,{' '}
+            <strong style={{ color: BRAND, fontWeight: 800 }}>בסוף שבוע</strong>.{' '}<br></br>
+            לא כדי שתהיי תלויה בתפריט — אלא כדי שתדעי להתנהל נכון{' '}
+            <strong style={{ color: BRAND }}>בכל סיטואציה</strong>.{' '}
+            כי כשאת מבינה איך הדברים עובדים - <br></br>
+            הרבה יותר קל{' '}
+            <strong style={{ color: BRAND, fontWeight: 800 }}>לרדת במשקל, להתמיד ולשמור על התוצאות</strong>.
           </motion.p>
         </motion.div>
       </ContentPanel>
@@ -696,20 +763,26 @@ function PhaseExploded() {
     <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
       <ContentPanel>
         <motion.div variants={stagger} initial="initial" animate="animate">
-          <SectionLabel>השיטה שלנו</SectionLabel>
+          {/* Section label — desktop only (saves ~32px on mobile) */}
+          <div className="hidden lg:block"><SectionLabel>השיטה שלנו</SectionLabel></div>
           <PhaseHeading>מה יש<br/><Accent>בצלחת מאוזנת?</Accent></PhaseHeading>
-          <motion.p variants={item} className="text-lg text-gray-600 leading-relaxed mb-4">
+          {/* Desktop paragraph */}
+          <motion.p variants={item} className="hidden lg:block text-lg text-gray-600 leading-relaxed mb-4">
             כל רכיב יש לו תפקיד. אנחנו לא מורידות — אנחנו מאזנות.
           </motion.p>
-          <motion.div variants={item} className="flex flex-col gap-3">
+          {/* Mobile paragraph — compact */}
+          <motion.p variants={item} className="lg:hidden text-base text-gray-600 leading-relaxed mb-3">
+            כל רכיב יש לו תפקיד. אנחנו לא מורידות — אנחנו מאזנות.
+          </motion.p>
+          <motion.div variants={item} className="flex flex-col gap-2 lg:gap-3">
             {foodComponents.map(({ label, sublabel, color, Icon }) => (
               <div key={label} className="flex items-center gap-3" dir="rtl">
-                <div className="rounded-full p-2.5 shrink-0" style={{ background: `${color}22`, border: `1.5px solid ${color}55` }}>
+                <div className="rounded-full p-1.5 lg:p-2.5 shrink-0" style={{ background: `${color}22`, border: `1.5px solid ${color}55` }}>
                   <Icon className="w-4 h-4" style={{ color }} />
                 </div>
                 <div>
                   <span className="text-base font-bold text-[#333]">{label}</span>
-                  <span className="text-sm text-gray-400 block leading-tight">{sublabel}</span>
+                  <span className="text-xs lg:text-sm text-gray-400 block leading-tight">{sublabel}</span>
                 </div>
               </div>
             ))}
@@ -752,19 +825,20 @@ function FoodSticker({ src, style, delay = 0, rotate = 0, size = 72, floatAmp = 
     </motion.div>
   );
 }
-// Ring rendered at 300 px — fits left column without pushing into text
-const RING_SIZE = 300;
+// Ring rendered at 480 px — 1.6× original, more dominant in left column
+const RING_SIZE = 480;
 
 function PhaseRing() {
   return (
     <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
 
-      {/* ── Desktop: ring — left visual column, clear of text (text starts at 50%) ── */}
+      {/* ── Desktop: ring — left visual column, scaled 1.6× for prominence ── */}
       <motion.div
-        className="absolute hidden lg:flex flex-col items-center pointer-events-none z-10"
+        className="absolute hidden lg:flex flex-col items-center pointer-events-none z-[13]"
         style={{
-          left: '10%',
-          top: '10%',
+          left: '6%',
+          top: '50%',
+          translateY: '-50%',
         }}
         initial={{ opacity: 0, scale: 0.72 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -795,8 +869,8 @@ function PhaseRing() {
             transform="rotate(-90 100 100)"
           />
           {/* Centre labels */}
-          <text x="100" y="95" textAnchor="middle" fill={BRAND} fontSize="24" fontWeight="900" fontFamily="Calibri,sans-serif">80:20</text>
-          <text x="100" y="114" textAnchor="middle" fill="#6e6e6e" font-bold fontSize="12" fontFamily="Heebo">הגישה שלנו</text>
+          <text x="100" y="92" textAnchor="middle" fill={BRAND} fontSize="28" fontWeight="900" fontFamily="Calibri,sans-serif">80:20</text>
+          <text x="100" y="116" textAnchor="middle" fill="#6e6e6e" fontSize="11" fontFamily="Heebo">הגישה שלנו</text>
         </svg>
 
         {/* Legend below the ring — no absolute overflow */}
@@ -806,81 +880,135 @@ function PhaseRing() {
             transition={{ delay: 1.0, duration: 0.35 }}
           >
             <div className="w-3 h-3 rounded-full shrink-0" style={{ background: BRAND }} />
-            <span className="text-sm font-semibold" style={{ color: TEXT }}>80% עקביות</span>
+            <span className="text-2xl font-semibold" style={{ color: TEXT }}>80% עקביות</span>
           </motion.div>
           <motion.div className="flex items-center gap-2 justify-center"
             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.25, duration: 0.35 }}
           >
             <div className="w-3 h-3 rounded-full shrink-0" style={{ background: '#C49A7A' }} />
-            <span className="text-sm font-semibold" style={{ color: TEXT }}>20% גמישות</span>
+            <span className="text-2xl font-semibold" style={{ color: TEXT }}>20% גמישות</span>
           </motion.div>
         </div>
 
-        {/* ── Food stickers — orbit d=165px from ring center (150,150), size=110px ── */}
-        {/* 20% treats: evenly spaced in terracotta arc (288°–360°) at θ=300°,324°,348° */}
-        <FoodSticker src={nt3} style={{ left: -48, top:  13 }} delay={0.40} rotate={ -5} size={110} accent={false} floatAmp={9} />
-        <FoodSticker src={nt2} style={{ left:  -2, top: -49 }} delay={0.50} rotate={  -15} size={110} accent={false} floatAmp={7} />
-        <FoodSticker src={nt1} style={{ left:  50, top: -66 }} delay={0.60} rotate={ 50} size={110} accent={false} floatAmp={8} />
-        {/* 80% healthy: evenly spaced in gold arc (0°–288°) at θ=0°,48°,96°,144°,192°,240° */}
-        <FoodSticker src={nt8} style={{ left:  170, top: -60 }} delay={0.45} rotate={  5} size={100} accent={true} floatAmp={10} />
-        <FoodSticker src={nt9}  style={{ left: 250, top: 15 }} delay={0.55} rotate={ -6} size={130} accent={true} floatAmp={9}  />
-        <FoodSticker src={nt4}  style={{ left: 270, top: 120 }} delay={0.65} rotate={  8} size={110} accent={true} floatAmp={7}  />
-        <FoodSticker src={nt7}  style={{ left: 192, top: 240 }} delay={0.70} rotate={ -5} size={110} accent={true} floatAmp={10} />
-        <FoodSticker src={nt10}  style={{ left:  0, top: 236 }} delay={0.75} rotate={  7} size={110} accent={true} floatAmp={6}  />
-        <FoodSticker src={nt5}  style={{ left: -50, top: 150 }} delay={0.80} rotate={ -4} size={110} accent={true} floatAmp={7}  />
+        {/* ── Food stickers — positions ×1.6, sizes ×1.2 of original 300px ring ── */}
+        {/* 20% treats */}
+        <FoodSticker src={nt3} style={{ left: -70, top:  50 }} delay={0.40} rotate={ -5} size={150} accent={false} floatAmp={9} />
+        <FoodSticker src={nt2} style={{ left:  10, top: -35 }} delay={0.50} rotate={ -15} size={150} accent={false} floatAmp={7} />
+        <FoodSticker src={nt1} style={{ left:  100, top:-70 }} delay={0.60} rotate={  50} size={150} accent={false} floatAmp={8} />
+        {/* 80% healthy */}
+        <FoodSticker src={nt8} style={{ left: 272, top: -70 }} delay={0.45} rotate={  5} size={140} accent={true} floatAmp={10} />
+        <FoodSticker src={nt9}  style={{ left: 410, top:  30 }} delay={0.55} rotate={ -6} size={180} accent={true} floatAmp={9}  />
+        <FoodSticker src={nt4}  style={{ left: 450, top: 192 }} delay={0.65} rotate={  8} size={170} accent={true} floatAmp={7}  />
+        <FoodSticker src={nt7}  style={{ left: 307, top: 380 }} delay={0.70} rotate={ -5} size={170} accent={true} floatAmp={10} />
+        <FoodSticker src={nt10}  style={{ left:   0, top: 360 }} delay={0.75} rotate={  7} size={180} accent={true} floatAmp={6}  />
+        <FoodSticker src={nt5}  style={{ left: -80, top: 220 }} delay={0.80} rotate={ -4} size={170} accent={true} floatAmp={7}  />
       </motion.div>
 
-      <ContentPanel mobilePt="pt-0" mobileAlign="items-center">
+      <ContentPanel mobilePt="pt-2" mobileAlign="items-center">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
-          {/* Mobile-only: compact ring + legend inline to save vertical space */}
-          <motion.div variants={item} className="lg:hidden flex items-center justify-center gap-4 mb-4">
-            <svg width="120" height="120" viewBox="0 0 200 200">
-              <circle cx="100" cy="100" r="72" fill="none" stroke="#ddd6bc" strokeWidth="14" />
-              <motion.circle cx="100" cy="100" r="72" fill="none" stroke={BRAND}
-                strokeWidth="14" strokeLinecap="round" strokeDasharray={CIRC}
-                initial={{ strokeDashoffset: CIRC }} animate={{ strokeDashoffset: CIRC * 0.2 }}
-                transition={{ duration: 1.2, delay: 0.2, ease }} transform="rotate(-90 100 100)"
-              />
-              <motion.circle cx="100" cy="100" r="72" fill="none" stroke="#C49A7A"
-                strokeWidth="14" strokeLinecap="round"
-                strokeDasharray={`${CIRC * 0.2} ${CIRC * 0.8}`} strokeDashoffset={`${-CIRC * 0.8}`}
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}
-                transform="rotate(-90 100 100)"
-              />
-              <text x="100" y="95" textAnchor="middle" fill={BRAND} fontSize="28" fontWeight="900" fontFamily="Calibri,sans-serif">80:20</text>
-              <text x="100" y="116" textAnchor="middle" fill="#aaa" fontSize="11" fontFamily="Calibri,sans-serif">הגישה שלנו</text>
-            </svg>
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: BRAND }} />
-                <span className="text-xs font-semibold" style={{ color: TEXT }}>80% עקביות</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: '#C49A7A' }} />
-                <span className="text-xs font-semibold" style={{ color: TEXT }}>20% גמישות</span>
-              </div>
+          {/* Mobile-only: full-size ring with 8 stickers orbiting the ring edge */}
+          <motion.div variants={item} className="lg:hidden flex flex-col items-center mb-2">
+            {/*
+              Container: 340×330px. SVG 240px centered → SVG top-left at (50,45), center at (170,165).
+              Ring rendered radius = 72/200×240 = 86.4px from center.
+              Sticker centers (size/2 = 40px offset) placed ON the ring circumference at 8 positions.
+            */}
+            <div style={{
+              position: 'relative',
+              width: 'min(92vw, 340px)',
+              height: 'min(90vw, 330px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <svg
+                style={{ width: 'min(68vw, 240px)', height: 'min(68vw, 240px)', flexShrink: 0, position: 'relative', zIndex: 1 }}
+                viewBox="0 0 200 200"
+              >
+                <circle cx="100" cy="100" r="72" fill="none" stroke="#ddd6bc" strokeWidth="14" />
+                <motion.circle cx="100" cy="100" r="72" fill="none" stroke={BRAND}
+                  strokeWidth="14" strokeLinecap="round" strokeDasharray={CIRC}
+                  initial={{ strokeDashoffset: CIRC }} animate={{ strokeDashoffset: CIRC * 0.2 }}
+                  transition={{ duration: 1.2, delay: 0.2, ease }} transform="rotate(-90 100 100)"
+                />
+                <motion.circle cx="100" cy="100" r="72" fill="none" stroke="#C49A7A"
+                  strokeWidth="14" strokeLinecap="round"
+                  strokeDasharray={`${CIRC * 0.2} ${CIRC * 0.8}`} strokeDashoffset={`${-CIRC * 0.8}`}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}
+                  transform="rotate(-90 100 100)"
+                />
+                <text x="100" y="88" textAnchor="middle" fill={BRAND} fontSize="36" fontWeight="900" fontFamily="Calibri,sans-serif">80:20</text>
+                <text x="100" y="113" textAnchor="middle" fill="#aaa" fontSize="12" fontFamily="Heebo,sans-serif">הגישה שלנו</text>
+              </svg>
+
+              {/* 8 stickers — centers placed on ring circumference (top → clockwise) */}
+              {/* Top 270°: pizza */}
+              <FoodSticker src={nt1}  style={{ left: '30%', top: '-2%'    }} delay={0.45} rotate={80}  size={80} floatAmp={7} />
+              {/* Top-right 315°: running */}
+              <FoodSticker src={nt8}  style={{ left: '60%', top: '5%'    }} delay={0.55} rotate={5}   size={76} floatAmp={6} />
+              {/* Right 0°: banana */}
+              <FoodSticker src={nt9}  style={{ right: '2%', top: '28%'   }} delay={0.65} rotate={-8}  size={88} floatAmp={7} />
+              {/* Bottom-right 45°: water */}
+              <FoodSticker src={nt4}  style={{ right: '8%', bottom: '19%'}} delay={0.75} rotate={10}  size={80} floatAmp={5} />
+              {/* Bottom 90°: veggie plate */}
+              <FoodSticker src={nt7}  style={{ left: '40%', bottom: '-3%' }} delay={0.80} rotate={-5}  size={82} floatAmp={6} />
+              {/* Bottom-left 135°: bread */}
+              <FoodSticker src={nt5}  style={{ left: '11%', bottom: '8%' }} delay={0.70} rotate={7}   size={88} floatAmp={5} />
+              {/* Left 180°: croissant */}
+              <FoodSticker src={nt3}  style={{ left: '2%', top: '18%'    }} delay={0.40} rotate={-10} size={84} floatAmp={6} />
+              {/* Top-left 225°: wine */}
+              <FoodSticker src={nt2}  style={{ left: '15%', top: '3%'    }} delay={0.50} rotate={-15}   size={90} floatAmp={5} />
             </div>
           </motion.div>
 
-          <PhaseHeading>גישת<br/><Accent>80:20</Accent></PhaseHeading>
-          <motion.p variants={item} className="text-lg text-gray-600 leading-relaxed mb-1">
-            80% מהתזונה מבוססת על בריאות
+          <motion.h2
+            variants={item}
+            className="text-2xl font-heading leading-tight mb-1 lg:hidden"
+            style={{ color: TEXT }}
+            dir="rtl"
+          >
+            גישת <span style={{ color: BRAND }}>80:20</span>
+          </motion.h2>
+          <div className="hidden lg:block">
+            <PhaseHeading>גישת<br/><Accent>80:20</Accent></PhaseHeading>
+          </div>
+
+          {/* Sub-headline */}
+          <motion.p
+            variants={item}
+            style={{ fontSize: 'clamp(0.85rem, 3vw, 2rem)', color: '#777', lineHeight: 1.4 }}
+            className="mb-2 lg:mb-4"
+          >
+           השיטה שמאפשרת לרדת במשקל בלי להפוך את החיים לדיאטה
           </motion.p>
-          <motion.p variants={item} className="text-lg text-gray-600 leading-relaxed mb-1">
-            20% מאכלים לנפש
-          </motion.p>
-          <motion.div variants={item} className="flex flex-col gap-3">
-            <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-4 border border-white/60" dir="rtl">
-              <p className="font-bold text-m text-[#333] mb-1">ה-80% שלך</p>
-              <p className="text-s text-gray-500 leading-relaxed">אוכל מזין, גולמי. <br></br>לדוגמה: פירות וירקות, קטניות, דגנים מלאים, חלבונים רזים, שומנים בריאים ומים.</p>
+          
+
+          <motion.div variants={item} className="flex flex-col gap-2">
+            <div className="bg-white/65 backdrop-blur-sm rounded-xl p-2.5 lg:rounded-2xl lg:p-4 border border-white/60" dir="rtl">
+              <p className="font-bold mb-1" style={{ color: '#333', fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>ה-80% שלך</p>
+              <p style={{ color: '#666', lineHeight: 1.55, fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>
+                אוכל שמזין את הגוף שלך — ירקות, חלבונים, פחמימות טובות, שומנים בריאים ומים.<br></br>
+                 זה הבסיס שמאפשר לך ליהנות מהשאר.
+              </p>
             </div>
-            <div className="rounded-2xl p-4" style={{ background: '#C49A7A18', border: '1px solid #C49A7A40' }} dir="rtl">
-              <p className="font-bold text-m mb-1" style={{ color: '#A0745A' }}>ה-20% שלך</p>
-              <p className="text-s text-gray-500 leading-relaxed">זה מה שיגרום לך לתהליך חיובי, שפוי וכזה שתוכלי להתמיד בו</p>
+            <div className="rounded-xl p-2.5 lg:rounded-2xl lg:p-4" style={{ background: '#C49A7A18', border: '1px solid #C49A7A40' }} dir="rtl">
+              <p className="font-bold mb-1" style={{ color: '#A0745A', fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>ה-20% שלך</p>
+              <p style={{ color: '#666', lineHeight: 1.55, fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>
+                אוכל שמזין את הנשמה שלך — הפיצה של שישי, הגלידה בחופשה. <br></br>
+                 זה חלק מהשיטה, ובגלל זה היא עובדת לאורך זמן.
+              </p>
             </div>
           </motion.div>
+
+          {/* Social proof — desktop only (saves vertical space on mobile) */}
+          <motion.p
+            variants={item}
+            className="hidden lg:block text-center mt-4"
+            style={{ fontSize: 'clamp(0.78rem, 2.5vw, 1rem)', opacity: 0.65, color: '#555' }}
+          >
+            אלפי נשים כבר שינו את הדרך שהן מסתכלות על הצלחת שלהן.
+          </motion.p>
+
         </motion.div>
       </ContentPanel>
     </motion.div>
@@ -1159,41 +1287,44 @@ function PhaseApp() {
       {/* Desktop: phone mockup floats left */}
       <motion.div
         className="absolute hidden lg:flex items-center justify-center pointer-events-none z-10"
-        style={{ left: '6%', top: '30%', transform: 'translateY(-50%)' }}
-        initial={{ opacity: 0, y: 40, scale: 0.86 }}
+        style={{ left: '6%', top: '30%', transform: 'translateY(-50%)' , height: '60vh', width: '25vw' }}
+        initial={{ opacity: 0, y: 40, scale: 1.86 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.65, delay: 0.1, ease: [0.34, 1.2, 0.64, 1] }}
       >
         <AppPhoneMockup />
       </motion.div>
 
-      <ContentPanel>
+      <ContentPanel mobilePt="pt-2">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
-          {/* Mobile: compact phone mockup inside text panel */}
-          <motion.div variants={item} className="lg:hidden mb-4 flex justify-center">
-            <AppPhoneMockup compact />
+          {/* Mobile: compact phone mockup — fully visible at 65% scale via transform */}
+          <motion.div variants={item} className="lg:hidden mb-2 flex justify-center"
+            style={{ height: '35vh', paddingTop: '14px' }}>
+            <div style={{ transform: 'scale(0.80)', transformOrigin: 'top center', flexShrink: 0 }}>
+              <AppPhoneMockup compact />
+            </div>
           </motion.div>
 
           <PhaseHeading>יומן אכילה<br/><Accent>שיתוף הדיאטנית המלווה באפליקציה שלנו</Accent></PhaseHeading>
 
-          <motion.p variants={item} className="hidden lg:block text-base text-gray-600 leading-relaxed mb-5">
-           כבר בפגישה הראשונה נבנה עבורך תפריט אישי, גמיש, מפורט עם הנחיות ושפת תזונה ברורה
-          באפליקציה שלנו תוכלי לצלם את הארוחות ולשתף ישירות עם התזונאית
+          <motion.p variants={item} className="text-base lg:text-xl text-gray-600 leading-relaxed mb-3 lg:mb-5" dir="rtl">
+            כבר בפגישה הראשונה נבנה עבורך תפריט אישי, גמיש, מפורט עם הנחיות ושפת תזונה ברורה. <br></br>
+            באפליקציה שלנו תוכלי לצלם את הארוחות ולשתף ישירות עם התזונאית.
           </motion.p>
 
-          <motion.div variants={item} className="flex flex-col gap-2.5">
+          <motion.div variants={item} className="flex flex-col gap-2 lg:gap-2.5">
             {[
               'תפריט אישי מותאם כולל הנחיות מדויקות',
-              ' צילום יומני אכילה באפליקציה ושיתוף עם התזונאית',
-              'התזונאית כותבת פידבק בכל יום בווצאפ',
-              'ניתן לשאול שאלות ולעלות קשיים שיקבלו מענה על ידי התזונאית האישית',
-              'במהלך השנה מתקיימות הרצאות תזונה ייחודיות אונליין לקהילה על ידי קים',
-              'כל מטופלת זכאית לקיטים שלנו (קובץ דיגיטלי) הכוללים דגשים ,פרקטיקה והתנהלות תזונתית',
+              'צילום יומני אכילה באפליקציה ושיתוף ישיר עם הדיאטנית',
+              'פידבק כתוב מהדיאטנית בכל יום בווצאפ',
+              'מענה לשאלות ופתרון קשיים שעולים לאורך התהליך',
+              'הרצאות תזונה אונליין לקהילה של קים',
+              'קיטים דיגיטליים עם מגוון מתכונים קלים, טעימים ופרקטיים — לגיוון התזונה ביומיום',
             ].map((f) => (
               <div key={f} className="flex items-center gap-3" dir="rtl">
                 <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: LIVEAT_GREEN }} />
-                <span className="text-sm font-semibold text-[#333]">{f}</span>
+                <span className="text-base lg:text-lg font-semibold text-[#333]">{f}</span>
               </div>
             ))}
           </motion.div>
@@ -1206,22 +1337,22 @@ function PhaseApp() {
 // ─────────────────────────────────────────────────────────────────────────────
 // Phase 6 · Support + CTA
 // ─────────────────────────────────────────────────────────────────────────────
-const chatBubbles = [
-  { text: 'אפשר להחליף את ארוחת הערב?',              isKim: false },
-  { text: 'ברור! הנה 3 אופציות שמתאימות לך 💪',      isKim: true  },
-  { text: 'היום פחות הסתדרתי...',                     isKim: false },
-  { text: 'זה חלק מהדרך. ממשיכות מהארוחה הבאה 🌿',   isKim: true  },
-];
-
 // const chatBubbles = [
-//   { text: 'תאריך 23.3 משקל 67.5',      isKim: true  },
-//   { text: 'תאריך 29.3 משקל 66.6',      isKim: true  },
-//   { text: 'ירידה של 900 גרם אלופה!!! 🎉🎉🎉',      isKim: true  },
-//   { text: 'אני לא מפספסת ארוחות',              isKim: false },
-//   { text: 'שימי לב שאם יש לך ארוחה יותר גדולה במהלך היום - לדייק בארוחה שבאה',   isKim: true  },
+//   { text: 'אפשר להחליף את ארוחת הערב?',              isKim: false },
+//   { text: 'ברור! הנה 3 אופציות שמתאימות לך 💪',      isKim: true  },
+//   { text: 'היום פחות הסתדרתי...',                     isKim: false },
+//   { text: 'זה חלק מהדרך. ממשיכות מהארוחה הבאה 🌿',   isKim: true  },
 // ];
 
-const CHAT_TIMES = ['10:32', '10:33', '10:45', '10:46'];
+const chatBubbles = [
+  { text: 'יצאנו למסעדה ואני מתלבטת', isKim: false },
+  { text: 'שלחי לי מה יש בתפריט', isKim: true },
+  { text: 'דג, המבורגר, פסטה וסלטים', isKim: false },
+  { text: 'נבחר משהו שגם טעים לך וגם מתאים לתהליך', isKim: true },
+  { text: 'המטרה היא שתדעי להתנהל גם כשאין יום רגיל', isKim: true },
+];
+
+const CHAT_TIMES = ['10:32', '10:35', '10:37', '10:42', '10:43', '10:44'];
 
 /* Three bouncing dots — WhatsApp typing indicator */
 function TypingDots() {
@@ -1257,10 +1388,14 @@ function WaPhoneMockup({ compact = false }) {
     const ts = [
       setTimeout(() => setShown(1),                             350),   // user msg 1
       setTimeout(() => setTyping(true),                         750),   // kim typing…
-      setTimeout(() => { setTyping(false); setShown(2); },      1250),  // kim msg 1
-      setTimeout(() => setShown(3),                             1900),  // user msg 2
+      setTimeout(() => { setTyping(false); setShown(2); },      1250),  // kim msg 2
+      setTimeout(() => setShown(3),                             1900),  // user msg 3
       setTimeout(() => setTyping(true),                         2300),  // kim typing…
-      setTimeout(() => { setTyping(false); setShown(4); },      2800),  // kim msg 2
+      setTimeout(() => { setTyping(false); setShown(4); },      2800),  // kim msg 4
+      setTimeout(() => setTyping(true),                         3200),  // kim typing…
+      setTimeout(() => { setTyping(false); setShown(5); },      3700),  // kim msg 5
+      setTimeout(() => setTyping(true),                         4100),  // kim typing…
+      setTimeout(() => { setTyping(false); setShown(6); },      4550),  // kim msg 6
     ];
     return () => ts.forEach(clearTimeout);
   }, []);
@@ -1378,7 +1513,7 @@ function WaPhoneMockup({ compact = false }) {
                   initial={{ opacity: 0, scale: 0.85, y: 6 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.85, y: 6 }}
-                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div style={{ background: '#fff', borderRadius: '3px 10px 10px 10px', boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}>
                     <TypingDots />
@@ -1443,7 +1578,7 @@ function PhaseSupport() {
       {/* ── Desktop: iPhone WA mockup in left column ── */}
       <motion.div
         className="absolute hidden lg:flex items-center justify-center pointer-events-none z-10"
-        style={{ left: '6%', top: '30%', transform: 'translateY(-50%)' }}
+        style={{ left: '8%', top: '30%', transform: 'translateY(-50%)' }}
         initial={{ opacity: 0, y: 36, scale: 0.88 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.65, delay: 0.08, ease: [0.34, 1.2, 0.64, 1] }}
@@ -1451,23 +1586,32 @@ function PhaseSupport() {
         <WaPhoneMockup />
       </motion.div>
 
-      <ContentPanel>
+      <ContentPanel mobilePt="pt-2">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
-          {/* Mobile: compact iPhone WA mockup — centered before heading */}
-          <motion.div variants={item} className="lg:hidden flex justify-center mb-5">
-            <WaPhoneMockup compact />
+          {/* Mobile: compact WA mockup — fully visible at 65% scale via transform */}
+          <motion.div variants={item} className="lg:hidden flex justify-center mb-2"
+            style={{ height: '45vh', paddingTop: '5vh' }}>
+            <div style={{ transform: 'scale(0.85)', transformOrigin: 'top center', flexShrink: 0 }}>
+              <WaPhoneMockup compact />
+            </div>
           </motion.div>
 
-          <PhaseHeading>ליווי יומיומי.<br/><Accent>כל יום.</Accent></PhaseHeading>
-          <motion.p variants={item} className="hidden sm:block text-lg text-gray-600 leading-relaxed mb-4 lg:mb-5">
-            וואטסאפ ישיר עם התזונאית שלך, תגובה אנושית ותמיכה מלאה בתהליך ובמטרות שלך.
+          <PhaseHeading>ליווי יומיומי<br/><Accent>וכלים שנשארים איתך</Accent></PhaseHeading>
+
+          <motion.p variants={item} className="text-base lg:text-xl text-gray-600 leading-relaxed mb-3 lg:mb-5" dir="rtl">
+           בתוכנית שלנו את לא רק מקבלת תפריט{' '}
+            <strong style={{ color: BRAND }}>את לומדת על התזונה שלך</strong>{' '}<br></br>
+            כך שתדעי{' '}
+            <strong style={{ color: BRAND }}>לנהל אותה</strong>,
+            {' '}גם{' '}
+            <strong style={{ color: BRAND }}>שהתהליך מסתיים</strong>.
           </motion.p>
           <motion.div variants={item} className="flex flex-col gap-2 lg:gap-2.5 mb-3 lg:mb-7">
-            {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות'].map((f) => (
+            {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה (בתוכנית נבחרת)', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות עם תזונאית קלינית'].map((f) => (
               <div key={f} className="flex items-center gap-3" dir="rtl">
                 <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: BRAND }} />
-                <span className="text-sm font-semibold text-[#333]">{f}</span>
+                <span className="text-lg font-semibold text-[#333]">{f}</span>
               </div>
             ))}
           </motion.div>
@@ -1476,7 +1620,7 @@ function PhaseSupport() {
               href="https://wa.link/ntdrz1"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="קביעת ייעוץ חינם עם קים בוואטסאפ"
+              aria-label="קביעת ייעוץ חינם עם קים בווצאפ"
               className="block sm:inline-block"
               whileHover={{ y: -4, scale: 1.05, filter: 'drop-shadow(0 8px 24px rgba(139,127,75,0.50))' }}
               whileTap={{ scale: 0.97 }}
@@ -1531,11 +1675,11 @@ export default function ScrollStorySection() {
   const kimScale   = useSpring(_kimScale, springCfg);
   const kimY       = useTransform(scrollYProgress, [0, 1], [0, -60]);
 
-  // Video overlay — covers phases 2 (Plate) + bridges into phase 3 (Ring)
-  const plateScrollProgress = useTransform(scrollYProgress, [0.29, 0.52], [0, 1]);
+  // Video overlay — covers phase 2 (Plate) only; fades out completely before PhaseRing (0.43)
+  const plateScrollProgress = useTransform(scrollYProgress, [0.29, 0.40], [0, 1]);
   const _videoOpacity = useTransform(
     scrollYProgress,
-    [0.25, 0.30, 0.48, 0.54],
+    [0.25, 0.30, 0.39, 0.43],
     [0, 1, 1, 0]
   );
   const videoOpacity = useSpring(_videoOpacity, springCfg);
@@ -1578,11 +1722,11 @@ export default function ScrollStorySection() {
         </motion.div>
 
         {/* ── Video layer — responsive ──────────────────────────────────────────
-             Mobile  : top strip matching Kim's area — height 160px, pt-3
+             Mobile  : top strip — 48vh so the plate fills a meaningful portion
              Desktop : left column, 52% wide, full height                       */}
         <motion.div
           className="absolute pointer-events-none
-                     top-0 left-0 right-0 h-[160px] pt-3
+                     top-0 left-0 right-0 h-[48vh]
                      lg:inset-y-0 lg:right-auto lg:h-auto lg:pt-0 lg:w-[52%]"
           style={{ opacity: videoOpacity, zIndex: 11 }}
         >
@@ -1672,7 +1816,7 @@ export default function ScrollStorySection() {
         {/* ── Bottom banner ── */}
         <div className="absolute bottom-0 left-0 right-0 z-40" style={{ background: `${BRAND}ee` }}>
           <p className="text-white text-center text-sm md:text-base font-medium py-3 px-6">
-            ליווי תזונתי אישי עם דיאטנית קלינית, אפליקציה תומכת וקהילה סגורה
+           תוכנית תזונה מדויקת וממוקדת, ליווי תזונתי אישי עם דיאטנית קלינית, אפליקציה תומכת וקהילה סגורה
           </p>
         </div>
       </div>

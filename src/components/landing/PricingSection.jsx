@@ -42,7 +42,7 @@ export default function PricingSection() {
       featuresTitle: 'מה מקבלים?',
       features: [
         'פגישה אישית עם תזונאית אונליין בכל חודש (3 פגישות)',
-        'מעקב וליווי אישי יומיומי וצמוד בוואטסאפ',
+        'מעקב וליווי אישי יומיומי וצמוד בווצאפ',
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאת זום חודשית עם קים לכל הקהילה'
       ],
@@ -62,7 +62,7 @@ export default function PricingSection() {
       featuresTitle: 'מה מקבלים?',
       features: [
         'פגישה אישית עם תזונאית אונליין בכל חודש (6 פגישות)',
-        'מעקב וליווי אישי יומיומי וצמוד בוואטסאפ',
+        'מעקב וליווי אישי יומיומי וצמוד בווצאפ',
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאת זום חודשית עם קים לכל הקהילה'
       ],
@@ -83,8 +83,8 @@ export default function PricingSection() {
       featuresTitle: 'מה מקבלים?',
       features: [
         'פגישה אישית עם תזונאית אונליין בכל חודש (11 פגישות)',
-        'מעקב וליווי אישי יומיומי וצמוד בוואטסאפ',
-        'קבוצת וואטסאפ סגורה לקהילה עם התזונאית',
+        'מעקב וליווי אישי יומיומי וצמוד בואי לדבר איתנו בווצאפ',
+        'קבוצת ווצאפ סגורה לקהילה עם התזונאית',
         '2 ערכות קיט לבחירתך במתנה',
         'פגישה אישית עם קים – ייעוץ על נושאים תזונתיים ואישיים לבחירתך',
         'הרצאת זום חודשית עם קים לכל הקהילה'
@@ -162,7 +162,7 @@ export default function PricingSection() {
                 
                 {/* Header */}
                 <div className="text-center mb-6 relative">
-                  <h3 className={`text-6xl md:text-7xl font-bold mb-1 font-gveret ${plan.headerColor} relative inline-block`}>
+                  <h3 className={`text-6xl md:text-7xl font-bold mb-1 font-heading ${plan.headerColor} relative inline-block`}>
                     {plan.name}
                     {plan.name === 'גולד' && <span className="absolute -top-2 -left-6 text-4xl">*</span>}
                   </h3>
@@ -193,7 +193,7 @@ export default function PricingSection() {
 
                 {/* Features */}
                 <div>
-                  <h4 className={`text-2xl font-gveret ${plan.headerColor} mb-4 text-right font-bold `}>
+                  <h4 className={`text-2xl font-heading ${plan.headerColor} mb-4 text-right font-bold `}>
                     {plan.featuresTitle}
                   </h4>
                   <ul className="space-y-3 text-right">

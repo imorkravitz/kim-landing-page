@@ -9,6 +9,7 @@ module.exports = {
             sans:      ['"Assistant"', 'sans-serif'],  // global body default
             assistant: ['"Assistant"', 'sans-serif'],
             heebo:     ['"Heebo"', 'sans-serif'],
+            heading:   ['"Secular One"', '"Assistant"', 'sans-serif'],
             gveret:    ['"Gveret Levin Alef"', 'sans-serif'],
             calibri:   ['"Calibri"', 'sans-serif'],
             calibri_bold: ['"Calibri bold"', 'sans-serif'],

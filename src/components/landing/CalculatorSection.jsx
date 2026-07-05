@@ -131,10 +131,10 @@ export default function CalculatorSection() {
     <section id="calculator" className="py-20 md:py-28 bg-gradient-to-b from-white to-[#F5F3ED]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-gray-900 mb-4">
             מחשבון תזונה <span className="text-[#8B7F4B]">אישי</span>
           </h2>
-          <p className="text-xl text-gray-500">גלי את הצרכים התזונתיים שלך בכמה צעדים פשוטים</p>
+          <p className="text-xl text-gray-500">כך תדעי מה הצרכים התזונתיים שלך בכמה צעדים פשוטים</p>
         </div>
 
         <div className="max-w-2xl mx-auto">
@@ -336,7 +336,7 @@ export default function CalculatorSection() {
                     >
                       <Button className="bg-green-500 text-white px-8 py-5 rounded-xl shadow-[0_4px_6px_-1px_rgba(34,197,94,0.4)] hover:bg-green-600 hover:shadow-[0_10px_15px_-3px_rgba(34,197,94,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200">
                         <WhatsAppIcon className="w-5 h-5 ml-2" />
-                        דברי איתי בוואטסאפ
+                          בואי לדבר איתנו בווצאפ
                       </Button>
                     </a>
                   </div>

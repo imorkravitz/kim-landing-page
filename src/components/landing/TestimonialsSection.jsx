@@ -323,12 +323,9 @@ export default function TestimonialsSection() {
           className="text-center mb-16"
         >
           <div className="flex justify-center mb-4">
-            <div className="border border-[#8B7F4B]/30 bg-[#8B7F4B]/10 py-2 px-4 rounded-lg text-[#8B7F4B] font-medium">
-              תוצאות
-            </div>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            כשהמסגרת חכמה והליווי עקבי = <span className="text-[#8B7F4B]">רואים שינוי</span>
+          <h2 className="text-4xl md:text-5xl font-heading text-slate-900 mb-6">
+            כשהמסגרת חכמה והליווי עקבי - <span className="text-[#8B7F4B]">השינוי מגיע</span>
           </h2>
           <p className="text-xl text-slate-700 max-w-3xl mx-auto">
             התוצאות מדברות בעד עצמן.<br></br> צילומי מסך ושיתופים של לקוחות מרוצים שהצליחו לשנות את אורח החיים שלהם
@@ -350,7 +347,7 @@ export default function TestimonialsSection() {
               className="bg-[#8B7F4B] text-white rounded-2xl px-8 py-6 text-lg font-medium shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[#6d6339] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
             >
               <WhatsAppIcon className="w-5 h-5 ml-2" />
-              רוצה מסגרת דומה? התחילי עכשיו
+             צאו איתנו לדרך!
             </Button>
           </a>
           <Link to={createPageUrl('SuccessStories')}>

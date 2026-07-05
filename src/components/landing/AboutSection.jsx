@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { GraduationCap, Heart, Users, Award } from 'lucide-react';
+import { GraduationCap, Stethoscope, Users, Award } from 'lucide-react';
 import {
   motion,
   useInView,
@@ -27,10 +27,10 @@ const staggerV = {
 
 /* ── Credential strip data ── */
 const credentials = [
-  { Icon: GraduationCap, title: 'B.Sc תזונה', sub: 'האוניברסיטה העברית' },
-  { Icon: Heart,         title: 'סטודנטית לרפואה', sub: '' },
-  { Icon: Award,         title: '12 שנות ניסיון', sub: 'קליני' },
-  { Icon: Users,         title: '5,000+ מטופלות', sub: 'מרוצות' },
+  { Icon: GraduationCap, title: 'B.Sc תזונה',         sub: 'האוניברסיטה העברית' },
+  { Icon: Stethoscope,   title: 'סטודנטית לרפואה',    sub: 'אונירסיטת תל אביב' },
+  { Icon: Award,         title: '12 שנות ניסיון',     sub: '' },
+  { Icon: Users,         title: '5,000+ מטופלות',     sub: '' },
 ];
 
 export default function AboutSection() {
@@ -79,7 +79,7 @@ export default function AboutSection() {
             {/* Bio heading — editorial size, not hero */}
             <motion.h2
               variants={itemV}
-              className="font-gveret text-3xl md:text-4xl leading-snug mb-6"
+              className="font-heading text-3xl md:text-4xl leading-snug mb-6"
               style={{ color: BRAND, textWrap: 'balance' }}
             >
               מי עומדת מאחורי הכל?
@@ -88,11 +88,11 @@ export default function AboutSection() {
             {/* Intro — slightly larger for hierarchy */}
             <motion.p
               variants={itemV}
-              className="text-[1.125rem] text-gray-800 leading-relaxed mb-5"
+              className="text-base text-gray-600 leading-relaxed mb-5"
               style={{ textWrap: 'pretty' }}
             >
-              היי, אני <strong>קים גפסון קרביץ</strong> – דיאטנית קלינית, סטודנטית
-              לרפואה, נשואה לאור ואמא לליאו וים.
+              היי, אני <strong>קים גפסון קרביץ</strong> בוגרת תואר בתזונה באוניברסיטה
+              העברית וסטודנטית לרפואה באוניברסיטת תל אביב, נשואה לאור ואמא לליאו וים.
             </motion.p>
 
             {/* Story paragraph 1 */}
@@ -101,9 +101,9 @@ export default function AboutSection() {
               className="text-gray-600 leading-relaxed mb-5"
               style={{ textWrap: 'pretty' }}
             >
-              בגיל 23 חוויתי שינוי חיים עמוק כשחליתי בסרטן מסוג הודג'קין לימפומה.
-              מתוך התהליך הזה בחרתי להחלים – בגוף ובנפש – וליצור לעצמי אורח חיים
-              מאוזן, נעים ומדויק.
+              בגיל 23 חוויתי מהפך בחיים כשחליתי בסרטן מסוג הודג'קין לימפומה.
+              מתוך התהליך הזה בחרתי להחלים בגוף ובנפש וליצור לעצמי אורח חיים בריא
+              מאוזן ובלי לוותר על ההנאות.
             </motion.p>
 
             {/* Story paragraph 2 */}
@@ -115,7 +115,7 @@ export default function AboutSection() {
               בדרך למדתי שאיזון אמיתי לא נמצא בקיצוניות, אלא בהקשבה, בגמישות,
               ובהתאמה אישית. כך נולדה שיטת{' '}
               <strong className="text-gray-800">"תזונה מאפשרת"</strong> – גישה מקצועית
-              וחומלת שמתבססת על עקרון האיזון בגישת 80:20.
+              שמתבססת על עקרון האיזון בגישת 80:20.
             </motion.p>
 
             {/* Pull quote — typographic, no side border */}
@@ -218,12 +218,12 @@ export default function AboutSection() {
                 }}
               >
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center mb-3"
+                  className="w-14 h-14 rounded-full flex items-center justify-center mb-3"
                   style={{ background: `${BRAND}12` }}
                 >
-                  <Icon className="w-4 h-4" style={{ color: BRAND }} />
+                  <Icon className="w-6 h-6" style={{ color: BRAND }} />
                 </div>
-                <p className="font-semibold text-gray-900 text-sm leading-tight mb-0.5">
+                <p className="font-semibold text-gray-900 text-base leading-tight mb-0.5">
                   {title}
                 </p>
                 {sub && (

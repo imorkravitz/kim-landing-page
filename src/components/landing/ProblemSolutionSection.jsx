@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { MessageCircle, Smartphone, Users } from 'lucide-react';
+import { MessageCircle, Smartphone, Users, UtensilsCrossed } from 'lucide-react';
 
 const BRAND   = '#8B7F4B';
 const TERRA   = '#C49A7A';
@@ -70,29 +70,23 @@ const pillars = [
   {
     Icon: MessageCircle,
     color: WA_GREEN,
-    title: 'ליווי יומי ישיר',
-    desc:  'ווצאפ ישיר עם הדיאטנית. פידבק אמיתי, תגובה מקצועית.',
+    title: 'ליווי אישי יומיומי',
+    desc:  'ווצאפ ישיר עם הדיאטנית שלך, פידבק אישי ומענה מקצועי לאורך הדרך',
   },
   {
     Icon: Smartphone,
     color: BRAND,
-    title: 'אפליקציה תומכת שתעזור לך ללמוד על התזונה שלך',
-    desc:  'צלמי כל ארוחה, עקבי אחר מדדים ויעדים, ושתפי ישירות עם הדיאטנית שלך.',
+    title: 'אפליקציה תומכת',
+    desc:  'צילום ארוחות, מעקב אחר מדדים וכלים שיעזרו לך להתמיד טוב יותר.',
   },
   {
     Icon: Users,
     color: TERRA,
-    title: 'קהילה + תפריט מותאם אישית + תוכן',
-    desc:  'קבוצת נשים שמבינות אותך, תפריט אישי גמיש, והרצאות תזונה חיות לאורך הדרך.',
+    title: 'קהילה',
+    desc:  'הרצאות חודשיות, תכנים פרקטיים וקיטים דיגיטליים עם מתכונים ורעיונות לגיוון התזונה.',
   },
 ];
 
-/* ── Pain points ── */
-const pains = [
-  'את יודעת מה בריא — הבעיה היא להתמיד כשהחיים עמוסים',
-  'כל ניסיון הרגיש כמו ויתור, לא כמו בחירה',
-  'כוונות טובות נגמרו בארוחת שישי הראשונה',
-];
 
 export default function ProblemSolutionSection() {
   return (
@@ -107,15 +101,13 @@ export default function ProblemSolutionSection() {
         <Reveal className="text-center mb-14">
           <motion.h2
             variants={fade}
-            className="text-4xl md:text-5xl lg:text-[3.5rem] font-gveret text-gray-900 mb-3 leading-tight"
+            className="text-4xl md:text-5xl lg:text-[3.5rem] font-heading text-gray-900 mb-3 leading-tight"
             style={{ textWrap: 'balance' }}
           >
-            הדרך החכמה לתזונה{' '}
-            <span style={{ color: BRAND }}>שאת מחפשת</span>
+            לא עוד ניסיון לרדת במשקל.{' '}<br></br>
+            <span style={{ color: BRAND }}>שיטה שמלמדת אותך להצליח באמת.</span>
           </motion.h2>
-          <motion.p variants={fade} className="text-lg text-gray-500">
-            לא עוד מאמץ. שיטה שמתאימה לחיים האמיתיים שלך.
-          </motion.p>
+   
         </Reveal>
 
         {/* ── PROBLEM ── */}
@@ -132,41 +124,25 @@ export default function ProblemSolutionSection() {
               className="text-2xl md:text-[1.6rem] font-bold text-gray-800 leading-snug mb-6"
               style={{ textWrap: 'balance' }}
             >
-              ניסית. הסתדרת שבוע. ואז הגיעה ישיבה, ארוחת שישי, יום עמוס — והכל התפרק.
+             ניסית לבד. החזקת כמה ימים ואז
+             יום עמוס, ארוחת שישי, מסעדה, חופשה או רגע של עייפות — ושוב היה קל לחזור להרגלים הישנים.
+
             </p>
-            <div className="flex flex-col gap-3">
-              {pains.map((text) => (
-                <motion.p
-                  key={text}
-                  variants={fade}
-                  className="text-gray-500 text-base leading-relaxed flex items-start gap-3"
-                >
-                  <span
-                    className="shrink-0 mt-[3px] text-xs font-black"
-                    style={{ color: TERRA }}
-                  >
-                    ●
-                  </span>
-                  {text}
-                </motion.p>
-              ))}
-            </div>
+            <p
+              className="text-2xl md:text-[1.6rem] font-bold text-gray-800 leading-snug mb-6"
+              style={{ textWrap: 'balance' }}
+            >
+            בדיוק בשביל זה בנינו שיטה שלא מסתיימת בתפריט.<br></br>
+            שיטה שמלמדת אותך להבין את התזונה שלך, לקבל החלטות טובות יותר ולדעת איך להתנהל גם כשהשגרה לא מושלמת.
+            </p>
+      
           </motion.div>
         </Reveal>
 
         <Connector />
 
-        {/* ── SOLUTION ── */}
+        {/* ── SOLUTION pillars ── */}
         <Reveal className="mb-1">
-          <motion.div variants={fade} className="mb-5">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">
-              מה שקים מביאה — מערכת שלמה
-            </h3>
-            <p className="text-gray-500 text-sm">
-              לא תוכנית. ליווי אמיתי שמתחיל ביום הראשון.
-            </p>
-          </motion.div>
-
           <div className="flex flex-col gap-3">
             {pillars.map(({ Icon, color, title, desc }) => (
               <motion.div
@@ -202,49 +178,35 @@ export default function ProblemSolutionSection() {
 
         <Connector />
 
-        {/* ── RESULT ── */}
+        {/* ── תפריט מותאם — featured card ── */}
         <Reveal>
           <motion.div
             variants={fade}
-            className="rounded-3xl p-7 md:p-10 text-center"
+            whileHover={{
+              y: -3,
+              boxShadow: `0 10px 32px rgba(0,0,0,0.10)`,
+              transition: { duration: 0.22, ease: 'easeOut' },
+            }}
+            className="flex items-start gap-5 p-5 rounded-2xl"
             style={{
-              background: `${BRAND}0C`,
-              border: `1px solid ${BRAND}22`,
+              background: 'rgba(255,255,255,0.92)',
+              border: '1px solid rgba(0,0,0,0.07)',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
+              willChange: 'transform',
             }}
           >
-            <h3
-              className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 leading-snug"
-              style={{ textWrap: 'balance' }}
+            <div
+              className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
+              style={{ background: `${BRAND}18` }}
             >
-              תזונה שמרגישה כמו חיים —{' '}
-              <span style={{ color: BRAND }}>לא כמו דיאטה</span>
-            </h3>
-            <p className="text-gray-600 text-base leading-relaxed mb-8 max-w-md mx-auto">
-              אלפי לקוחות מרוצים ששינו את מערכת היחסים שלהם עם האוכל. לא על ידי ויתור —
-              על ידי ליווי שמתאים לאורח החיים שלהם.
-            </p>
-            <a
-              href="https://wa.link/ntdrz1"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <motion.button
-                whileHover={{
-                  scale: 1.04,
-                  boxShadow: `0 10px 28px rgba(37,211,102,0.38)`,
-                  transition: { duration: 0.18 },
-                }}
-                whileTap={{ scale: 0.97, transition: { duration: 0.1 } }}
-                className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-full text-base font-bold cursor-pointer"
-                style={{
-                  background: WA_GREEN,
-                  boxShadow: '0 4px 16px rgba(37,211,102,0.30)',
-                }}
-              >
-                <WaIcon />
-                דברי איתי בוואטסאפ
-              </motion.button>
-            </a>
+              <UtensilsCrossed className="w-5 h-5" style={{ color: BRAND }} />
+            </div>
+            <div>
+              <h4 className="font-bold text-gray-900 text-base mb-1">תפריט מותאם אישית</h4>
+              <p className="text-gray-500 text-sm leading-relaxed">
+                מותאם לאורך החיים, ליכולות, למטרות ולאופי שלך.
+              </p>
+            </div>
           </motion.div>
         </Reveal>
 

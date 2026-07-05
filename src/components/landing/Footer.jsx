@@ -89,7 +89,7 @@ export default function Footer() {
                   className="flex items-center gap-2 hover:text-white transition-colors"
                 >
                   <Phone className="w-5 h-5" />
-                  שירות לקוחות בוואטסאפ
+                  שירות לקוחות בווצאפ
                 </a>
               </li>
             </ul>
