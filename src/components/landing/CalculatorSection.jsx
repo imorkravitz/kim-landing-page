@@ -336,7 +336,7 @@ export default function CalculatorSection() {
                     >
                       <Button className="bg-green-500 text-white px-8 py-5 rounded-xl shadow-[0_4px_6px_-1px_rgba(34,197,94,0.4)] hover:bg-green-600 hover:shadow-[0_10px_15px_-3px_rgba(34,197,94,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200">
                         <WhatsAppIcon className="w-5 h-5 ml-2" />
-                          בואי לדבר איתנו בווצאפ
+                          לקביעת ייעוץ התאמה חינם
                       </Button>
                     </a>
                   </div>

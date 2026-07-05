@@ -113,28 +113,32 @@ export default function Home() {
       `}</style>
       
       <ScrollStorySection />
-      
+
       <ScrollVideoBackground>
         <ProblemSolutionSection />
-        <ProcessSection />
       </ScrollVideoBackground>
-      
-      <AnimatedSection>
-        <PricingSection />
-      </AnimatedSection>
-      
-      <AnimatedSection>
-        <AppSection />
-      </AnimatedSection>
-      
-      <AnimatedSection>
-        <TestimonialsSection />
-      </AnimatedSection>
-      
+
+      {/* Trust before price: who Kim is → social proof → how it works → product → pricing */}
       <AnimatedSection>
         <AboutSection />
       </AnimatedSection>
-      
+
+      <AnimatedSection>
+        <TestimonialsSection />
+      </AnimatedSection>
+
+      <AnimatedSection>
+        <ProcessSection />
+      </AnimatedSection>
+
+      <AnimatedSection>
+        <AppSection />
+      </AnimatedSection>
+
+      <AnimatedSection>
+        <PricingSection />
+      </AnimatedSection>
+
       <AnimatedSection>
         <CalculatorSection />
       </AnimatedSection>
