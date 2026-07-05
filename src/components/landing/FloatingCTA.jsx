@@ -48,7 +48,7 @@ export default function FloatingCTA() {
                 </div>
               </div>
               <div>
-                <p className="font-semibold text-gray-900">מענה אוטומטי 24/7</p>
+                <p className="font-semibold text-gray-900">צ'אט חכם — זמין 24/7</p>
                 <p className="text-xs text-gray-500">מענה מיידי בכל שעה</p>
               </div>
             </a>

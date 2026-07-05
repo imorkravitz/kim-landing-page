@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, MessageCircle, Phone, MapPin } from 'lucide-react';
+import { Instagram, MessageCircle, Phone, MapPin, Smartphone } from 'lucide-react';
 
 // @ts-ignore
 import Logo from '../../assets/icons/KIM - LOGO 2.png';
@@ -32,8 +32,9 @@ export default function Footer() {
                   href="https://onelink.to/zter3n"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-white transition-colors flex items-center gap-2"
                 >
+                  <Smartphone className="w-4 h-4" />
                   הורדת אפליקציית Liveat
                 </a>
               </li>
@@ -48,28 +49,6 @@ export default function Footer() {
                   אינסטגרם
                 </a>
               </li>
-              <li>
-                <a 
-                  href="https://wa.link/ntdrz1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors flex items-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  מענה אוטומטי 24/7
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="https://wa.link/r2etxn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors flex items-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  שירות לקוחות
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -77,19 +56,26 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-4 text-gray-800">יצירת קשר</h4>
             <ul className="space-y-3 text-gray-400">
-              <li className="flex items-start gap-2">
-                <MapPin className="w-5 h-5 shrink-0 mt-0.5" />
-                <span>ילדי טהרן 5, ראשון לציון - הולמס פלייס</span>
+              <li>
+                <a
+                  href="https://wa.link/ntdrz1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  צ'אט חכם בווצאפ — זמין 24/7
+                </a>
               </li>
               <li>
-                <a 
+                <a
                   href="https://wa.link/r2etxn"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-white transition-colors"
                 >
                   <Phone className="w-5 h-5" />
-                  שירות לקוחות בווצאפ
+                  שירות לקוחות — מענה אנושי
                 </a>
               </li>
             </ul>
@@ -98,6 +84,11 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
           <p>© {new Date().getFullYear()} KIM - Your Health My Mission. כל הזכויות שמורות.</p>
+          <p className="mt-2">
+            <a href="/Accessibility" className="underline underline-offset-4 hover:text-gray-300 transition-colors">
+              הצהרת נגישות
+            </a>
+          </p>
         </div>
       </div>
     </footer>

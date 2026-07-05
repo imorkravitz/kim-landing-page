@@ -81,15 +81,23 @@ export default function ScrollVideoBackground({ children }) {
       pendingRef.current = false;
     };
 
-    video.addEventListener('seeked',     paint);
-    video.addEventListener('loadeddata', paint);
+    video.addEventListener('seeked',         paint);
+    video.addEventListener('loadeddata',     paint);
+    video.addEventListener('canplaythrough', paint);
+    video.load(); // explicit — some browsers defer buffering of display:none videos
 
     // Repaint on resize / orientation change (mobile chrome bar)
     const ro = new ResizeObserver(() => paint());
     ro.observe(canvas);
 
     // ── RAF scrub loop ───────────────────────────────────────────────────────
+    // pendingSince: watchdog — if a seek never fires `seeked` (unbuffered
+    // region, browser quirk), the pending flag would freeze the scrub forever.
+    let pendingSince = 0;
     const tick = () => {
+      if (pendingRef.current && performance.now() - pendingSince > 250) {
+        pendingRef.current = false; // seek lost — recover instead of freezing
+      }
       if (!pendingRef.current) {
         const diff = targetRef.current - smoothRef.current;
         if (Math.abs(diff) > 0.0004) {
@@ -99,6 +107,7 @@ export default function ScrollVideoBackground({ children }) {
             const t = v * video.duration;
             if (Math.abs(video.currentTime - t) > 1 / 60) {
               pendingRef.current = true;
+              pendingSince = performance.now();
               video.currentTime  = t;
             }
           }
@@ -111,8 +120,9 @@ export default function ScrollVideoBackground({ children }) {
     return () => {
       cancelAnimationFrame(rafRef.current);
       ro.disconnect();
-      video.removeEventListener('seeked',     paint);
-      video.removeEventListener('loadeddata', paint);
+      video.removeEventListener('seeked',         paint);
+      video.removeEventListener('loadeddata',     paint);
+      video.removeEventListener('canplaythrough', paint);
     };
   }, []);
 

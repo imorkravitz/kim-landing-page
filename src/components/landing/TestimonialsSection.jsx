@@ -8,87 +8,87 @@ import { createPageUrl } from '@/utils';
 import { ArrowLeft } from 'lucide-react';
 
 // @ts-ignore
-import img1 from '../../assets/patientsSuccess/1.png';
+import img1 from '../../assets/patientsSuccess/1.webp';
 // @ts-ignore
-import img2 from '../../assets/patientsSuccess/2.png';
+import img2 from '../../assets/patientsSuccess/2.webp';
 // @ts-ignore
-import img3 from '../../assets/patientsSuccess/3.png';
+import img3 from '../../assets/patientsSuccess/3.webp';
 // @ts-ignore
-import img4 from '../../assets/patientsSuccess/4.png';
+import img4 from '../../assets/patientsSuccess/4.webp';
 // @ts-ignore
-import img5 from '../../assets/patientsSuccess/5.png';
+import img5 from '../../assets/patientsSuccess/5.webp';
 // @ts-ignore
-import img6 from '../../assets/patientsSuccess/6.png';
+import img6 from '../../assets/patientsSuccess/6.webp';
 // @ts-ignore
-import img7 from '../../assets/patientsSuccess/7.png';
+import img7 from '../../assets/patientsSuccess/7.webp';
 // @ts-ignore
-import img8 from '../../assets/patientsSuccess/8.png';
+import img8 from '../../assets/patientsSuccess/8.webp';
 // @ts-ignore
-import img9 from '../../assets/patientsSuccess/9.png';
+import img9 from '../../assets/patientsSuccess/9.webp';
 // @ts-ignore
-import img10 from '../../assets/patientsSuccess/10.png';
+import img10 from '../../assets/patientsSuccess/10.webp';
 // @ts-ignore
-import img11 from '../../assets/patientsSuccess/11.png';
+import img11 from '../../assets/patientsSuccess/11.webp';
 // @ts-ignore
-import img12 from '../../assets/patientsSuccess/12.png';
+import img12 from '../../assets/patientsSuccess/12.webp';
 // @ts-ignore
-import img13 from '../../assets/patientsSuccess/13.png';
+import img13 from '../../assets/patientsSuccess/13.webp';
 // @ts-ignore
-import img14 from '../../assets/patientsSuccess/14.png';
+import img14 from '../../assets/patientsSuccess/14.webp';
 // @ts-ignore
-import img15 from '../../assets/patientsSuccess/15.png';
+import img15 from '../../assets/patientsSuccess/15.webp';
 // @ts-ignore
-import img16 from '../../assets/patientsSuccess/16.png';
+import img16 from '../../assets/patientsSuccess/16.webp';
 // @ts-ignore
-import img17 from '../../assets/patientsSuccess/17.png';
+import img17 from '../../assets/patientsSuccess/17.webp';
 // @ts-ignore
-import img18 from '../../assets/patientsSuccess/18.png';
+import img18 from '../../assets/patientsSuccess/18.webp';
 // @ts-ignore
-import img19 from '../../assets/patientsSuccess/19.png';
+import img19 from '../../assets/patientsSuccess/19.webp';
 // @ts-ignore
-import img20 from '../../assets/patientsSuccess/20.png';
+import img20 from '../../assets/patientsSuccess/20.webp';
 // @ts-ignore
-import img21 from '../../assets/patientsSuccess/21.png';
+import img21 from '../../assets/patientsSuccess/21.webp';
 // @ts-ignore
-import img22 from '../../assets/patientsSuccess/22.png';
+import img22 from '../../assets/patientsSuccess/22.webp';
 // @ts-ignore
-import img23 from '../../assets/patientsSuccess/23.png';
+import img23 from '../../assets/patientsSuccess/23.webp';
 // @ts-ignore
-import img24 from '../../assets/patientsSuccess/24.png';
+import img24 from '../../assets/patientsSuccess/24.webp';
 // @ts-ignore
-import img25 from '../../assets/patientsSuccess/25.png';
+import img25 from '../../assets/patientsSuccess/25.webp';
 // @ts-ignore
-import img26 from '../../assets/patientsSuccess/26.png';
+import img26 from '../../assets/patientsSuccess/26.webp';
 // @ts-ignore
-import img27 from '../../assets/patientsSuccess/27.png';
+import img27 from '../../assets/patientsSuccess/27.webp';
 // @ts-ignore
-import img28 from '../../assets/patientsSuccess/28.png';
+import img28 from '../../assets/patientsSuccess/28.webp';
 // @ts-ignore
-import img29 from '../../assets/patientsSuccess/29.png';
+import img29 from '../../assets/patientsSuccess/29.webp';
 // @ts-ignore
-import img30 from '../../assets/patientsSuccess/30.png';
+import img30 from '../../assets/patientsSuccess/30.webp';
 // @ts-ignore
-import img31 from '../../assets/patientsSuccess/31.png';
+import img31 from '../../assets/patientsSuccess/31.webp';
 // @ts-ignore
-import img32 from '../../assets/patientsSuccess/32.png';
+import img32 from '../../assets/patientsSuccess/32.webp';
 // @ts-ignore
-import img33 from '../../assets/patientsSuccess/33.png';
+import img33 from '../../assets/patientsSuccess/33.webp';
 // @ts-ignore
-import img34 from '../../assets/patientsSuccess/34.png';
+import img34 from '../../assets/patientsSuccess/34.webp';
 // @ts-ignore
-import img35 from '../../assets/patientsSuccess/35.png';
+import img35 from '../../assets/patientsSuccess/35.webp';
 // @ts-ignore
-import img36 from '../../assets/patientsSuccess/36.png';
+import img36 from '../../assets/patientsSuccess/36.webp';
 // @ts-ignore
-import img37 from '../../assets/patientsSuccess/37.png';
+import img37 from '../../assets/patientsSuccess/37.webp';
 // @ts-ignore
-import img38 from '../../assets/patientsSuccess/38.png';
+import img38 from '../../assets/patientsSuccess/38.webp';
 // @ts-ignore
-import img39 from '../../assets/patientsSuccess/39.png';
+import img39 from '../../assets/patientsSuccess/39.webp';
 // @ts-ignore
-import img40 from '../../assets/patientsSuccess/40.png';
+import img40 from '../../assets/patientsSuccess/40.webp';
 // @ts-ignore
-import img41 from '../../assets/patientsSuccess/41.png';
+import img41 from '../../assets/patientsSuccess/41.webp';
 
 const WhatsAppIcon = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -101,209 +101,209 @@ const testimonials = [
   {
     text: "",
     image: img1,
-    role: 'ירדה 12 ק"ג ב-4 חודשים',
+    role: "",
   },
   {
     text: "",
     image: img2,
-    role: "שיפור במדדי הדם",
+    role: "",
   },
   {
     text: "",
     image: img3,
-    role: "למדה לאכול נכון",
+    role: "",
   },
   {
     text: "",
     image: img4,
-    role: 'ירדה 8 ק"ג ב-3 חודשים',
+    role: "",
   },
   {
     text: "",
     image: img5,
-    role: "שינוי אורח חיים מלא",
+    role: "",
   },
   {
     text: "",
     image: img6,
-    role: "למדה להכין אוכל בריא",
+    role: "",
   },
   {
     text: "",
     image: img7,
-    role: 'ירדה 15 ק"ג ב-6 חודשים',
+    role: "",
   },
   {
     text: "",
     image: img8,
-    role: "התגברה על אכילה רגשית",
+    role: "",
   },
   {
     text: "",
     image: img9,
-    role: "שינתה את התזונה של כל המשפחה",
+    role: "",
   },
 
   // --- תמונות חדשות (10-25) ---
   {
     text: "",
     image: img10,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img11,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img12,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img13,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img14,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img15,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img16,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img17,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img18,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img19,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img20,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img21,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img22,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img23,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img24,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img25,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img26,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img27,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img28,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img29,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img30,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img31,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img32,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img33,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img34,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img35,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img36,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img37,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img38,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img39,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img40,
-    role: "תיאור ההצלחה",
+    role: "",
   },
   {
     text: "",
     image: img41,
-    role: "תיאור ההצלחה",
+    role: "",
   },
 ];
 

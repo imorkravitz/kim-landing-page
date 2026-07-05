@@ -105,7 +105,7 @@ export default function ProblemSolutionSection() {
             style={{ textWrap: 'balance' }}
           >
             לא עוד ניסיון לרדת במשקל.{' '}<br></br>
-            <span style={{ color: BRAND }}>שיטה שמלמדת אותך להצליח באמת.</span>
+            <span style={{ color: BRAND }}>שיטה שמלמדת אותך  <br></br>להצליח באמת.</span>
           </motion.h2>
    
         </Reveal>

@@ -59,10 +59,6 @@ export default function CTASection() {
               <Instagram className="w-6 h-6" />
               <span>kimgafson</span>
             </a>
-            <div className="flex items-center gap-2">
-              <MapPin className="w-6 h-6" />
-              <span>ילדי טהרן 5, ראשון לציון - הולמס פלייס</span>
-            </div>
           </div>
         </div>
       </div>
