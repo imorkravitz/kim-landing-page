@@ -174,7 +174,7 @@ export default function HeroSection() {
                   size="lg" 
                   className="bg-[#8B7F4B] text-white px-10 py-7 text-xl font-bold rounded-full shadow-[0_4px_6px_-1px_rgba(139,127,75,0.5)] hover:bg-[#968a56] hover:-translate-y-[2px] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.4)] active:translate-y-[1px] active:shadow-none transition-all duration-200 font-['Rubik']"
                 >
-                 לקביעת יעוץ חינם עכשיו
+                 לקביעת ייעוץ התאמה חינם
                 </Button>
               </a>
               

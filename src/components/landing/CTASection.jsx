@@ -34,7 +34,7 @@ export default function CTASection() {
                 className="bg-white text-[#8B7F4B] px-8 py-6 text-lg rounded-full shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] hover:bg-gray-50 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.15)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
               >
                 <WhatsAppIcon className="w-6 h-6 ml-2" />
-                צ'אטבוט 24/7
+                לקביעת ייעוץ התאמה חינם
               </Button>
             </a>
             <a href="https://wa.link/r2etxn" target="_blank" rel="noopener noreferrer">

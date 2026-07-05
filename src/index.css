@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Accessibility: honor the user's reduced-motion preference (WCAG / Israeli a11y law) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @font-face {
   font-family: 'Gveret Levin Alef';
   src: url('./assets/fonts/Gveret Levin Alef Alef Alef copy.ttf') format('truetype');

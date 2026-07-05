@@ -95,7 +95,7 @@ export default function ProcessSection() {
               }}
             >
               <WhatsAppIcon className="w-5 h-5" />
-              בואי לדבר איתנו בווצאפ
+              לקביעת ייעוץ התאמה חינם
             </button>
           </a>
         </div>
@@ -147,19 +147,31 @@ export default function ProcessSection() {
         </div>
 
         <div className="text-center mt-14">
-          <a 
-            href="https://tinyurl.com/nutrition-diary" 
-            target="_blank" 
+          <a
+            href="https://wa.link/ntdrz1"
+            target="_blank"
             rel="noopener noreferrer"
           >
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-[#8B7F4B] text-white px-10 py-6 text-lg rounded-full shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[#6d6339] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
             >
               <ClipboardList className="w-5 h-5 ml-2" />
               לקביעת ייעוץ התאמה חינם
             </Button>
           </a>
+          <p className="mt-4 text-sm text-gray-500">
+            מעדיפה להתחיל לבד?{' '}
+            <a
+              href="https://tinyurl.com/nutrition-diary"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 font-medium"
+              style={{ color: '#8B7F4B' }}
+            >
+              מלאי את שאלון ההתאמה
+            </a>
+          </p>
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, MotionConfig } from 'framer-motion';
 
 import SEOHead from '@/components/SEOHead';
 import ScrollStorySection from '@/components/landing/ScrollStorySection';
@@ -10,7 +10,7 @@ import ProcessSection from '@/components/landing/ProcessSection';
 import AppSection from '@/components/landing/AppSection';
 import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import FAQSection from '@/components/landing/FAQSection';
-import CalculatorSection from '@/components/landing/CalculatorSection';
+import TrustBar from '@/components/landing/TrustBar';
 import AboutSection from '@/components/landing/AboutSection';
 import CTASection from '@/components/landing/CTASection';
 import Footer from '@/components/landing/Footer';
@@ -61,23 +61,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-white font-piki page-transition">
+    <MotionConfig reducedMotion="user">
+    <div dir="rtl" className="min-h-screen bg-white font-sans page-transition">
       <SEOHead 
         title="קים גפסון | תזונה מאפשרת - דיאטנית קלינית"
         description="קים גפסון - דיאטנית קלינית מוסמכת עם 12 שנות ניסיון. ליווי תזונתי אישי לנשים עם גישת 80:20, התמחות בגניקולוגיה ורפואת נשים, אפליקציית Liveat ותמיכה יומית בווצאפ."
       />
       <style>{`
-        @font-face {
-          font-family: 'Piki';
-          src: local('Piki'), local('Arial Hebrew'), local('Arial');
-          font-weight: normal;
-          font-style: normal;
-        }
-        
-        .font-piki {
-          font-family: 'Piki', 'Calibri', 'Arial Hebrew', Arial, sans-serif;
-        }
-        
         html {
           scroll-behavior: smooth;
           scroll-snap-type: y proximity;
@@ -106,39 +96,41 @@ export default function Home() {
           }
         }
         
-        /* Improved scroll behavior */
-        * {
+        /* Anchor targets clear the fixed header when scrolled to */
+        section[id], [id][data-scroll-target] {
           scroll-margin-top: 80px;
         }
       `}</style>
       
       <ScrollStorySection />
-      
+
+      <TrustBar />
+
       <ScrollVideoBackground>
         <ProblemSolutionSection />
-        <ProcessSection />
       </ScrollVideoBackground>
-      
-      <AnimatedSection>
-        <PricingSection />
-      </AnimatedSection>
-      
-      <AnimatedSection>
-        <AppSection />
-      </AnimatedSection>
-      
-      <AnimatedSection>
-        <TestimonialsSection />
-      </AnimatedSection>
-      
+
+      {/* Trust before price: who Kim is → social proof → how it works → product → pricing */}
       <AnimatedSection>
         <AboutSection />
       </AnimatedSection>
-      
+
       <AnimatedSection>
-        <CalculatorSection />
+        <TestimonialsSection />
       </AnimatedSection>
-      
+
+      <AnimatedSection>
+        <ProcessSection />
+      </AnimatedSection>
+
+      <AnimatedSection>
+        <AppSection />
+      </AnimatedSection>
+
+      <AnimatedSection>
+        <PricingSection />
+      </AnimatedSection>
+
       <AnimatedSection>
         <FAQSection />
       </AnimatedSection>
@@ -155,5 +147,6 @@ export default function Home() {
       <AccessibilityWidget />
       <FloatingCTA />
     </div>
+    </MotionConfig>
   );
 }

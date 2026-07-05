@@ -324,7 +324,7 @@ export default function TestimonialsSection() {
         >
           <div className="flex justify-center mb-4">
           </div>
-          <h2 className="text-4xl md:text-5xl font-heading text-slate-900 mb-6">
+          <h2 className="text-4xl md:text-5xl font-heading text-gray-900 mb-6">
             כשהמסגרת חכמה והליווי עקבי - <span className="text-[#8B7F4B]">השינוי מגיע</span>
           </h2>
           <p className="text-xl text-slate-700 max-w-3xl mx-auto">
@@ -339,7 +339,7 @@ export default function TestimonialsSection() {
         </div>
 
         <div className="text-center mt-12 flex flex-wrap gap-4 justify-center">
-          <a href="https://wa.link/r2etxn" target="_blank" rel="noopener noreferrer">
+          <a href="https://wa.link/ntdrz1" target="_blank" rel="noopener noreferrer">
             <
 // @ts-ignore
             Button
@@ -347,7 +347,7 @@ export default function TestimonialsSection() {
               className="bg-[#8B7F4B] text-white rounded-2xl px-8 py-6 text-lg font-medium shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[#6d6339] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
             >
               <WhatsAppIcon className="w-5 h-5 ml-2" />
-             צאו איתנו לדרך!
+             לקביעת ייעוץ התאמה חינם
             </Button>
           </a>
           <Link to={createPageUrl('SuccessStories')}>

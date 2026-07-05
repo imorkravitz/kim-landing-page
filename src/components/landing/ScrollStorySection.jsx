@@ -375,7 +375,7 @@ function PhaseHero() {
                            shadow-[0_4px_20px_rgba(139,127,75,0.35)] w-full sm:w-auto"
                 style={{ background: BRAND }}
               >
-                לקביעת יעוץ חינם עכשיו
+                לקביעת ייעוץ התאמה חינם
               </Button>
             </motion.a>
 
@@ -1631,7 +1631,7 @@ function PhaseSupport() {
                            shadow-[0_4px_20px_rgba(139,127,75,0.35)] w-full sm:w-auto"
                 style={{ background: BRAND }}
               >
-                קבעי ייעוץ חינם עכשיו
+                לקביעת ייעוץ התאמה חינם
               </Button>
             </motion.a>
           </motion.div>
