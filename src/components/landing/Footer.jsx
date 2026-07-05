@@ -48,28 +48,6 @@ export default function Footer() {
                   אינסטגרם
                 </a>
               </li>
-              <li>
-                <a 
-                  href="https://wa.link/ntdrz1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors flex items-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  מענה אוטומטי 24/7
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="https://wa.link/r2etxn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors flex items-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  שירות לקוחות
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -77,19 +55,26 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-4 text-gray-800">יצירת קשר</h4>
             <ul className="space-y-3 text-gray-400">
-              <li className="flex items-start gap-2">
-                <MapPin className="w-5 h-5 shrink-0 mt-0.5" />
-                <span>ילדי טהרן 5, ראשון לציון - הולמס פלייס</span>
+              <li>
+                <a
+                  href="https://wa.link/ntdrz1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  צ'אט חכם בווצאפ — זמין 24/7
+                </a>
               </li>
               <li>
-                <a 
+                <a
                   href="https://wa.link/r2etxn"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-white transition-colors"
                 >
                   <Phone className="w-5 h-5" />
-                  שירות לקוחות בווצאפ
+                  שירות לקוחות — מענה אנושי
                 </a>
               </li>
             </ul>
