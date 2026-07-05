@@ -62,7 +62,6 @@ export default function SEOHead({
       "image": image,
       "url": url,
       "@id": url,
-      "telephone": "+972-50-1234567",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "רוטשילד 25",
@@ -79,11 +78,6 @@ export default function SEOHead({
         "name": "קים גפסון",
         "jobTitle": "דיאטנית קלינית",
         "description": "דיאטנית קלינית מוסמכת עם 12 שנות ניסיון בליווי תזונתי אישי"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "reviewCount": "5000"
       }
     };
     
