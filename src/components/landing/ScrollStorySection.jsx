@@ -106,10 +106,10 @@ const item = {
  *   pt-[156px]     → starts below Kim's strip (pt-3 + h-36 = 12+144=156px)
  *   pb-28          → clears bottom banner (44px) + phase dots (52px) + breathing
  */
-function ContentPanel({ children, mobilePt = 'pt-[30vh]', mobileAlign = 'items-start' }) {
+function ContentPanel({ children, mobilePt = 'pt-[30vh]', mobileAlign = 'items-start', mobilePb = 'pb-16' }) {
   return (
     <div className={`h-full flex ${mobileAlign} lg:items-center`}>
-      <div className={`w-full ${mobilePt} pb-16 px-5 lg:pt-0 lg:pb-0 lg:px-0 lg:pl-[50%] lg:pr-12`}>
+      <div className={`w-full ${mobilePt} ${mobilePb} px-5 lg:pt-0 lg:pb-0 lg:px-0 lg:pl-[50%] lg:pr-12`}>
         {/* dir="rtl" is re-applied here so text inside is always RTL */}
         <div dir="rtl" className="text-right">
           {children}
@@ -1308,25 +1308,25 @@ function PhaseApp() {
         <AppPhoneMockup />
       </motion.div>
 
-      <ContentPanel mobilePt="pt-2">
+      <ContentPanel mobilePt="pt-2" mobilePb="pb-6">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           {/* Mobile: compact phone mockup — fully visible at 65% scale via transform */}
-          <motion.div variants={item} className="lg:hidden mb-2 flex justify-center"
-            style={{ height: '35vh', paddingTop: '14px' }}>
-            <div style={{ transform: 'scale(0.80)', transformOrigin: 'top center', flexShrink: 0 }}>
+          <motion.div variants={item} className="lg:hidden mb-1.5 flex justify-center"
+            style={{ height: '24vh', paddingTop: '10px' }}>
+            <div style={{ transform: 'scale(0.62)', transformOrigin: 'top center', flexShrink: 0 }}>
               <AppPhoneMockup compact />
             </div>
           </motion.div>
 
           <PhaseHeading>יומן אכילה<br/><Accent>שיתוף הדיאטנית המלווה באפליקציה שלנו</Accent></PhaseHeading>
 
-          <motion.p variants={item} className="text-base lg:text-xl text-gray-600 leading-relaxed mb-3 lg:mb-5" dir="rtl">
-            כבר בפגישה הראשונה נבנה עבורך תפריט אישי, גמיש, מפורט עם הנחיות ושפת תזונה ברורה. <br></br>
+          <motion.p variants={item} className="text-sm lg:text-xl text-gray-600 leading-snug lg:leading-relaxed mb-2 lg:mb-5" dir="rtl">
+            כבר בפגישה הראשונה נבנה עבורך תפריט אישי, גמיש, מפורט עם הנחיות ושפת תזונה ברורה. <br className="hidden lg:block"></br>
             באפליקציה שלנו תוכלי לצלם את הארוחות ולשתף ישירות עם התזונאית.
           </motion.p>
 
-          <motion.div variants={item} className="flex flex-col gap-2 lg:gap-2.5">
+          <motion.div variants={item} className="flex flex-col gap-1.5 lg:gap-2.5">
             {[
               'תפריט אישי מותאם כולל הנחיות מדויקות',
               'צילום יומני אכילה באפליקציה ושיתוף ישיר עם הדיאטנית',
@@ -1335,9 +1335,9 @@ function PhaseApp() {
               'הרצאות תזונה אונליין לקהילה של קים',
               'קיטים דיגיטליים עם מגוון מתכונים קלים, טעימים ופרקטיים — לגיוון התזונה ביומיום',
             ].map((f) => (
-              <div key={f} className="flex items-center gap-3" dir="rtl">
-                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: LIVEAT_GREEN }} />
-                <span className="text-base lg:text-lg font-semibold text-[#333]">{f}</span>
+              <div key={f} className="flex items-center gap-2.5 lg:gap-3" dir="rtl">
+                <CheckCircle2 className="w-3.5 h-3.5 lg:w-4 lg:h-4 shrink-0" style={{ color: LIVEAT_GREEN }} />
+                <span className="text-[13px] lg:text-lg leading-snug font-semibold text-[#333]">{f}</span>
               </div>
             ))}
           </motion.div>
@@ -1599,32 +1599,32 @@ function PhaseSupport() {
         <WaPhoneMockup />
       </motion.div>
 
-      <ContentPanel mobilePt="pt-2">
+      <ContentPanel mobilePt="pt-2" mobilePb="pb-6">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           {/* Mobile: compact WA mockup — fully visible at 65% scale via transform */}
-          <motion.div variants={item} className="lg:hidden flex justify-center mb-2"
-            style={{ height: '45vh', paddingTop: '5vh' }}>
-            <div style={{ transform: 'scale(0.85)', transformOrigin: 'top center', flexShrink: 0 }}>
+          <motion.div variants={item} className="lg:hidden flex justify-center mb-1.5"
+            style={{ height: '26vh', paddingTop: '10px' }}>
+            <div style={{ transform: 'scale(0.62)', transformOrigin: 'top center', flexShrink: 0 }}>
               <WaPhoneMockup compact />
             </div>
           </motion.div>
 
           <PhaseHeading>ליווי יומיומי<br/><Accent>וכלים שנשארים איתך</Accent></PhaseHeading>
 
-          <motion.p variants={item} className="text-base lg:text-xl text-gray-600 leading-relaxed mb-3 lg:mb-5" dir="rtl">
+          <motion.p variants={item} className="text-sm lg:text-xl text-gray-600 leading-snug lg:leading-relaxed mb-2 lg:mb-5" dir="rtl">
            בתוכנית שלנו את לא רק מקבלת תפריט{' '}
-            <strong style={{ color: BRAND }}>את לומדת על התזונה שלך</strong>{' '}<br></br>
+            <strong style={{ color: BRAND }}>את לומדת על התזונה שלך</strong>{' '}<br className="hidden lg:block"></br>
             כך שתדעי{' '}
             <strong style={{ color: BRAND }}>לנהל אותה</strong>,
             {' '}גם{' '}
             <strong style={{ color: BRAND }}>שהתהליך מסתיים</strong>.
           </motion.p>
-          <motion.div variants={item} className="flex flex-col gap-2 lg:gap-2.5 mb-3 lg:mb-7">
+          <motion.div variants={item} className="flex flex-col gap-1.5 lg:gap-2.5 mb-2 lg:mb-7">
             {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה (בתוכנית נבחרת)', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות עם תזונאית קלינית'].map((f) => (
-              <div key={f} className="flex items-center gap-3" dir="rtl">
-                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: BRAND }} />
-                <span className="text-lg font-semibold text-[#333]">{f}</span>
+              <div key={f} className="flex items-center gap-2.5 lg:gap-3" dir="rtl">
+                <CheckCircle2 className="w-3.5 h-3.5 lg:w-4 lg:h-4 shrink-0" style={{ color: BRAND }} />
+                <span className="text-[13px] lg:text-lg leading-snug font-semibold text-[#333]">{f}</span>
               </div>
             ))}
           </motion.div>
@@ -1640,7 +1640,7 @@ function PhaseSupport() {
               transition={{ type: 'spring', stiffness: 320, damping: 18 }}
             >
               <Button
-                className="rounded-full px-8 py-6 text-lg font-bold text-white min-h-[48px]
+                className="rounded-full px-8 py-3 lg:py-6 text-base lg:text-lg font-bold text-white min-h-[44px]
                            shadow-[0_4px_20px_rgba(139,127,75,0.35)] w-full sm:w-auto"
                 style={{ background: BRAND }}
               >
@@ -1705,7 +1705,7 @@ export default function ScrollStorySection() {
     <section
       ref={sectionRef}
       dir="rtl"
-      style={{ height: '450dvh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative' }}
+      style={{ height: '560dvh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative' }}
     >
       <div
         className="sticky top-0 overflow-hidden"

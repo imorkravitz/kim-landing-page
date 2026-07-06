@@ -92,7 +92,7 @@ export default function ProblemSolutionSection() {
   return (
     <section
       dir="rtl"
-      className="relative min-h-[100vh] py-20 md:py-28"
+      className="relative min-h-[190vh] md:min-h-[150vh] py-20 md:py-28"
       style={{ background: 'transparent' }}
     >
       <div className="container mx-auto px-6 max-w-3xl">
