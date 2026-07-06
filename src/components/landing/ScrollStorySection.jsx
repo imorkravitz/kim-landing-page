@@ -320,7 +320,7 @@ function PhaseHero() {
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           <motion.div variants={item} className="inline-block mb-2 lg:mb-4">
-            <img src={kimLogo} alt="KIM" className="h-24 md:h-36 lg:h-80 drop-shadow-lg" />
+            <img src={kimLogo} alt="KIM" className="h-48 md:h-56 lg:h-80 drop-shadow-lg" />
           </motion.div>
 
           {/* Main headline */}
@@ -1308,7 +1308,7 @@ function PhaseApp() {
         <AppPhoneMockup />
       </motion.div>
 
-      <ContentPanel mobilePt="pt-2" mobilePb="pb-6">
+      <ContentPanel mobilePt="pt-8" mobilePb="pb-6">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           {/* Mobile: compact phone mockup — scaled 0.62, wrapper clips leftover
@@ -1600,7 +1600,7 @@ function PhaseSupport() {
         <WaPhoneMockup />
       </motion.div>
 
-      <ContentPanel mobilePt="pt-2" mobilePb="pb-6">
+      <ContentPanel mobilePt="pt-8" mobilePb="pb-6">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           {/* Mobile: compact WA mockup — scaled 0.62, wrapper clips leftover
@@ -1707,11 +1707,11 @@ export default function ScrollStorySection() {
     <section
       ref={sectionRef}
       dir="rtl"
-      style={{ height: '560dvh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative' }}
+      style={{ height: '560svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative' }}
     >
       <div
         className="sticky top-0 overflow-hidden"
-        style={{ height: '100dvh', background: BG }}
+        style={{ height: '100svh', background: BG }}
       >
         {/* ── Kim desktop — physically LEFT, always behind text column ── */}
         <motion.div
@@ -1730,9 +1730,11 @@ export default function ScrollStorySection() {
             h-36 (144px) keeps Kim visible but compact → bottom of strip = 156px,
             matching ContentPanel's pt-[156px] so text starts right below. */}
         <motion.div
-          className="lg:hidden absolute top-0 left-0 right-0 flex justify-center pt-3 z-10 pointer-events-none"
+          className={`lg:hidden absolute top-0 left-0 right-0 flex justify-center pt-3 z-10 pointer-events-none ${phase >= 4 ? 'hidden' : ''}`}
           style={{ opacity: kimOpacity }}
         >
+          {/* Hidden in phases 4-5 (App/Support): on mobile the phone mockups own
+              the top strip, and Kim behind them muddied the heading legibility */}
           <img src={kimHero} alt="קים גפסון" className="object-contain object-bottom w-auto" style={{ height: '42vh', maxHeight: '340px' }} />
         </motion.div>
 
