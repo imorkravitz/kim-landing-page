@@ -1,4 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import img_4dfadad4e_KIM_LOGO from '../../assets/remote/4dfadad4e_KIM-LOGO.webp';
+import img_6a474e22f_Untitleddesign7 from '../../assets/remote/6a474e22f_Untitleddesign7.webp';
+import img_8fa64f760_1 from '../../assets/remote/8fa64f760_1.webp';
+import img_df0c9358a_2 from '../../assets/remote/df0c9358a_2.webp';
 import { Check, Star, Sparkles } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -111,14 +115,14 @@ export default function PricingSection() {
       </style>
       
       {/* Background Texture/Image */}
-      <div className="absolute inset-0 pointer-events-none bg-cover bg-center" 
-           style={{ backgroundImage: 'url("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/6a474e22f_Untitleddesign7.png")' }}>
+      <div className="absolute inset-0 pointer-events-none bg-cover bg-center"
+           style={{ backgroundImage: `url(${img_6a474e22f_Untitleddesign7})` }}>
       </div>
 
       {/* Bottom Left Decoration - Beet */}
       <div className="absolute bottom-0 left-0 w-[36rem] h-[48rem] md:w-[54rem] md:h-[72rem] pointer-events-none z-0 opacity-90"
-           style={{ 
-             backgroundImage: 'url("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/8fa64f760_1.png")',
+           style={{
+             backgroundImage: `url(${img_8fa64f760_1})`,
              backgroundRepeat: 'no-repeat',
              backgroundPosition: 'bottom left',
              backgroundSize: 'contain'
@@ -127,18 +131,18 @@ export default function PricingSection() {
 
       {/* Top Right Decoration - Flower */}
       <div className="absolute top-0 right-0 w-[18rem] h-[24rem] md:w-[27rem] md:h-[36rem] pointer-events-none z-0 opacity-90"
-           style={{ 
-             backgroundImage: 'url("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/df0c9358a_2.png")',
+           style={{
+             backgroundImage: `url(${img_df0c9358a_2})`,
              backgroundRepeat: 'no-repeat',
              backgroundPosition: 'top right',
              backgroundSize: 'contain'
            }}>
       </div>
-      
+
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16 ">
-          <img 
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_691cc3bcb50ab4a43494e846/4dfadad4e_KIM-LOGO.png"
+          <img
+            src={img_4dfadad4e_KIM_LOGO}
             alt="KIM"
             className="h-80 md:h-96 mx-auto mb-10 opacity-100"
           />

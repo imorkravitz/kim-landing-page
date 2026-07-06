@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import img_4a45529a3_app_icon from '../../assets/remote/4a45529a3_app-icon.webp';
 import {
   motion,
   useScroll,
@@ -25,17 +26,17 @@ import animatedVideo from '../../assets/videos/animated.mp4';
 
 // Phase 5 — real food photos + goals screen (Liveat diary)
 // @ts-ignore
-import meal1    from '../../assets/app/meal-2.png';   // breakfast photo
+import meal1    from '../../assets/app/meal-2.webp';   // breakfast photo
 // @ts-ignore
-import meal2    from '../../assets/app/meal-1.png';   // morning-snack photo
+import meal2    from '../../assets/app/meal-1.webp';   // morning-snack photo
 // @ts-ignore
-import meal3    from '../../assets/app/meal-3.png';   // lunch photo
+import meal3    from '../../assets/app/meal-3.webp';   // lunch photo
 // @ts-ignore
 import appGoals from '../../assets/app/app-6.png';    // daily-goals screen — water bottles at bottom
 // @ts-ignore
-import eatDiary1 from '../../assets/app/eat_diary_1.PNG'; // actual app diary screen 1
+import eatDiary1 from '../../assets/app/eat_diary_1.webp'; // actual app diary screen 1
 // @ts-ignore
-import eatDiary2 from '../../assets/app/eat_diary_2.PNG'; // actual app diary screen 2 (macros)
+import eatDiary2 from '../../assets/app/eat_diary_2.webp'; // actual app diary screen 2 (macros)
 
 // Phase 4 — food sticker images for 80:20 ring
 // @ts-ignore
@@ -43,13 +44,13 @@ import nt1 from '../../assets/8020/pizza.png';
 // @ts-ignore
 import nt2 from '../../assets/8020/wine.png';
 // @ts-ignore
-import nt3 from '../../assets/8020/crossiant.png';
+import nt3 from '../../assets/8020/crossiant.webp';
 // @ts-ignore
 import nt4 from '../../assets/8020/water.png';
 // @ts-ignore
-import nt5 from '../../assets/8020/bread.png';
+import nt5 from '../../assets/8020/bread.webp';
 // @ts-ignore
-import nt7 from '../../assets/8020/healthyPlate.png';
+import nt7 from '../../assets/8020/healthyPlate.webp';
 // @ts-ignore
 import nt8 from '../../assets/8020/running2.png';
 // @ts-ignore
@@ -625,11 +626,21 @@ function ScrollVideoPlayer({ plateProgress }) {
       pendingRef.current = false; // ready for the next seek
     };
 
-    video.addEventListener('seeked',     paint);
-    video.addEventListener('loadeddata', paint); // paint frame 0 when ready
+    video.addEventListener('seeked',         paint);
+    video.addEventListener('loadeddata',     paint); // paint frame 0 when ready
+    video.addEventListener('canplaythrough', paint);
+    video.load(); // explicit — some browsers defer buffering of display:none videos
 
     // ── RAF scrub loop ────────────────────────────────────────────────────────
+    // pendingSince: watchdog — if a seek never fires `seeked` (unbuffered
+    // region, mobile browser quirk), the pending flag would freeze the scrub
+    // forever. This is what caused the janky/stuck feel at the start of the
+    // Hero scroll on mobile.
+    let pendingSince = 0;
     const tick = () => {
+      if (pendingRef.current && performance.now() - pendingSince > 250) {
+        pendingRef.current = false; // seek lost — recover instead of freezing
+      }
       if (!pendingRef.current) {               // wait for previous seek to finish
         const target  = targetRef.current;
         const current = smoothRef.current;
@@ -644,6 +655,7 @@ function ScrollVideoPlayer({ plateProgress }) {
             const t = v * video.duration;
             if (Math.abs(video.currentTime - t) > 1 / 30) { // ≥1 frame gap
               pendingRef.current = true;
+              pendingSince = performance.now();
               video.currentTime  = t;
             }
           }
@@ -656,8 +668,9 @@ function ScrollVideoPlayer({ plateProgress }) {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      video.removeEventListener('seeked',     paint);
-      video.removeEventListener('loadeddata', paint);
+      video.removeEventListener('seeked',         paint);
+      video.removeEventListener('loadeddata',     paint);
+      video.removeEventListener('canplaythrough', paint);
     };
   }, []);
 
@@ -681,7 +694,7 @@ function ScrollVideoPlayer({ plateProgress }) {
         muted
         playsInline
         preload="auto"
-        style={{ display: 'none' }}
+        style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', overflow: 'hidden' }}
       />
       {/* Canvas — always shows last good frame; zero black-flash between frames */}
       <canvas
@@ -726,15 +739,15 @@ function PhasePlate() {
               maxWidth: 520,
             }}
           >
-            במקום עוד תפריט נוקשה שקשה להחזיק לאורך זמן — <br></br>
+            במקום עוד תפריט נוקשה שקשה להחזיק לאורך זמן <br></br>
              נלמד אותך איך לבנות צלחת שמתאימה לחיים האמיתיים שלך.{' '}
             בבית, בעבודה,{' '}
             <strong style={{ color: BRAND, fontWeight: 800 }}>במסעדה</strong>,{' '}
             <strong style={{ color: BRAND, fontWeight: 800 }}>בחופשה</strong>,{' '}
             <strong style={{ color: BRAND, fontWeight: 800 }}>בסוף שבוע</strong>.{' '}<br></br>
-            לא כדי שתהיי תלויה בתפריט — אלא כדי שתדעי להתנהל נכון{' '}
+            לא כדי שתהיי תלויה בתפריט אלא כדי שתדעי להתנהל נכון{' '} <br></br>
             <strong style={{ color: BRAND }}>בכל סיטואציה</strong>.{' '}
-            כי כשאת מבינה איך הדברים עובדים - <br></br>
+            כי כשאת מבינה איך הדברים עובדים <br></br>
             הרבה יותר קל{' '}
             <strong style={{ color: BRAND, fontWeight: 800 }}>לרדת במשקל, להתמיד ולשמור על התוצאות</strong>.
           </motion.p>
@@ -1021,7 +1034,7 @@ function PhaseRing() {
 // The core feature: patient photographs every meal → Kim reviews & responds daily
 // ─────────────────────────────────────────────────────────────────────────────
 const LIVEAT_GREEN = '#2D9F6A';
-const LIVEAT_ICON  = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/4a45529a3_app-icon.png';
+const LIVEAT_ICON  = img_4a45529a3_app_icon;
 
 // Photo diary cells — one dedicated meal photo per logged entry.
 // objectPosition defaults to 'center' for all; tweak per photo if needed.

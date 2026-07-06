@@ -4,8 +4,8 @@ export default function SEOHead({
   title = "קים גפסון | תזונה מאפשרת - קליניקת דיאטניות",
   description = "קים גפסון - בוגרת תואר בתזונה באוניברסיטה העברית וסטודנטית לרפואה בתל אביב סמלול ה-4 שנתי. עם 12 שנות ניסיון. ליווי תזונתי אישי עם גישת 80:20, אפליקציית Liveat ותמיכה יומית בווצאפ. הצטרפי ל-5,000+ מטופלות מרוצות.",
   keywords = "קים גפסון, קים גפסון קרביץ, קים תזונה ובריאות נשים, דיאטנית קלינית, דיאטנית קלינית לנשים, דיאטנית נשים, תזונאית קלינית, תזונאית לנשים, ליווי תזונתי, ליווי תזונתי לנשים, ירידה במשקל, ירידה במשקל לנשים, דיאטה לנשים, תזונה בריאה, תזונה מאוזנת, תזונה מאפשרת, תזונה מותאמת אישית, תפריט תזונה אישי, תהליך ירידה במשקל, שמירה על המשקל, תזונה בהריון, תזונה אחרי לידה, תזונה בהנקה, תזונה לפוריות, תזונה ל-PCOS, תזונה לאנדומטריוזיס, תזונה לסוכרת, תזונה לנערות, דיאטנית ראשון לציון, תזונאית ראשון לציון, דיאטנית אונליין, תזונאית אונליין, ייעוץ תזונה אונליין, ליווי תזונה בווצאפ, אפליקציית תזונה, Liveat",
-  image = "../../assets/icons/kim-image.png",
-  url = ""
+  image = "/og-image.jpg",
+  url = "https://tzuna-maafsheret.com"
 }) {
   useEffect(() => {
     // Update document title
@@ -56,19 +56,31 @@ export default function SEOHead({
     
     const structuredData = {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
+      "@type": "ProfessionalService",
       "name": "תזונה מאפשרת - קים גפסון",
       "description": description,
       "image": image,
       "url": url,
       "@id": url,
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "ראשון לציון",
-        "addressCountry": "IL"
+      "areaServed": {
+        "@type": "Country",
+        "name": "IL"
       },
       "priceRange": "₪₪",
-      "openingHours": "Su-Th 08:00-22:00, Fr 08:00-16:00",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+          "opens": "08:00",
+          "closes": "22:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Friday"],
+          "opens": "08:00",
+          "closes": "16:00"
+        }
+      ],
       "sameAs": [
         "https://www.instagram.com/kimgafson"
       ],

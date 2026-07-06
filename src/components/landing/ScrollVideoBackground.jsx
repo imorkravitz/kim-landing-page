@@ -157,7 +157,7 @@ export default function ScrollVideoBackground({ children }) {
           muted
           playsInline
           preload="auto"
-          style={{ display: 'none' }}
+          style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', overflow: 'hidden' }}
         />
         <canvas
           ref={canvasRef}

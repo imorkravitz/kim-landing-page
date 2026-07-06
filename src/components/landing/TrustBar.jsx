@@ -4,7 +4,7 @@ import { FlaskConical, Stethoscope, Smartphone, GraduationCap } from 'lucide-rea
 const BRAND = '#8B7F4B';
 
 const items = [
-  { Icon: FlaskConical,  label: 'שיטה מבוססת מחקר' },
+  { Icon: FlaskConical,  label: 'שיטה מבוססת מחקרים' },
   { Icon: Stethoscope,   label: 'צוות דיאטניות קליניות' },
   { Icon: Smartphone,    label: 'אפליקציה תומכת + מערכות AI' },
   { Icon: GraduationCap, label: 'בהובלת וניהול מלא של קים' },

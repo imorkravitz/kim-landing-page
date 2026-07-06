@@ -1,5 +1,5 @@
-// @ts-ignore
 import React from 'react';
+import { trackCTA } from '@/lib/analytics';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { TestimonialsColumn } from '@/components/ui/testimonials-column';
@@ -339,7 +339,8 @@ export default function TestimonialsSection() {
         </div>
 
         <div className="text-center mt-12 flex flex-wrap gap-4 justify-center">
-          <a href="https://wa.link/ntdrz1" target="_blank" rel="noopener noreferrer">
+          <a href="https://wa.link/ntdrz1"
+              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
             <
 // @ts-ignore
             Button

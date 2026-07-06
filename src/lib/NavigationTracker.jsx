@@ -7,11 +7,9 @@ export default function NavigationTracker() {
   const { user } = useAuth();
 
   useEffect(() => {
-    // כאן הייתה קריאה לשרת (base44) שמחקנו.
-    // במקום זה, נשאיר רק לוג מקומי לפיתוח.
-    console.log(`Navigation: User visited ${location.pathname}`);
-    
-    // אם בעתיד תרצה להוסיף Google Analytics, זה המקום לעשות את זה
+    if (window.gtag) {
+      window.gtag('event', 'page_view', { page_path: location.pathname });
+    }
   }, [location, user]);
 
   return null;
