@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { trackCTA } from '@/lib/analytics';
 import { ClipboardList, Calendar, Smartphone, MessageCircle } from 'lucide-react';
 
 const WhatsAppIcon = ({ className }) => (
@@ -86,7 +87,8 @@ export default function ProcessSection() {
           <p className="text-gray-600 text-base leading-relaxed mb-8 max-w-md mx-auto">
             אלפי נשים ששינו את מערכת היחסים עם אוכל ולמדו לנהל את התזונה שלהן בצורה שמתאימה לחיים.
           </p>
-          <a href="https://wa.link/ntdrz1" target="_blank" rel="noopener noreferrer">
+          <a href="https://wa.link/ntdrz1"
+              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
             <button
               className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
               style={{
@@ -149,6 +151,7 @@ export default function ProcessSection() {
         <div className="text-center mt-14">
           <a
             href="https://wa.link/ntdrz1"
+              onClick={() => trackCTA('whatsapp_consult')}
             target="_blank"
             rel="noopener noreferrer"
           >

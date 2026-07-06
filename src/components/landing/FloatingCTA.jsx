@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { trackCTA } from '@/lib/analytics';
 import { X } from 'lucide-react';
 
 const WhatsAppIcon = ({ className }) => (
@@ -37,6 +38,7 @@ export default function FloatingCTA() {
           <div className="space-y-3">
             <a
               href="https://wa.link/ntdrz1"
+              onClick={() => trackCTA('whatsapp_consult')}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-3 bg-green-50 rounded-xl hover:bg-green-100 transition-colors text-right"
@@ -55,6 +57,7 @@ export default function FloatingCTA() {
             
             <a
               href="https://wa.link/r2etxn"
+              onClick={() => trackCTA('whatsapp_support')}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-3 bg-green-50 rounded-xl hover:bg-green-100 transition-colors text-right"

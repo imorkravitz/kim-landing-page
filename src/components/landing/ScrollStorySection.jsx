@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import img_4a45529a3_app_icon from '../../assets/remote/4a45529a3_app-icon.webp';
 import {
   motion,
   useScroll,
@@ -726,15 +727,15 @@ function PhasePlate() {
               maxWidth: 520,
             }}
           >
-            במקום עוד תפריט נוקשה שקשה להחזיק לאורך זמן — <br></br>
+            במקום עוד תפריט נוקשה שקשה להחזיק לאורך זמן <br></br>
              נלמד אותך איך לבנות צלחת שמתאימה לחיים האמיתיים שלך.{' '}
             בבית, בעבודה,{' '}
             <strong style={{ color: BRAND, fontWeight: 800 }}>במסעדה</strong>,{' '}
             <strong style={{ color: BRAND, fontWeight: 800 }}>בחופשה</strong>,{' '}
             <strong style={{ color: BRAND, fontWeight: 800 }}>בסוף שבוע</strong>.{' '}<br></br>
-            לא כדי שתהיי תלויה בתפריט — אלא כדי שתדעי להתנהל נכון{' '}
+            לא כדי שתהיי תלויה בתפריט אלא כדי שתדעי להתנהל נכון{' '} <br></br>
             <strong style={{ color: BRAND }}>בכל סיטואציה</strong>.{' '}
-            כי כשאת מבינה איך הדברים עובדים - <br></br>
+            כי כשאת מבינה איך הדברים עובדים <br></br>
             הרבה יותר קל{' '}
             <strong style={{ color: BRAND, fontWeight: 800 }}>לרדת במשקל, להתמיד ולשמור על התוצאות</strong>.
           </motion.p>
@@ -1021,7 +1022,7 @@ function PhaseRing() {
 // The core feature: patient photographs every meal → Kim reviews & responds daily
 // ─────────────────────────────────────────────────────────────────────────────
 const LIVEAT_GREEN = '#2D9F6A';
-const LIVEAT_ICON  = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/4a45529a3_app-icon.png';
+const LIVEAT_ICON  = img_4a45529a3_app_icon;
 
 // Photo diary cells — one dedicated meal photo per logged entry.
 // objectPosition defaults to 'center' for all; tweak per photo if needed.

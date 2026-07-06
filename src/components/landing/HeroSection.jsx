@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { trackCTA } from '@/lib/analytics';
+import img_515c2fe4e_KIM_LOGO2 from '../../assets/remote/515c2fe4e_KIM-LOGO2.webp';
+import img_eeac41e3b_kim_t from '../../assets/remote/eeac41e3b_kim-t.webp';
 import { Button } from "@/components/ui/button";
 import { Star, GraduationCap } from 'lucide-react';
 // @ts-ignore
@@ -112,8 +115,8 @@ export default function HeroSection() {
 
                 {/* Image - Mobile */}
                 <div className="lg:hidden flex justify-center pt-24 pb-4">
-                  <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/eeac41e3b_kim-t.png"
+                  <img
+                    src={img_eeac41e3b_kim_t}
                     alt="קים גפסון"
                     className="h-64 w-auto object-contain"
                   />
@@ -125,8 +128,8 @@ export default function HeroSection() {
                         <div className="text-right py-8 lg:py-20 order-1 lg:order-1">
             {/* Logo */}
             <div className="inline-block mb-8">
-              <img 
-                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_691cc3bcb50ab4a43494e846/515c2fe4e_KIM-LOGO2.png"
+              <img
+                                    src={img_515c2fe4e_KIM_LOGO2}
                                     alt="KIM Logo"
                                     className="h-56 md:h-80 drop-shadow-lg filter contrast-110"
                                   />
@@ -167,6 +170,7 @@ export default function HeroSection() {
             <div className="mb-12 flex flex-col sm:flex-row gap-6 items-center sm:items-start ">
               <a 
                 href="https://wa.link/ntdrz1"
+              onClick={() => trackCTA('whatsapp_consult')}
                 target="_blank"
                 rel="noopener noreferrer"
               >

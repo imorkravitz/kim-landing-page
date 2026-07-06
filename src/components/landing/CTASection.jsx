@@ -1,4 +1,5 @@
 import React from 'react';
+import { trackCTA } from '@/lib/analytics';
 import { Instagram, MapPin } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -28,7 +29,8 @@ export default function CTASection() {
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center mb-12">
-            <a href="https://wa.link/ntdrz1" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.link/ntdrz1"
+              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
               <Button 
                 size="lg" 
                 className="bg-white text-[#8B7F4B] px-8 py-6 text-lg rounded-full shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] hover:bg-gray-50 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.15)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
@@ -37,7 +39,8 @@ export default function CTASection() {
                 לקביעת ייעוץ התאמה חינם
               </Button>
             </a>
-            <a href="https://wa.link/r2etxn" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.link/r2etxn"
+              onClick={() => trackCTA('whatsapp_support')} target="_blank" rel="noopener noreferrer">
               <Button 
                 size="lg" 
                 className="bg-transparent border-2 border-white text-white px-8 py-6 text-lg rounded-full shadow-none hover:bg-white hover:text-[#8B7F4B] hover:shadow-[0_10px_15px_-3px_rgba(255,255,255,0.2)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"

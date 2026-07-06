@@ -1,4 +1,5 @@
 import React from 'react';
+import { trackCTA } from '@/lib/analytics';
 import { Instagram, MessageCircle, Phone, MapPin, Smartphone } from 'lucide-react';
 
 // @ts-ignore
@@ -59,6 +60,7 @@ export default function Footer() {
               <li>
                 <a
                   href="https://wa.link/ntdrz1"
+              onClick={() => trackCTA('whatsapp_consult')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-white transition-colors"
@@ -70,6 +72,7 @@ export default function Footer() {
               <li>
                 <a
                   href="https://wa.link/r2etxn"
+              onClick={() => trackCTA('whatsapp_support')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-white transition-colors"

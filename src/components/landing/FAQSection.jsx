@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { trackCTA } from '@/lib/analytics';
 import { ChevronDown } from 'lucide-react';
 
 const BRAND = '#8B7F4B';
@@ -119,7 +120,8 @@ export default function FAQSection() {
           <p className="text-gray-500 mb-4">
             לא מצאת את התשובה שלך? שאלי אותנו ישירות — עונות מהר.
           </p>
-          <a href="https://wa.link/ntdrz1" target="_blank" rel="noopener noreferrer">
+          <a href="https://wa.link/ntdrz1"
+              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
             <button
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
               style={{

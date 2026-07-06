@@ -1,4 +1,11 @@
 import React, { useRef } from 'react';
+import img_03fd56ba1_app_1 from '../../assets/remote/03fd56ba1_app_1.webp';
+import img_4a45529a3_app_icon from '../../assets/remote/4a45529a3_app-icon.webp';
+import img_4f0d4bec3_app_3 from '../../assets/remote/4f0d4bec3_app_3.webp';
+import img_6a00d70d8_app_6 from '../../assets/remote/6a00d70d8_app_6.webp';
+import img_77c6ca764_app_4 from '../../assets/remote/77c6ca764_app_4.webp';
+import img_7b8e2dc17_app_2 from '../../assets/remote/7b8e2dc17_app_2.webp';
+import img_cbbd3e3fd_app_5 from '../../assets/remote/cbbd3e3fd_app_5.webp';
 import { motion, useInView } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Check, User, BarChart3, Clock, Zap } from 'lucide-react';
@@ -6,27 +13,27 @@ import CardSwap, { Card } from '@/components/ui/card-swap';
 
 const appImages = [
   {
-    src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/03fd56ba1_app_1.png",
+    src: img_03fd56ba1_app_1,
     alt: "מעקב צעדים ויעדים יומיים"
   },
   {
-    src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/7b8e2dc17_app_2.png",
+    src: img_7b8e2dc17_app_2,
     alt: "יומן אוכל מצולם"
   },
   {
-    src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/4f0d4bec3_app_3.png",
+    src: img_4f0d4bec3_app_3,
     alt: "מעקב צעדים וגרפים"
   },
   {
-    src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/77c6ca764_app_4.png",
+    src: img_77c6ca764_app_4,
     alt: "מחשבון BMR"
   },
   {
-    src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/cbbd3e3fd_app_5.png",
+    src: img_cbbd3e3fd_app_5,
     alt: "מעקב משקל"
   },
   {
-    src: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/6a00d70d8_app_6.png",
+    src: img_6a00d70d8_app_6,
     alt: "יומן אוכל יומי"
   }
 ];
@@ -76,9 +83,9 @@ export default function AppSection() {
 
         <div className="text-center mb-16 relative z-20">
           <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg border border-gray-100">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274c44228d0da5d0b3bd04/4a45529a3_app-icon.png" 
-              alt="Liveat App Icon" 
+            <img
+              src={img_4a45529a3_app_icon}
+              alt="Liveat App Icon"
               className="w-20 h-20 rounded-xl" 
             />
           </div>
