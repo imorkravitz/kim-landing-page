@@ -80,7 +80,11 @@ export default function AboutSection() {
             <motion.h2
               variants={itemV}
               className="font-heading text-3xl md:text-4xl leading-snug mb-6"
-              style={{ color: BRAND, textWrap: 'balance' }}
+              style={{
+                color: BRAND,
+                textWrap: 'balance',
+                textShadow: '0 2px 20px rgba(255,255,255,0.95), 0 1px 4px rgba(255,255,255,0.95)',
+              }}
             >
               מי עומדת מאחורי הכל?
             </motion.h2>
@@ -128,7 +132,10 @@ export default function AboutSection() {
               <blockquote>
                 <p
                   className="font-gveret text-xl md:text-2xl leading-relaxed italic"
-                  style={{ color: BRAND }}
+                  style={{
+                    color: BRAND,
+                    textShadow: '0 2px 20px rgba(255,255,255,0.95), 0 1px 4px rgba(255,255,255,0.95), 0 0 2px rgba(255,255,255,0.9)',
+                  }}
                 >
                   "את לא צריכה לבחור בין בריאות לבין הנאה. אפשר גם וגם."
                 </p>

@@ -70,16 +70,8 @@ export default function Home() {
       <style>{`
         html {
           scroll-behavior: smooth;
-          scroll-snap-type: y proximity;
         }
-        
-        @media (max-width: 768px) {
-          html {
-            /* proximity keeps mobile usable without fighting the sticky scroll section */
-            scroll-snap-type: y proximity;
-          }
-        }
-        
+
         /* Smooth page transitions */
         .page-transition {
           animation: fadeInUp 0.4s ease-out;
@@ -106,14 +98,12 @@ export default function Home() {
 
       <TrustBar />
 
+      {/* Stethoscope scrub spans ProblemSolution + About — the animation
+          completes only at the bottom of About (Kim's full portrait) */}
       <ScrollVideoBackground>
         <ProblemSolutionSection />
-      </ScrollVideoBackground>
-
-      {/* Trust before price: who Kim is → social proof → how it works → product → pricing */}
-      <AnimatedSection>
         <AboutSection />
-      </AnimatedSection>
+      </ScrollVideoBackground>
 
       <AnimatedSection>
         <TestimonialsSection />

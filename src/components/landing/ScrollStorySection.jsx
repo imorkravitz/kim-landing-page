@@ -1311,9 +1311,10 @@ function PhaseApp() {
       <ContentPanel mobilePt="pt-2" mobilePb="pb-6">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
-          {/* Mobile: compact phone mockup — fully visible at 65% scale via transform */}
-          <motion.div variants={item} className="lg:hidden mb-1.5 flex justify-center"
-            style={{ height: '24vh', paddingTop: '10px' }}>
+          {/* Mobile: compact phone mockup — scaled 0.62, wrapper clips leftover
+              layout height so the phone never overlaps the heading below */}
+          <motion.div variants={item} className="lg:hidden mb-2 flex justify-center"
+            style={{ height: '258px', overflow: 'hidden', paddingTop: '10px' }}>
             <div style={{ transform: 'scale(0.62)', transformOrigin: 'top center', flexShrink: 0 }}>
               <AppPhoneMockup compact />
             </div>
@@ -1602,9 +1603,10 @@ function PhaseSupport() {
       <ContentPanel mobilePt="pt-2" mobilePb="pb-6">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
-          {/* Mobile: compact WA mockup — fully visible at 65% scale via transform */}
-          <motion.div variants={item} className="lg:hidden flex justify-center mb-1.5"
-            style={{ height: '26vh', paddingTop: '10px' }}>
+          {/* Mobile: compact WA mockup — scaled 0.62, wrapper clips leftover
+              layout height so the phone never overlaps the heading below */}
+          <motion.div variants={item} className="lg:hidden flex justify-center mb-2"
+            style={{ height: '258px', overflow: 'hidden', paddingTop: '10px' }}>
             <div style={{ transform: 'scale(0.62)', transformOrigin: 'top center', flexShrink: 0 }}>
               <WaPhoneMockup compact />
             </div>
