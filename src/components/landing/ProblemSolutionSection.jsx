@@ -102,7 +102,7 @@ export default function ProblemSolutionSection() {
           <motion.h2
             variants={fade}
             className="text-4xl md:text-5xl lg:text-[3.5rem] font-heading text-gray-900 mb-3 leading-tight"
-            style={{ textWrap: 'balance' }}
+            style={{ textWrap: 'balance', textShadow: '0 2px 24px rgba(255,255,255,0.9), 0 1px 3px rgba(255,255,255,0.9)' }}
           >
             לא עוד ניסיון לרדת במשקל.{' '}<br></br>
             <span style={{ color: BRAND }}>שיטה שמלמדת אותך  <br></br>להצליח באמת.</span>
@@ -116,8 +116,9 @@ export default function ProblemSolutionSection() {
             variants={fade}
             className="rounded-3xl p-7 md:p-9"
             style={{
-              background: 'rgba(0,0,0,0.035)',
+              background: 'rgba(255,255,255,0.82)',
               border: '1px solid rgba(0,0,0,0.08)',
+              backdropFilter: 'blur(6px)',
             }}
           >
             <p
