@@ -23,7 +23,7 @@ export default function FloatingCTA() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-20 md:bottom-6 right-4 z-50">
+    <div className="fixed bottom-5 md:bottom-6 right-4 z-50">
       {isOpen && (
         <div className="absolute bottom-14 md:bottom-16 right-0 bg-white rounded-2xl shadow-2xl p-4 md:p-6 w-64 md:w-72 mb-2 animate-in slide-in-from-bottom-2 border border-gray-100">
           <button

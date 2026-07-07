@@ -411,8 +411,10 @@ function PhaseHero() {
 
           </motion.div>
 
-          {/* Stats — desktop only; hero content is tight on mobile */}
-          <motion.div variants={item} className="hidden lg:flex gap-6 border-t border-[#8B7F4B]/20 pt-4" dir="rtl">
+          {/* Stats — desktop only; hero content is tight on mobile.
+              lg:pr-24 keeps the first (rightmost) stat clear of the fixed
+              WhatsApp floating button pinned to the bottom-right corner */}
+          <motion.div variants={item} className="hidden lg:flex gap-6 border-t border-[#8B7F4B]/20 pt-4 lg:pr-24" dir="rtl">
             <div className="flex items-center gap-2">
               <div className="text-xs text-gray-500 font-medium leading-tight">שנות<br/>ניסיון</div>
               <div className="text-2xl font-black" style={{ color: BRAND }}>12+</div>

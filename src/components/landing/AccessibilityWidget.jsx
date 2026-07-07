@@ -88,7 +88,7 @@ export default function AccessibilityWidget() {
         .accessibility-line-height * { line-height: 2 !important; }
       `}</style>
       
-      <div className="fixed bottom-32 md:bottom-24 left-4 z-50">
+      <div className="fixed bottom-[72px] md:bottom-24 left-4 z-50">
         {/* Main Button - Enable Style */}
         <button
           onClick={() => setIsOpen(!isOpen)}
