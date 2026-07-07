@@ -46,3 +46,4 @@ export function trackCTA(label) {
   if (window.gtag) window.gtag('event', 'cta_click', { cta: label });
   if (window.fbq) window.fbq('track', 'Lead', { content_name: label });
 }
+// deploy-connection test: 2026-07-07T17:38:10Z
