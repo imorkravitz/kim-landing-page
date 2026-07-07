@@ -41,7 +41,7 @@ export default function Footer() {
               </li>
               <li>
                 <a 
-                  href="https://www.instagram.com/kimgafson/profilecard/"
+                  href="https://www.instagram.com/kimgafson/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors flex items-center gap-2"

@@ -106,7 +106,7 @@ const item = {
  *   pt-[156px]     → starts below Kim's strip (pt-3 + h-36 = 12+144=156px)
  *   pb-28          → clears bottom banner (44px) + phase dots (52px) + breathing
  */
-function ContentPanel({ children, mobilePt = 'pt-[30vh]', mobileAlign = 'items-start', mobilePb = 'pb-16' }) {
+function ContentPanel({ children, mobilePt = 'pt-[24svh]', mobileAlign = 'items-start', mobilePb = 'pb-16' }) {
   return (
     <div className={`h-full flex ${mobileAlign} lg:items-center`}>
       <div className={`w-full ${mobilePt} ${mobilePb} px-5 lg:pt-0 lg:pb-0 lg:px-0 lg:pl-[50%] lg:pr-12`}>
@@ -320,7 +320,7 @@ function PhaseHero() {
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           <motion.div variants={item} className="inline-block mb-2 lg:mb-4">
-            <img src={kimLogo} alt="KIM" className="h-48 md:h-56 lg:h-80 drop-shadow-lg" />
+            <img src={kimLogo} alt="KIM" className="h-40 md:h-56 lg:h-80 drop-shadow-lg" />
           </motion.div>
 
           {/* Main headline */}
@@ -501,7 +501,7 @@ function PhaseBusyLife() {
         </motion.div>
       ))}
 
-      <ContentPanel mobilePt="pt-[44vh]">
+      <ContentPanel mobilePt="pt-[38svh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           {/* Mobile heading */}
@@ -716,7 +716,7 @@ function ScrollVideoPlayer({ plateProgress }) {
 function PhasePlate() {
   return (
     <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-      <ContentPanel mobilePt="pt-[47vh]">
+      <ContentPanel mobilePt="pt-[40svh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
           <motion.h2
             variants={item}
@@ -1669,11 +1669,17 @@ export default function ScrollStorySection() {
   const [phase, setPhase] = useState(0);
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    let next = 0;
-    for (let i = PHASE_STARTS.length - 1; i >= 0; i--) {
-      if (v >= PHASE_STARTS[i]) { next = i; break; }
-    }
-    setPhase(p => (p !== next ? next : p));
+    // Hysteresis: switching phase backward requires scrolling a bit PAST the
+    // boundary. Without it, hovering right at a boundary while reversing
+    // direction swaps phases instantly (full enter/exit animation) — which
+    // reads as a "jump" on mobile.
+    const BACK_LAG = 0.015;
+    setPhase(p => {
+      let next = p;
+      while (next < PHASE_STARTS.length - 1 && v >= PHASE_STARTS[next + 1]) next++;
+      while (next > 0 && v < PHASE_STARTS[next] - BACK_LAG) next--;
+      return next;
+    });
   });
 
   // ── Spring config for silky-smooth fade / scale on Kim and video layer ──
@@ -1735,7 +1741,7 @@ export default function ScrollStorySection() {
         >
           {/* Hidden in phases 4-5 (App/Support): on mobile the phone mockups own
               the top strip, and Kim behind them muddied the heading legibility */}
-          <img src={kimHero} alt="קים גפסון" className="object-contain object-bottom w-auto" style={{ height: '42vh', maxHeight: '340px' }} />
+          <img src={kimHero} alt="קים גפסון" className="object-contain object-bottom w-auto" style={{ height: '36svh', maxHeight: '320px' }} />
         </motion.div>
 
         {/* ── Video layer — responsive ──────────────────────────────────────────
@@ -1743,7 +1749,7 @@ export default function ScrollStorySection() {
              Desktop : left column, 52% wide, full height                       */}
         <motion.div
           className="absolute pointer-events-none
-                     top-0 left-0 right-0 h-[48vh]
+                     top-0 left-0 right-0 h-[44svh]
                      lg:inset-y-0 lg:right-auto lg:h-auto lg:pt-0 lg:w-[52%]"
           style={{ opacity: videoOpacity, zIndex: 11 }}
         >
@@ -1799,7 +1805,7 @@ export default function ScrollStorySection() {
         </div>
 
         {/* ── Phase dots — layout-animated pill expansion ── */}
-        <div className="absolute bottom-[52px] left-1/2 -translate-x-1/2 flex gap-2 z-30">
+        <div className="absolute bottom-4 md:bottom-[52px] left-1/2 -translate-x-1/2 flex gap-2 z-30">
           {phases.map((_, i) => (
             <motion.div
               key={i}
@@ -1818,7 +1824,7 @@ export default function ScrollStorySection() {
         <AnimatePresence>
           {phase === 0 && (
             <motion.div
-              className="absolute bottom-32 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-30"
+              className="absolute bottom-12 md:bottom-32 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-30"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ delay: 1.2, duration: 0.5 }}
             >
@@ -1831,7 +1837,7 @@ export default function ScrollStorySection() {
         </AnimatePresence>
 
         {/* ── Bottom banner ── */}
-        <div className="absolute bottom-0 left-0 right-0 z-40" style={{ background: `${BRAND}ee` }}>
+        <div className="hidden md:block absolute bottom-0 left-0 right-0 z-40" style={{ background: `${BRAND}ee` }}>
           <p className="text-white text-center text-sm md:text-base font-medium py-3 px-6">
            תוכנית תזונה מדויקת וממוקדת, ליווי תזונתי אישי עם דיאטנית קלינית, אפליקציה תומכת וקהילה סגורה
           </p>
