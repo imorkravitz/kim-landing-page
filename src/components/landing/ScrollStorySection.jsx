@@ -316,11 +316,21 @@ function PhaseHero() {
   return (
     <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
 
+      {/* Mobile: logo pinned top-right, above Kim + the WhatsApp bubbles */}
+      <motion.div
+        className="lg:hidden absolute top-3 right-4 z-30 pointer-events-none"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <img src={kimLogo} alt="KIM" className="h-16 drop-shadow-md" />
+      </motion.div>
+
       <ContentPanel>
         <motion.div variants={stagger} initial="initial" animate="animate">
 
-          <motion.div variants={item} className="inline-block mb-2 lg:mb-4">
-            <img src={kimLogo} alt="KIM" className="h-40 md:h-56 lg:h-80 drop-shadow-lg" />
+          <motion.div variants={item} className="hidden lg:inline-block mb-2 lg:mb-4">
+            <img src={kimLogo} alt="KIM" className="md:h-56 lg:h-80 drop-shadow-lg" />
           </motion.div>
 
           {/* Main headline */}
@@ -382,7 +392,7 @@ function PhaseHero() {
 
             {/* Social-proof card — subtle lift on hover */}
             <motion.div
-              className="bg-white/80 backdrop-blur-sm border border-[#8B7F4B]/20 rounded-2xl px-4 py-2 shadow-md cursor-default"
+              className="bg-white/80 backdrop-blur-sm border border-[#8B7F4B]/20 rounded-2xl px-4 py-2 shadow-md cursor-default ms-16 lg:ms-0"
               whileHover={{ scale: 1.05, y: -3, boxShadow: '0 12px 28px rgba(139,127,75,0.22)' }}
               transition={{ type: 'spring', stiffness: 320, damping: 18 }}
             >
@@ -503,7 +513,7 @@ function PhaseBusyLife() {
         </motion.div>
       ))}
 
-      <ContentPanel mobilePt="pt-[38svh]">
+      <ContentPanel mobilePt="pt-[44svh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           {/* Mobile heading */}
@@ -1715,7 +1725,7 @@ export default function ScrollStorySection() {
     <section
       ref={sectionRef}
       dir="rtl"
-      style={{ height: '560svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative' }}
+      style={{ height: '560svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative', background: BG }}
     >
       <div
         className="sticky top-0 overflow-hidden"
