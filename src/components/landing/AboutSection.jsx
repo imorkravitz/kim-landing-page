@@ -173,7 +173,7 @@ export default function AboutSection() {
               {/* Portrait with bottom fade — blends into bg naturally */}
               <motion.img
                 src={kimPortrait}
-                alt="קים גפסון קרביץ – דיאטנית קלינית"
+                alt="קים גפסון קרביץ"
                 className="relative w-full object-contain"
                 style={{
                   maskImage:
