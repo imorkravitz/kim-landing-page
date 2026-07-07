@@ -392,7 +392,7 @@ function PhaseHero() {
 
             {/* Social-proof card — subtle lift on hover */}
             <motion.div
-              className="bg-white/80 backdrop-blur-sm border border-[#8B7F4B]/20 rounded-2xl px-4 py-2 shadow-md cursor-default ms-16 lg:ms-0"
+              className="bg-white/80 backdrop-blur-sm border border-[#8B7F4B]/20 rounded-2xl px-4 py-2 shadow-md cursor-default"
               whileHover={{ scale: 1.05, y: -3, boxShadow: '0 12px 28px rgba(139,127,75,0.22)' }}
               transition={{ type: 'spring', stiffness: 320, damping: 18 }}
             >
@@ -513,7 +513,7 @@ function PhaseBusyLife() {
         </motion.div>
       ))}
 
-      <ContentPanel mobilePt="pt-[48svh]">
+      <ContentPanel mobilePt="pt-[53svh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           {/* Mobile heading */}
