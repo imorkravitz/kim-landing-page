@@ -54,7 +54,7 @@ export default function CTASection() {
           {/* Contact Info */}
           <div className="flex flex-wrap gap-8 justify-center text-white/80">
             <a 
-              href="https://www.instagram.com/kimgafson/profilecard/"
+              href="https://www.instagram.com/kimgafson/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-white transition-colors"
