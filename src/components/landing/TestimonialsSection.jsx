@@ -333,9 +333,9 @@ export default function TestimonialsSection() {
         </motion.div>
 
         <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
-          <TestimonialsColumn testimonials={firstColumn} duration={25} />
-          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={30} />
-          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={35} />
+          <TestimonialsColumn testimonials={firstColumn} duration={14} />
+          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={17} />
+          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={20} />
         </div>
 
         <div className="text-center mt-12 flex flex-wrap gap-4 justify-center">

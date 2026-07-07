@@ -323,10 +323,10 @@ function PhaseHero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <img src={kimLogo} alt="KIM" className="h-16 drop-shadow-md" />
+        <img src={kimLogo} alt="KIM" className="h-32 drop-shadow-md" />
       </motion.div>
 
-      <ContentPanel>
+      <ContentPanel mobilePt="pt-[38svh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           <motion.div variants={item} className="hidden lg:inline-block mb-2 lg:mb-4">
@@ -504,16 +504,16 @@ function PhaseBusyLife() {
           <img
             src={src}
             alt={label}
-            className="w-14 h-14 object-contain"
+            className="w-20 h-20 object-contain"
             style={{ filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.18))' }}
           />
-          <span className="text-[9px] font-semibold bg-white/72 px-1.5 py-0.5 rounded-full text-gray-600 leading-none">
+          <span className="text-xs font-semibold bg-white/80 px-2 py-1 rounded-full text-gray-700 leading-none">
             {label}
           </span>
         </motion.div>
       ))}
 
-      <ContentPanel mobilePt="pt-[44svh]">
+      <ContentPanel mobilePt="pt-[48svh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
           {/* Mobile heading */}
@@ -1012,7 +1012,7 @@ function PhaseRing() {
             <div className="bg-white/65 backdrop-blur-sm rounded-xl p-2.5 lg:rounded-2xl lg:p-4 border border-white/60" dir="rtl">
               <p className="font-bold mb-1" style={{ color: '#333', fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>ה-80% שלך</p>
               <p style={{ color: '#666', lineHeight: 1.55, fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>
-                אוכל שמזין את הגוף שלך — ירקות, חלבונים, פחמימות טובות, שומנים בריאים ומים.<br></br>
+                אוכל שמזין את הגוף שלך — ירקות, חלבונים,<br></br>פחמימות טובות, שומנים בריאים ומים.<br></br>
                  זה הבסיס שמאפשר לך ליהנות מהשאר.
               </p>
             </div>
