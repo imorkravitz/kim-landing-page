@@ -137,7 +137,7 @@ export default function AboutSection() {
                     textShadow: '0 2px 20px rgba(255,255,255,0.95), 0 1px 4px rgba(255,255,255,0.95), 0 0 2px rgba(255,255,255,0.9)',
                   }}
                 >
-                  "את לא צריכה לבחור בין בריאות לבין הנאה. אפשר גם וגם."
+                  "את לא צריכה לבחור בין בריאות לבין הנאה.<br />אפשר גם וגם."
                 </p>
               </blockquote>
             </motion.figure>

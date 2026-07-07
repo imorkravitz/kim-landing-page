@@ -1346,11 +1346,11 @@ function PhaseApp() {
               'פידבק כתוב מהדיאטנית בכל יום בווצאפ',
               'מענה לשאלות ופתרון קשיים שעולים לאורך התהליך',
               'הרצאות תזונה אונליין לקהילה של קים',
-              'קיטים דיגיטליים עם מגוון מתכונים קלים, טעימים ופרקטיים — לגיוון התזונה ביומיום',
+              'קיטים דיגיטליים עם מגוון מתכונים קלים, טעימים ופרקטיים\nלגיוון התזונה ביומיום',
             ].map((f) => (
               <div key={f} className="flex items-center gap-2.5 lg:gap-3" dir="rtl">
                 <CheckCircle2 className="w-3.5 h-3.5 lg:w-4 lg:h-4 shrink-0" style={{ color: LIVEAT_GREEN }} />
-                <span className="text-[13px] lg:text-lg leading-snug font-semibold text-[#333]">{f}</span>
+                <span className="text-[13px] lg:text-lg leading-snug font-semibold text-[#333] whitespace-pre-line">{f}</span>
               </div>
             ))}
           </motion.div>
