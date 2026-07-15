@@ -334,7 +334,7 @@ function PhaseHero() {
           </motion.div>
 
           {/* Main headline */}
-          <motion.h1
+          <motion.h2
             variants={item}
             dir="rtl"
             className="text-3xl sm:text-4xl md:text-5xl font-heading leading-[1.15] mb-3 lg:mb-5"
@@ -348,7 +348,7 @@ function PhaseHero() {
             </span>{' '}
 
             <span className="block" style={{ color: TEXT }}>לרדת במשקל <br></br>ולשמור על התוצאות.</span>
-          </motion.h1>
+          </motion.h2>
 
           {/* Credentials card */}
           <motion.div
@@ -730,17 +730,8 @@ function PhasePlate() {
     <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
       <ContentPanel mobilePt="pt-[40svh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
-          <motion.h2
-            variants={item}
-            className="text-3xl font-heading leading-tight mb-3 lg:hidden"
-            style={{ color: TEXT }}
-            dir="rtl"
-          >
-            הכל <Accent>מתחיל בצלחת.</Accent>
-          </motion.h2>
-          <div className="hidden lg:block">
-            <PhaseHeading>הכל<br/><Accent>מתחיל בצלחת.</Accent></PhaseHeading>
-          </div>
+          {/* One responsive heading: inline on mobile, stacked on desktop */}
+          <PhaseHeading>הכל<br className="hidden lg:block" />{' '}<Accent>מתחיל בצלחת.</Accent></PhaseHeading>
           <motion.p
             variants={item}
             style={{

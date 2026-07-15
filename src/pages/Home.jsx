@@ -63,6 +63,12 @@ export default function Home() {
   return (
     <MotionConfig reducedMotion="user">
     <div dir="rtl" className="min-h-screen bg-white font-sans page-transition">
+      {/* Stable page H1 for SEO/screen readers — visually hidden, zero layout impact.
+          The hero's visual headline lives inside the animated story phases and
+          unmounts on scroll, so it can't serve as the document H1. */}
+      <h1 className="sr-only">
+        קים גפסון — תזונה מאפשרת: ליווי תזונתי אישי לנשים בגישת 80:20, לרדת במשקל ולשמור על התוצאות
+      </h1>
       <SEOHead 
         title="קים גפסון | תזונה מאפשרת"
         description="קים גפסון -  בוגרת תואר בתזונה באוניברסיטה העברית עם 12 שנות ניסיון. ליווי תזונתי אישי לנשים עם גישת 80:20,סטודנטית לרפואה באוניברסיטה העברית במסלול 4 שנתי עתידה להתמחות ברפואת נשים, אפליקציית Liveat ותמיכה יומית בווצאפ."
