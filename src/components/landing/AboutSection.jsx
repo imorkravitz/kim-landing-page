@@ -28,7 +28,7 @@ const staggerV = {
 /* ── Credential strip data ── */
 const credentials = [
   { Icon: GraduationCap, title: 'B.Sc תזונה',         sub: 'האוניברסיטה העברית' },
-  { Icon: Stethoscope,   title: 'סטודנטית לרפואה',    sub: 'אונירסיטת תל אביב' },
+  { Icon: Stethoscope,   title: 'סטודנטית לרפואה',    sub: 'אוניברסיטת תל אביב' },
   { Icon: Award,         title: '12 שנות ניסיון',     sub: '' },
   { Icon: Users,         title: '5,000+ מטופלות',     sub: '' },
 ];

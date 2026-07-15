@@ -19,7 +19,7 @@ export default function CTASection() {
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-white mb-6">
-            מוכנה להתחיל את המסע שלך?
+            מוכנה להתחיל לנהל את התזונה שלך?
           </h2>
           <p className="text-xl text-white/80 mb-4">
             "זה לא דיאטה, זו דרך חיים נעימה ובריאה"

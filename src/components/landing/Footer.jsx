@@ -18,7 +18,7 @@ export default function Footer() {
               alt="KIM Logo"
               className="h-90 mb-8"
             />
-            <p className="text-gray-400 leading-relaxed">
+            <p className="text-gray-600 leading-relaxed">
               תזונה מאפשרת – הקליניקה של קים גפסון. 
               ליווי מקצועי ואישי לאורח חיים בריא ומאוזן.
             </p>
@@ -27,13 +27,13 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h4 className="font-bold text-lg mb-4 text-gray-800">קישורים מהירים</h4>
-            <ul className="space-y-3 text-gray-400">
+            <ul className="space-y-3 text-gray-600">
               <li>
                 <a 
                   href="https://onelink.to/zter3n"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors flex items-center gap-2"
+                  className="hover:text-[#8B7F4B] transition-colors flex items-center gap-2"
                 >
                   <Smartphone className="w-4 h-4" />
                   הורדת אפליקציית Liveat
@@ -44,7 +44,7 @@ export default function Footer() {
                   href="https://www.instagram.com/kimgafson/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors flex items-center gap-2"
+                  className="hover:text-[#8B7F4B] transition-colors flex items-center gap-2"
                 >
                   <Instagram className="w-4 h-4" />
                   אינסטגרם
@@ -56,14 +56,14 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 className="font-bold text-lg mb-4 text-gray-800">יצירת קשר</h4>
-            <ul className="space-y-3 text-gray-400">
+            <ul className="space-y-3 text-gray-600">
               <li>
                 <a
                   href="https://wa.link/ntdrz1"
               onClick={() => trackCTA('whatsapp_consult')}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:text-white transition-colors"
+                  className="flex items-center gap-2 hover:text-[#8B7F4B] transition-colors"
                 >
                   <MessageCircle className="w-5 h-5" />
                   צ'אט חכם בווצאפ — זמין 24/7
@@ -75,7 +75,7 @@ export default function Footer() {
               onClick={() => trackCTA('whatsapp_support')}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:text-white transition-colors"
+                  className="flex items-center gap-2 hover:text-[#8B7F4B] transition-colors"
                 >
                   <Phone className="w-5 h-5" />
                   שירות לקוחות — מענה אנושי
@@ -88,7 +88,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
           <p>© {new Date().getFullYear()} KIM - Your Health My Mission. כל הזכויות שמורות.</p>
           <p className="mt-2">
-            <a href="/Accessibility" className="underline underline-offset-4 hover:text-gray-300 transition-colors">
+            <a href="/Accessibility" className="underline underline-offset-4 hover:text-[#8B7F4B] transition-colors">
               הצהרת נגישות
             </a>
           </p>

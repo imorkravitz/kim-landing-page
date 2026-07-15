@@ -148,7 +148,7 @@ export default function PricingSection() {
           />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-7xl mx-auto lg:px-20">
           {plans.map((plan, index) => (
             <div
               key={plan.name}

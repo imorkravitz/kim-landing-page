@@ -169,7 +169,7 @@ export default function ProcessSection() {
               href="https://tinyurl.com/nutrition-diary"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 font-medium"
+              className="inline-block underline underline-offset-4 font-medium py-3 px-2 -my-3"
               style={{ color: '#8B7F4B' }}
             >
               מלאי את שאלון ההתאמה

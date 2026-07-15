@@ -368,7 +368,7 @@ function PhaseHero() {
           </motion.div>
 
           {/* CTA row */}
-          <motion.div variants={item} className="flex flex-col sm:flex-row gap-3 lg:gap-4 items-start mb-3 lg:mb-5">
+          <motion.div variants={item} className="flex flex-col sm:flex-row gap-3 lg:gap-4 items-start mb-3 lg:mb-5 lg:pr-24">
 
             {/* Primary CTA — spring lift + glow on hover */}
             <motion.a
