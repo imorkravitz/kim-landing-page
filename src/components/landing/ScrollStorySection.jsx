@@ -1325,12 +1325,12 @@ function PhaseApp() {
 
           <PhaseHeading>יומן אכילה<br/><Accent>שיתוף הדיאטנית המלווה באפליקציה שלנו</Accent></PhaseHeading>
 
-          <motion.p variants={item} className="text-base lg:text-xl text-gray-600 leading-relaxed mb-2 lg:mb-5" dir="rtl">
+          <motion.p variants={item} className="text-lg lg:text-xl text-gray-600 leading-relaxed mb-3 lg:mb-5" dir="rtl">
             כבר בפגישה הראשונה נבנה עבורך תפריט אישי, גמיש, מפורט עם הנחיות ושפת תזונה ברורה. <br className="hidden lg:block"></br>
             באפליקציה שלנו תוכלי לצלם את הארוחות ולשתף ישירות עם התזונאית.
           </motion.p>
 
-          <motion.div variants={item} className="flex flex-col gap-1.5 lg:gap-2.5">
+          <motion.div variants={item} className="flex flex-col gap-2.5 lg:gap-2.5">
             {[
               'תפריט אישי מותאם כולל הנחיות מדויקות',
               'צילום יומני אכילה באפליקציה ושיתוף ישיר עם הדיאטנית',
@@ -1341,7 +1341,7 @@ function PhaseApp() {
             ].map((f) => (
               <div key={f} className="flex items-center gap-2.5 lg:gap-3" dir="rtl">
                 <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: LIVEAT_GREEN }} />
-                <span className="text-[15px] lg:text-lg leading-snug font-semibold text-[#333] whitespace-pre-line">{f}</span>
+                <span className="text-[17px] lg:text-lg leading-snug font-semibold text-[#333] whitespace-pre-line">{f}</span>
               </div>
             ))}
           </motion.div>
@@ -1617,7 +1617,7 @@ function PhaseSupport() {
 
           <PhaseHeading>ליווי יומיומי<br/><Accent>וכלים שנשארים איתך</Accent></PhaseHeading>
 
-          <motion.p variants={item} className="text-base lg:text-xl text-gray-600 leading-relaxed mb-2 lg:mb-5" dir="rtl">
+          <motion.p variants={item} className="text-lg lg:text-xl text-gray-600 leading-relaxed mb-3 lg:mb-5" dir="rtl">
            בתוכנית שלנו את לא רק מקבלת תפריט{' '}
             <strong style={{ color: BRAND }}>את לומדת על התזונה שלך</strong>{' '}<br className="hidden lg:block"></br>
             כך שתדעי{' '}
@@ -1625,11 +1625,11 @@ function PhaseSupport() {
             {' '}גם{' '}
             <strong style={{ color: BRAND }}>שהתהליך מסתיים</strong>.
           </motion.p>
-          <motion.div variants={item} className="flex flex-col gap-1.5 lg:gap-2.5 mb-2 lg:mb-7">
+          <motion.div variants={item} className="flex flex-col gap-2.5 lg:gap-2.5 mb-4 lg:mb-7">
             {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה (בתוכנית נבחרת)', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות עם תזונאית קלינית'].map((f) => (
               <div key={f} className="flex items-center gap-2.5 lg:gap-3" dir="rtl">
                 <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: BRAND }} />
-                <span className="text-[15px] lg:text-lg leading-snug font-semibold text-[#333]">{f}</span>
+                <span className="text-[17px] lg:text-lg leading-snug font-semibold text-[#333]">{f}</span>
               </div>
             ))}
           </motion.div>
