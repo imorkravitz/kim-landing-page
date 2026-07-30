@@ -192,3 +192,15 @@ button:focus-visible {
     font-family: 'Heebo', sans-serif;
   }
 }
+
+/* ── Story-phase body text (PhaseApp / PhaseSupport) ────────────────────────
+   These phases live in a fixed 100svh sticky box with overflow:hidden, so the
+   text must scale with viewport height or the last lines get clipped on short
+   phones. Desktop keeps the exact Tailwind sizes it always had. */
+.phase-bullet { font-size: clamp(14px, 2.1svh, 17px); }
+.phase-intro  { font-size: clamp(14.5px, 2.2svh, 18px); }
+
+@media (min-width: 1024px) {
+  .phase-bullet { font-size: 1.125rem; } /* = text-lg */
+  .phase-intro  { font-size: 1.25rem; }  /* = text-xl */
+}
