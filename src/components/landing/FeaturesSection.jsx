@@ -38,7 +38,7 @@ const features = [
   {
     icon: UtensilsCrossed,
     title: 'תפריט מותאם אישית',
-    highlight: 'מותאם לאורך החיים',
+    highlight: 'מותאם לאורח החיים',
     desc: ', ליכולות, למטרות ולאופי שלך.',
   },
 ];

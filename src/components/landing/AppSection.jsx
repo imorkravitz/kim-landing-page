@@ -52,7 +52,7 @@ const features = [
   {
     icon: BarChart3,
     title: "מעקב משקל חכם",
-    description: "גרפים ומדדים למעקב אחר ההתקדמות"
+    description: "גרפים ומדדים למעקב אחר ההתקדמות בתהליך"
   },
 ];
 

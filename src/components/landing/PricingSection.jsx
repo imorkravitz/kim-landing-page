@@ -40,7 +40,7 @@ export default function PricingSection() {
       ctaText: 'תרשמי אותי!',
       price: '439',
       duration: 'לחודש',
-      commitment: 'הוראת קבע ל-3 חודשים*',
+      commitment: 'הוראת קבע ל-3 חודשים',
       subtitle: '(ללא תפיסת מסגרת)',
       description: 'תוכנית קצרה וממוקדת, החל מהיום הראשון. נציב מטרות יחד, נבנה תפריט מותאם, גמיש ומאפשר ונצא לדרך לשלושה חודשי איזון תזונתי ותוצאות!',
       featuresTitle: 'מה מקבלים?',
@@ -48,7 +48,7 @@ export default function PricingSection() {
         'פגישה אישית עם תזונאית אונליין בכל חודש (3 פגישות)',
         'מעקב וליווי אישי יומיומי וצמוד בווצאפ',
         '2 ערכות קיט לבחירתך במתנה',
-        'הרצאת זום חודשית עם קים לכל הקהילה'
+        'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
       bgColor: 'bg-[#f9f4eb]',
       headerColor: 'text-[#8B7F4B]',
@@ -60,7 +60,7 @@ export default function PricingSection() {
       ctaText: 'צרפי אותי!',
       price: '399',
       duration: 'לחודש',
-      commitment: 'הוראת קבע ל-6 חודשים*',
+      commitment: 'הוראת קבע ל-6 חודשים',
       subtitle: '(ללא תפיסת מסגרת)',
       description: 'תוכנית תהליכית ואיכותית. מתאימה למי שמחפשת ללמוד לנהל את התזונה שלה בכל זמן ובכל סיטואציה. מפגישה לפגישה נדייק את החליפה התזונתית עבורך, נציב יעדים על ציר הזמן ונצעד יד ביד לתוצאות!',
       featuresTitle: 'מה מקבלים?',
@@ -68,7 +68,7 @@ export default function PricingSection() {
         'פגישה אישית עם תזונאית אונליין בכל חודש (6 פגישות)',
         'מעקב וליווי אישי יומיומי וצמוד בווצאפ',
         '2 ערכות קיט לבחירתך במתנה',
-        'הרצאת זום חודשית עם קים לכל הקהילה'
+        'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
       bgColor: 'bg-[#edead4]',
       headerColor: 'text-[#8B7F4B]',
@@ -81,7 +81,7 @@ export default function PricingSection() {
       ctaText: 'רוצה לנבחרת!',
       price: '409',
       duration: 'לחודש',
-      commitment: 'הוראת קבע ל-12 חודשים*',
+      commitment: 'הוראת קבע ל-12 חודשים',
       subtitle: '(ללא תפיסת מסגרת)',
       description: 'תוכנית אישית וקהילתית. מתאים למי שאנרגיית הקבוצה עושה לה טוב. בנוסף לפגישות והליווי האישי עם התזונאית, תקבלי פגישת מיקוד תזונתית ואישית עם קים. התוכנית משלבת קבוצה ייעודית סגורה, למוטיבציה יומיומית, השראה, רעיונות ואתגרים שבועיים שיתנו לך פוש לתהליך!',
       featuresTitle: 'מה מקבלים?',
@@ -91,7 +91,7 @@ export default function PricingSection() {
         'קבוצת ווצאפ סגורה לקהילה עם התזונאית',
         '2 ערכות קיט לבחירתך במתנה',
         'פגישה אישית עם קים – ייעוץ על נושאים תזונתיים ואישיים לבחירתך',
-        'הרצאת זום חודשית עם קים לכל הקהילה'
+        'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
       bgColor: 'bg-[#cdc2ab]',
       headerColor: 'text-[#8B7F4B]',
@@ -173,8 +173,8 @@ export default function PricingSection() {
                   
                   <div className="flex flex-col items-center justify-center mt-4">
                     <div className="flex items-baseline gap-1 text-[#7D7046]">
-                      <span className="text-3xl font-bold">₪</span>
                       <span className="text-4xl font-bold">{plan.price}</span>
+                      <span className="text-3xl font-bold">₪</span>
                       <span className="text-2xl font-bold">{plan.duration}</span>
                     </div>
                     <div className="text-sm text-gray-600 mt-1 font-medium">{plan.commitment}</div>

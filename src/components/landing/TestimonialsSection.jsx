@@ -328,7 +328,7 @@ export default function TestimonialsSection() {
             כשהמסגרת חכמה והליווי עקבי - <span className="text-[#8B7F4B]">השינוי מגיע</span>
           </h2>
           <p className="text-xl text-slate-700 max-w-3xl mx-auto">
-            התוצאות מדברות בעד עצמן.<br></br> צילומי מסך ושיתופים של לקוחות מרוצים שהצליחו לשנות את אורח החיים שלהם
+            התוצאות מדברות בעד עצמן.<br></br> צילומי מסך ושיתופים של לקוחות מרוצות שהצליחו לשנות את אורח החיים שלהןד
           </p>
         </motion.div>
 
@@ -345,8 +345,11 @@ export default function TestimonialsSection() {
 // @ts-ignore
             Button
               size="lg"
-              className="bg-[#8B7F4B] text-white rounded-2xl px-8 py-6 text-lg font-medium shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[#6d6339] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
-            >
+ className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
+              style={{
+                background: '#25D366',
+                boxShadow: '0 4px 16px rgba(37,211,102,0.30)',
+              }}            >
               <WhatsAppIcon className="w-5 h-5 ml-2" />
              לקביעת ייעוץ התאמה חינם
             </Button>

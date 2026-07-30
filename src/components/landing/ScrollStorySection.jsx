@@ -536,7 +536,7 @@ function PhaseBusyLife() {
           {/* Desktop paragraph — full */}
           <motion.p variants={item} className="hidden lg:block text-xl text-gray-600 leading-relaxed mb-6">
             עבודה, ילדים, אירועים, חופשות ורגעים שבהם האכילה יוצאת מהאיזון.<br/>
-            בדיוק בשביל זה בניתי שיטה שלא דורשת ממך לעצור את החיים, אלא ללמוד איך להתנהל בתוכם.
+            בדיוק בשביל זה בניתי שיטה שלא דורשת ממך לעצור את החיים<br></br> אלא ללמוד איך להתנהל בתוכם.
           </motion.p>
           {/* Mobile paragraph — condensed to one sentence */}
           <motion.p variants={item} className="lg:hidden text-lg text-gray-600 leading-relaxed mb-2">
@@ -992,7 +992,7 @@ function PhaseRing() {
           {/* Sub-headline */}
           <motion.p
             variants={item}
-            style={{ fontSize: 'clamp(0.85rem, 3vw, 2rem)', color: '#777', lineHeight: 1.4 }}
+            style={{ fontSize: 'clamp(1.05rem, 3vw, 2rem)', color: '#777', lineHeight: 1.45 }}
             className="mb-2 lg:mb-4"
           >
            השיטה שמאפשרת לרדת במשקל בלי להפוך את החיים לדיאטה
@@ -1000,16 +1000,16 @@ function PhaseRing() {
           
 
           <motion.div variants={item} className="flex flex-col gap-2">
-            <div className="bg-white/65 backdrop-blur-sm rounded-xl p-2.5 lg:rounded-2xl lg:p-4 border border-white/60" dir="rtl">
-              <p className="font-bold mb-1" style={{ color: '#333', fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>ה-80% שלך</p>
-              <p style={{ color: '#666', lineHeight: 1.55, fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>
+            <div className="bg-white/65 backdrop-blur-sm rounded-xl p-3.5 lg:rounded-2xl lg:p-4 border border-white/60" dir="rtl">
+              <p className="font-bold mb-1" style={{ color: '#333', fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>ה-80% שלך</p>
+              <p style={{ color: '#666', lineHeight: 1.55, fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
                 אוכל שמזין את הגוף שלך — ירקות, חלבונים,<br></br>פחמימות טובות, שומנים בריאים ומים.<br></br>
                  זה הבסיס שמאפשר לך ליהנות מהשאר.
               </p>
             </div>
-            <div className="rounded-xl p-2.5 lg:rounded-2xl lg:p-4" style={{ background: '#C49A7A18', border: '1px solid #C49A7A40' }} dir="rtl">
-              <p className="font-bold mb-1" style={{ color: '#A0745A', fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>ה-20% שלך</p>
-              <p style={{ color: '#666', lineHeight: 1.55, fontSize: 'clamp(0.82rem, 3vw, 1.5rem)' }}>
+            <div className="rounded-xl p-3.5 lg:rounded-2xl lg:p-4" style={{ background: '#C49A7A18', border: '1px solid #C49A7A40' }} dir="rtl">
+              <p className="font-bold mb-1" style={{ color: '#A0745A', fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>ה-20% שלך</p>
+              <p style={{ color: '#666', lineHeight: 1.55, fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
                 אוכל שמזין את הנשמה שלך — הפיצה של שישי, הגלידה בחופשה. <br></br>
                  זה חלק מהשיטה, ובגלל זה היא עובדת לאורך זמן.
               </p>
@@ -1325,7 +1325,7 @@ function PhaseApp() {
 
           <PhaseHeading>יומן אכילה<br/><Accent>שיתוף הדיאטנית המלווה באפליקציה שלנו</Accent></PhaseHeading>
 
-          <motion.p variants={item} className="text-sm lg:text-xl text-gray-600 leading-snug lg:leading-relaxed mb-2 lg:mb-5" dir="rtl">
+          <motion.p variants={item} className="text-base lg:text-xl text-gray-600 leading-relaxed mb-2 lg:mb-5" dir="rtl">
             כבר בפגישה הראשונה נבנה עבורך תפריט אישי, גמיש, מפורט עם הנחיות ושפת תזונה ברורה. <br className="hidden lg:block"></br>
             באפליקציה שלנו תוכלי לצלם את הארוחות ולשתף ישירות עם התזונאית.
           </motion.p>
@@ -1340,8 +1340,8 @@ function PhaseApp() {
               'קיטים דיגיטליים עם מגוון מתכונים קלים, טעימים ופרקטיים\nלגיוון התזונה ביומיום',
             ].map((f) => (
               <div key={f} className="flex items-center gap-2.5 lg:gap-3" dir="rtl">
-                <CheckCircle2 className="w-3.5 h-3.5 lg:w-4 lg:h-4 shrink-0" style={{ color: LIVEAT_GREEN }} />
-                <span className="text-[13px] lg:text-lg leading-snug font-semibold text-[#333] whitespace-pre-line">{f}</span>
+                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: LIVEAT_GREEN }} />
+                <span className="text-[15px] lg:text-lg leading-snug font-semibold text-[#333] whitespace-pre-line">{f}</span>
               </div>
             ))}
           </motion.div>
@@ -1617,7 +1617,7 @@ function PhaseSupport() {
 
           <PhaseHeading>ליווי יומיומי<br/><Accent>וכלים שנשארים איתך</Accent></PhaseHeading>
 
-          <motion.p variants={item} className="text-sm lg:text-xl text-gray-600 leading-snug lg:leading-relaxed mb-2 lg:mb-5" dir="rtl">
+          <motion.p variants={item} className="text-base lg:text-xl text-gray-600 leading-relaxed mb-2 lg:mb-5" dir="rtl">
            בתוכנית שלנו את לא רק מקבלת תפריט{' '}
             <strong style={{ color: BRAND }}>את לומדת על התזונה שלך</strong>{' '}<br className="hidden lg:block"></br>
             כך שתדעי{' '}
@@ -1628,8 +1628,8 @@ function PhaseSupport() {
           <motion.div variants={item} className="flex flex-col gap-1.5 lg:gap-2.5 mb-2 lg:mb-7">
             {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה (בתוכנית נבחרת)', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות עם תזונאית קלינית'].map((f) => (
               <div key={f} className="flex items-center gap-2.5 lg:gap-3" dir="rtl">
-                <CheckCircle2 className="w-3.5 h-3.5 lg:w-4 lg:h-4 shrink-0" style={{ color: BRAND }} />
-                <span className="text-[13px] lg:text-lg leading-snug font-semibold text-[#333]">{f}</span>
+                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: BRAND }} />
+                <span className="text-[15px] lg:text-lg leading-snug font-semibold text-[#333]">{f}</span>
               </div>
             ))}
           </motion.div>

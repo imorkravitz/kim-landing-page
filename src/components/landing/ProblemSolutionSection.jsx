@@ -105,7 +105,7 @@ export default function ProblemSolutionSection() {
             style={{ textWrap: 'balance', textShadow: '0 2px 24px rgba(255,255,255,0.9), 0 1px 3px rgba(255,255,255,0.9)' }}
           >
             לא עוד ניסיון לרדת במשקל.{' '}<br></br>
-            <span style={{ color: BRAND }}>שיטה שמלמדת אותך  <br></br>להצליח באמת.</span>
+            <span style={{ color: BRAND }}>שיטה שמלמדת אותך  <br></br>על התזונה שלך באמת.</span>
           </motion.h2>
    
         </Reveal>
@@ -169,8 +169,8 @@ export default function ProblemSolutionSection() {
                   <Icon className="w-5 h-5" style={{ color }} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 text-base mb-1">{title}</h4>
-                  <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                  <h4 className="font-bold text-gray-900 text-lg lg:text-base mb-1">{title}</h4>
+                  <p className="text-gray-600 text-base lg:text-sm leading-relaxed">{desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -203,9 +203,9 @@ export default function ProblemSolutionSection() {
               <UtensilsCrossed className="w-5 h-5" style={{ color: BRAND }} />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-base mb-1">תפריט מותאם אישית</h4>
-              <p className="text-gray-500 text-sm leading-relaxed">
-                מותאם לאורך החיים, ליכולות, למטרות ולאופי שלך.
+              <h4 className="font-bold text-gray-900 text-lg lg:text-base mb-1">תפריט מותאם אישית</h4>
+              <p className="text-gray-600 text-base lg:text-sm leading-relaxed">
+                מותאם לאורח החיים, ליכולות, למטרות ולאופי שלך.
               </p>
             </div>
           </motion.div>

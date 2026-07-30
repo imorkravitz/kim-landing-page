@@ -7,7 +7,7 @@ const items = [
   { Icon: FlaskConical,  label: 'שיטה מבוססת מחקרים' },
   { Icon: Stethoscope,   label: 'צוות דיאטניות קליניות' },
   { Icon: Smartphone,    label: 'אפליקציה תומכת + מערכות AI' },
-  { Icon: GraduationCap, label: 'בהובלת וניהול מלא של קים' },
+  { Icon: GraduationCap, label: 'בהובלה וניהול מלא של קים' },
 ];
 
 /**

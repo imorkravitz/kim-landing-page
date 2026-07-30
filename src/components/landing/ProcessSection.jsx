@@ -42,21 +42,21 @@ export default function ProcessSection() {
       number: '2',
       icon: Calendar,
       title: 'בניית תפריט מותאם',
-      description: 'תוכנית אישית שנבנית לפי החיים שלך — לא לפי תפריט גנרי.',
+      description: 'תוכנית אישית וגמישה שנבנית לפי החיים שלך ולא לפי תפריט גנרי.',
       color: 'bg-[#A69B6A]'
     },
     {
       number: '3',
       icon: WhatsAppIcon,
       title: 'ליווי יומי בווצאפ',
-      description: 'מענה אישי, פידבק מקצועי ותמיכה בזמן אמת לאורך התהליך.',
+      description: 'מענה אישי, פידבק מקצועי ותמיכה מהתזונאית שלך בזמן אמת לאורך כל התהליך.',
       color: 'bg-[#25D366]'
     },
     {
       number: '4',
       icon: Smartphone,
       title: 'מעקב ודיוקים באפליקציה',
-      description: 'צילום ארוחות, מעקב אחר ההתקדמות ודיוקים שיעזרו לך להבין מה עובד עבורך.',
+      description: 'צילום ארוחות, מעקב אחר ההתקדמות ופתרונות מדויקים לקשיים שעולים, שיעזרו לך להבין מה עובד עבורך.',
       color: 'bg-[#B8AD7E]'
     }
   ];
@@ -70,7 +70,7 @@ export default function ProcessSection() {
       <div className="container mx-auto px-6">
 
         {/* ── RESULT block — moved from ProblemSolutionSection ── */}
-        <div
+        {/* <div
           className="rounded-3xl p-7 md:p-10 text-center mb-12"
           style={{
             background: 'rgba(139,127,75,0.07)',
@@ -100,13 +100,13 @@ export default function ProcessSection() {
               לקביעת ייעוץ התאמה חינם
             </button>
           </a>
-        </div>
+        </div> */}
 
         <div className="text-center mb-8 md:mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-gray-900 mb-4" style={{ textWrap: 'balance' }}>
-            מהרגע שהשארת פרטים — אנחנו איתך
+          מוזמנת להשאיר פרטים ולצאת לדרך
           </h2>
-          <p className="text-xl text-gray-500">
+          <p className="text-2xl text-gray-500">
             4 צעדים פשוטים לתהליך שמותאם <strong style={{ color: '#8B7F4B' }}>אליך</strong>
           </p>
         </div>
@@ -164,7 +164,6 @@ export default function ProcessSection() {
             </Button>
           </a>
           <p className="mt-4 text-sm text-gray-500">
-            מעדיפה להתחיל לבד?{' '}
             <a
               href="https://tinyurl.com/nutrition-diary"
               target="_blank"
