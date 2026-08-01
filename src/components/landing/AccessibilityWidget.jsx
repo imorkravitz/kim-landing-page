@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X, RotateCcw, MousePointer2, Link2, ZoomIn, ZoomOut, FileText } from 'lucide-react';
 
 const AccessibilityIcon = ({ className }) => (
@@ -22,25 +23,38 @@ const DEFAULTS = {
 const STORAGE_KEY = 'a11y-settings';
 
 /**
- * Accessibility widget aligned with IS 5568 (Israeli standard, based on
- * WCAG 2.1 AA) and the service-accessibility regulations (2013).
+ * Accessibility widget aligned with IS 5568 (WCAG 2.1 AA).
  *
- * Compliance-relevant behaviour:
- *  • Settings persist across pages and sessions (localStorage)
- *  • Full keyboard operation: Escape closes, focus moves into the panel on
- *    open and returns to the trigger on close, focus is trapped while open
- *  • State is announced: aria-expanded on the trigger, aria-pressed on each
- *    toggle, role="dialog" + aria-modal on the panel
- *  • Direct link to the accessibility statement, as the regulations require
+ * CRITICAL LAYOUT NOTE — why this component portals itself:
+ * A CSS `filter` on an ancestor makes that ancestor the containing block for
+ * every `position: fixed` descendant. Applying the invert/contrast filters to
+ * <body> therefore un-pinned every floating control (this widget included) and
+ * dropped them to the bottom of an 18,000px page — leaving a user who enabled
+ * invert with no way to switch it back off. Two defences:
+ *   1. Filters are applied to #root, and this widget is portalled to <body> so
+ *      it sits OUTSIDE the filtered subtree and stays reachable, always.
+ *   2. Invert uses a blend-mode overlay instead of a filter, so no containing
+ *      block is created and the other fixed controls keep working normally.
  */
 export default function AccessibilityWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [settings, setSettings] = useState(DEFAULTS);
+  const [portalNode, setPortalNode] = useState(null);
   const panelRef = useRef(null);
   const triggerRef = useRef(null);
 
-  /* Restore saved preferences — required so a user doesn't reconfigure
-     accessibility on every visit */
+  /* Portal target: a direct child of <body>, i.e. a sibling of #root, so no
+     filter applied to the page content can ever affect this widget. */
+  useEffect(() => {
+    let node = document.getElementById('a11y-root');
+    if (!node) {
+      node = document.createElement('div');
+      node.id = 'a11y-root';
+      document.body.appendChild(node);
+    }
+    setPortalNode(node);
+  }, []);
+
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -51,19 +65,23 @@ export default function AccessibilityWidget() {
   useEffect(() => {
     document.documentElement.style.fontSize = `${settings.fontSize}%`;
 
+    /* Applied to #root (page content), never to <body>, so this widget —
+       which lives outside #root — is never filtered or un-pinned. */
+    const target = document.getElementById('root') || document.body;
+
     const classes = {
       'accessibility-bold': settings.boldText,
       'accessibility-high-contrast': settings.highContrast,
-      'accessibility-invert': settings.invertColors,
       'accessibility-highlight-links': settings.highlightLinks,
-      'accessibility-big-cursor': settings.bigCursor,
       'accessibility-readable-font': settings.readableFont,
       'accessibility-line-height': settings.lineHeight,
     };
-
     Object.entries(classes).forEach(([className, isActive]) => {
-      document.body.classList.toggle(className, isActive);
+      target.classList.toggle(className, isActive);
     });
+
+    // Cursor must cover the whole window, and carries no filter risk
+    document.body.classList.toggle('accessibility-big-cursor', settings.bigCursor);
 
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
@@ -100,11 +118,7 @@ export default function AccessibilityWidget() {
     };
 
     document.addEventListener('keydown', onKeyDown);
-    // Move focus into the panel so keyboard users land where they opened
-    const t = setTimeout(() => {
-      panelRef.current?.querySelector('button')?.focus();
-    }, 50);
-
+    const t = setTimeout(() => panelRef.current?.querySelector('button')?.focus(), 50);
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       clearTimeout(t);
@@ -128,13 +142,11 @@ export default function AccessibilityWidget() {
     { key: 'invertColors',   label: 'היפוך צבעים',     icon: '◑' },
   ];
 
-  return (
+  const widget = (
     <>
       <style>{`
         .accessibility-bold * { font-weight: bold !important; }
-        .accessibility-high-contrast { filter: contrast(1.4) !important; }
-        .accessibility-invert { filter: invert(1) hue-rotate(180deg) !important; }
-        .accessibility-invert img, .accessibility-invert video { filter: invert(1) hue-rotate(180deg) !important; }
+        .accessibility-high-contrast { filter: contrast(1.4); }
         .accessibility-highlight-links a {
           outline: 3px solid #0066cc !important;
           background-color: #ffff00 !important;
@@ -149,8 +161,19 @@ export default function AccessibilityWidget() {
         }
         .accessibility-line-height * { line-height: 2 !important; }
 
-        /* WCAG 2.4.7 Focus Visible — a clearly visible focus ring everywhere.
-           Removing focus outlines is one of the most-cited accessibility faults. */
+        /* Invert via blend mode, NOT filter: keeps position:fixed working */
+        #a11y-invert-overlay {
+          position: fixed;
+          inset: 0;
+          background: #fff;
+          mix-blend-mode: difference;
+          pointer-events: none;
+          z-index: 9998;
+        }
+        /* Widget sits above the overlay, so its own colours stay true */
+        #a11y-root { position: relative; z-index: 9999; }
+
+        /* WCAG 2.4.7 Focus Visible */
         a:focus-visible,
         button:focus-visible,
         input:focus-visible,
@@ -162,12 +185,12 @@ export default function AccessibilityWidget() {
           border-radius: 2px;
         }
 
-        /* WCAG 2.4.1 Bypass Blocks — skip link, visible only on keyboard focus */
+        /* WCAG 2.4.1 Bypass Blocks */
         .skip-to-content {
           position: absolute;
           right: 1rem;
           top: -100px;
-          z-index: 9999;
+          z-index: 10000;
           background: #1a73e8;
           color: #fff;
           padding: 0.75rem 1.25rem;
@@ -178,12 +201,13 @@ export default function AccessibilityWidget() {
         .skip-to-content:focus { top: 0; }
       `}</style>
 
-      {/* Skip link — first focusable element on the page */}
+      {settings.invertColors && <div id="a11y-invert-overlay" aria-hidden="true" />}
+
       <a href="#main-content" className="skip-to-content">
         דילוג לתוכן הראשי
       </a>
 
-      <div className="fixed bottom-[72px] md:bottom-24 left-4 z-50">
+      <div className="fixed bottom-[72px] md:bottom-24 left-4">
         <button
           ref={triggerRef}
           onClick={() => setIsOpen(!isOpen)}
@@ -204,7 +228,6 @@ export default function AccessibilityWidget() {
             className="absolute bottom-20 left-0 bg-white rounded-2xl shadow-2xl overflow-hidden w-80 md:w-96 border border-gray-200 animate-in slide-in-from-bottom-2"
             dir="rtl"
           >
-            {/* Header */}
             <div className="bg-[#1a73e8] text-white px-4 py-3 flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <AccessibilityIcon className="w-6 h-6" />
@@ -219,7 +242,6 @@ export default function AccessibilityWidget() {
               </button>
             </div>
 
-            {/* Font size */}
             <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
               <div className="flex items-center justify-between">
                 <span className="text-gray-700 font-medium" id="a11y-fontsize-label">גודל טקסט</span>
@@ -250,7 +272,6 @@ export default function AccessibilityWidget() {
               </div>
             </div>
 
-            {/* Toggles */}
             <div className="p-3 grid grid-cols-3 gap-2">
               {options.map((option) => (
                 <button
@@ -269,7 +290,6 @@ export default function AccessibilityWidget() {
               ))}
             </div>
 
-            {/* Reset */}
             <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
               <button
                 onClick={resetSettings}
@@ -280,7 +300,6 @@ export default function AccessibilityWidget() {
               </button>
             </div>
 
-            {/* Accessibility statement — required to be reachable */}
             <div className="px-4 py-3 border-t border-gray-100 text-center">
               <a
                 href="/Accessibility"
@@ -295,4 +314,6 @@ export default function AccessibilityWidget() {
       </div>
     </>
   );
+
+  return portalNode ? createPortal(widget, portalNode) : null;
 }
