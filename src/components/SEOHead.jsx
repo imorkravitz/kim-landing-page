@@ -23,6 +23,15 @@ export default function SEOHead({
       element.setAttribute('content', content);
     };
 
+    // Canonical URL — one authoritative address for this page
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', url);
+
     // Basic meta tags
     setMetaTag('description', description);
     setMetaTag('keywords', keywords);
@@ -87,6 +96,8 @@ export default function SEOHead({
       "founder": {
         "@type": "Person",
         "name": "קים גפסון",
+        "alternateName": ["קים גפסון קרביץ", "Kim Gafson", "Kim Gafson Kravitz"],
+        "sameAs": ["https://www.instagram.com/kimgafson"],
         "jobTitle": "בוגרת תואר בתזונה וסטודנטית לרפואה",
         "description": "קים גפסון היא בוגרת תואר בתזונה באוניברסיטה העברית וסטודנטית לרפואה באוניברסיטת תל אביב במסלול ה-4 שנתי. מתמחה בגישה של 80:20, המאפשרת לאכול בריא מבלי לוותר על ההנאות הקטנות של החיים. קים מציעה ליווי תזונתי מותאם אישית, כולל תמיכה יומית בווצאפ ואפליקציית Liveat, ומסייעת למטופלות להשיג את מטרותיהן התזונתיות בצורה בריאה ומאוזנת."
       }
