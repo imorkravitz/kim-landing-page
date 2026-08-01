@@ -100,6 +100,7 @@ export default function Home() {
         }
       `}</style>
       
+      <main id="main-content">
       <ScrollStorySection />
 
       <TrustBar />
@@ -135,6 +136,8 @@ export default function Home() {
         <CTASection />
       </AnimatedSection>
       
+      </main>
+
       <Footer />
       
       {/* Fixed Elements */}
