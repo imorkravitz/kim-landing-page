@@ -81,6 +81,8 @@ export default function FloatingCTA() {
         <div className={`absolute inset-0 bg-green-300/50 rounded-full ${!isOpen ? 'animate-ping' : ''}`} style={{ animationDuration: '2s' }}></div>
         <button
           onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? 'סגירת תפריט יצירת קשר' : 'פתיחת תפריט יצירת קשר בווצאפ'}
+          aria-expanded={isOpen}
           className={`relative z-10 w-12 h-12 md:w-14 md:h-14 rounded-full shadow-xl flex items-center justify-center transition-all ${
             isOpen 
               ? 'bg-gray-800 hover:bg-gray-700' 

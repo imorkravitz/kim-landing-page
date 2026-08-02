@@ -169,7 +169,7 @@ export default function ProblemSolutionSection() {
                   <Icon className="w-5 h-5" style={{ color }} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 text-lg lg:text-base mb-1">{title}</h4>
+                  <h3 className="font-bold text-gray-900 text-lg lg:text-base mb-1">{title}</h3>
                   <p className="text-gray-600 text-base lg:text-sm leading-relaxed">{desc}</p>
                 </div>
               </motion.div>
@@ -203,7 +203,7 @@ export default function ProblemSolutionSection() {
               <UtensilsCrossed className="w-5 h-5" style={{ color: BRAND }} />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-lg lg:text-base mb-1">תפריט מותאם אישית</h4>
+              <h3 className="font-bold text-gray-900 text-lg lg:text-base mb-1">תפריט מותאם אישית</h3>
               <p className="text-gray-600 text-base lg:text-sm leading-relaxed">
                 מותאם לאורח החיים, ליכולות, למטרות ולאופי שלך.
               </p>

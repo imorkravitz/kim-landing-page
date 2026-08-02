@@ -1,11 +1,8 @@
 import React from 'react';
 import { trackCTA } from '@/lib/analytics';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { TestimonialsColumn } from '@/components/ui/testimonials-column';
 import { Button } from "@/components/ui/button";
-import { createPageUrl } from '@/utils';
-import { ArrowLeft } from 'lucide-react';
 
 // @ts-ignore
 import img1 from '../../assets/patientsSuccess/1.webp';
@@ -354,18 +351,6 @@ export default function TestimonialsSection() {
              לקביעת ייעוץ התאמה חינם
             </Button>
           </a>
-          <Link to={createPageUrl('SuccessStories')}>
-            {/* <
-// @ts-ignore
-            Button
-              size="lg"
-              variant="outline"
-              className="border-2 border-[#8B7F4B] text-[#8B7F4B] rounded-2xl px-8 py-6 text-lg font-medium shadow-none hover:bg-[#8B7F4B] hover:text-white hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
-            >
-              לכל סיפורי ההצלחה
-              <ArrowLeft className="w-5 h-5 mr-2" />
-            </Button> */}
-          </Link>
         </div>
       </div>
     </section>

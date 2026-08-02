@@ -42,34 +42,59 @@ export default function Accessibility() {
 
           <h2 className="text-xl font-bold text-gray-900 pt-2">התאמות הנגישות באתר</h2>
           <ul className="list-disc pr-6 space-y-2">
-            <li>ווידג'ט נגישות המאפשר שינוי גודל טקסט, ניגודיות, עצירת אנימציות ועוד</li>
-            <li>תמיכה מלאה בניווט מקלדת</li>
+            <li>תפריט נגישות הכולל שינוי גודל טקסט, ניגודיות גבוהה, היפוך צבעים, הדגשת קישורים, סמן מוגדל, גופן קריא והגדלת מרווח שורות</li>
+            <li>ההגדרות שנבחרו בתפריט הנגישות נשמרות בין עמודים ובין ביקורים</li>
+            <li>קישור "דילוג לתוכן הראשי" בתחילת העמוד</li>
+            <li>תמיכה בניווט ובהפעלה מלאה באמצעות מקלדת, כולל סימון ברור של מוקד ההתמקדות</li>
             <li>טקסט חלופי לתמונות משמעותיות</li>
-            <li>יחסי ניגודיות העומדים בדרישות AA</li>
+            <li>מבנה כותרות היררכי וסמנטי ותגיות ARIA לקוראי מסך</li>
             <li>תמיכה בהעדפת "הפחתת תנועה" של מערכת ההפעלה</li>
-            <li>מבנה כותרות היררכי וסמנטי</li>
           </ul>
 
-          <h2 className="text-xl font-bold text-gray-900 pt-2">נתקלת בבעיה?</h2>
+          <h2 className="text-xl font-bold text-gray-900 pt-2">מגבלות נגישות ידועות</h2>
           <p>
-            אם נתקלת בקושי או בתקלה בנושא נגישות באתר, נשמח שתפני אלינו ונטפל
-            בהקדם האפשרי:
+            האתר כולל אזור סיפורי הצלחה המוצג באמצעות צילומי מסך של הודעות מלקוחות.
+            תוכן הצילומים אינו נגיש במלואו לקוראי מסך. ניתן לקבל את תוכן ההמלצות
+            בכתב בפנייה אלינו בערוצי הקשר המפורטים בהמשך.
           </p>
           <p>
-            <strong>פנייה בווצאפ:</strong>{' '}
-            <a
-              href="https://wa.link/r2etxn"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4"
-              style={{ color: BRAND }}
-            >
-              שירות הלקוחות שלנו
-            </a>
+            אנו ממשיכים לשפר את נגישות האתר באופן שוטף. אם מצאת רכיב שאינו נגיש,
+            נשמח לדעת ונטפל בכך בהקדם.
           </p>
 
-          <p className="text-sm text-gray-400 pt-4">
-            הצהרה זו עודכנה לאחרונה: יולי 2026
+          <h2 className="text-xl font-bold text-gray-900 pt-2">רכזת הנגישות ופרטי יצירת קשר</h2>
+          <p>
+            אחראית הנגישות באתר: <strong>קים גפסון קרביץ</strong>.
+            <br />
+            לפניות בנושא נגישות — כולל דיווח על תקלת נגישות או בקשה לקבלת מידע
+            בדרך חלופית:
+          </p>
+          <ul className="list-disc pr-6 space-y-2">
+            <li>
+              <strong>דוא"ל:</strong>{' '}
+              <a href="mailto:kimgafson@gmail.com" className="underline underline-offset-4" style={{ color: BRAND }}>
+                kimgafson@gmail.com
+              </a>
+            </li>
+            <li>
+              <strong>ווצאפ:</strong>{' '}
+              <a
+                href="https://wa.link/r2etxn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4"
+                style={{ color: BRAND }}
+              >
+                שירות הלקוחות שלנו
+              </a>
+            </li>
+          </ul>
+          <p>
+            נשתדל לטפל בפנייה בהקדם האפשרי, ובכל מקרה בתוך הזמן הקבוע בתקנות.
+          </p>
+
+          <p className="text-sm text-gray-500 pt-4">
+            הצהרה זו עודכנה לאחרונה: אוגוסט 2026.
           </p>
         </div>
       </div>

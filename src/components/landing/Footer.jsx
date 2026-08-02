@@ -26,7 +26,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-lg mb-4 text-gray-800">קישורים מהירים</h4>
+            <h3 className="font-bold text-lg mb-4 text-gray-800">קישורים מהירים</h3>
             <ul className="space-y-3 text-gray-600">
               <li>
                 <a 
@@ -55,7 +55,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-bold text-lg mb-4 text-gray-800">יצירת קשר</h4>
+            <h3 className="font-bold text-lg mb-4 text-gray-800">יצירת קשר</h3>
             <ul className="space-y-3 text-gray-600">
               <li>
                 <a
