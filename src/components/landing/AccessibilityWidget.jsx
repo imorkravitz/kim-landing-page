@@ -40,19 +40,29 @@ export default function AccessibilityWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [settings, setSettings] = useState(DEFAULTS);
   const [portalNode, setPortalNode] = useState(null);
+  const [overlayNode, setOverlayNode] = useState(null);
   const panelRef = useRef(null);
   const triggerRef = useRef(null);
 
   /* Portal target: a direct child of <body>, i.e. a sibling of #root, so no
      filter applied to the page content can ever affect this widget. */
   useEffect(() => {
-    let node = document.getElementById('a11y-root');
-    if (!node) {
-      node = document.createElement('div');
-      node.id = 'a11y-root';
-      document.body.appendChild(node);
-    }
-    setPortalNode(node);
+    const ensure = (id, before) => {
+      let n = document.getElementById(id);
+      if (!n) {
+        n = document.createElement('div');
+        n.id = id;
+        document.body.appendChild(n);
+      }
+      return n;
+    };
+    // Overlay lives in its OWN body-level node. It must NOT sit inside
+    // #a11y-root: that element has a z-index, which creates a stacking
+    // context, and mix-blend-mode only blends against a backdrop inside the
+    // same context — the overlay would have blended against nothing and
+    // painted an opaque white sheet over the whole page.
+    setOverlayNode(ensure('a11y-invert-root'));
+    setPortalNode(ensure('a11y-root'));
   }, []);
 
   useEffect(() => {
@@ -201,8 +211,6 @@ export default function AccessibilityWidget() {
         .skip-to-content:focus { top: 0; }
       `}</style>
 
-      {settings.invertColors && <div id="a11y-invert-overlay" aria-hidden="true" />}
-
       <a href="#main-content" className="skip-to-content">
         דילוג לתוכן הראשי
       </a>
@@ -315,5 +323,12 @@ export default function AccessibilityWidget() {
     </>
   );
 
-  return portalNode ? createPortal(widget, portalNode) : null;
+  return (
+    <>
+      {overlayNode && settings.invertColors
+        ? createPortal(<div id="a11y-invert-overlay" aria-hidden="true" />, overlayNode)
+        : null}
+      {portalNode ? createPortal(widget, portalNode) : null}
+    </>
+  );
 }
