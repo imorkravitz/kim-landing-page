@@ -72,8 +72,8 @@ export default function Accessibility() {
           <ul className="list-disc pr-6 space-y-2">
             <li>
               <strong>דוא"ל:</strong>{' '}
-              <a href="mailto:kimgafson@gmail.com" className="underline underline-offset-4" style={{ color: BRAND }}>
-                kimgafson@gmail.com
+              <a href="mailto:imkimgafson@gmail.com" className="underline underline-offset-4" style={{ color: BRAND }}>
+                imkimgafson@gmail.com
               </a>
             </li>
             <li>
