@@ -1,20 +1,36 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 
+/**
+ * Vertical marquee column of testimonial screenshots.
+ *
+ * Mobile notes:
+ *  • `duration` is the desktop loop time; mobile runs ~40% faster because the
+ *    viewport shows fewer cards at once, so the same speed reads as "nothing
+ *    is happening" before the visitor scrolls past.
+ *  • Auto-moving content that runs >5s needs a way to stop it (WCAG 2.2.2).
+ *    Desktop pauses on hover; touch devices pause while the user holds the
+ *    column, and prefers-reduced-motion stops the loop entirely.
+ */
 export const TestimonialsColumn = ({
   className = "",
   testimonials,
-  duration = 20 // ברירת מחדל איטית יותר לתנועה חלקה
+  duration = 20,
+  mobileDuration,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const columnRef = useRef(null);
 
+  const mobile = mobileDuration ?? duration * 0.6;
+
   return (
-    <div 
+    <div
       className={`relative h-full overflow-hidden ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
+      onTouchCancel={() => setIsPaused(false)}
     >
-      {/* הגדרת האנימציה בתוך הקומפוננטה כדי למנוע התנגשויות */}
       <style>{`
         @keyframes scrollVertical {
           0% { transform: translate3d(0, 0, 0); }
@@ -22,41 +38,48 @@ export const TestimonialsColumn = ({
         }
         .animate-scroll-vertical {
           animation: scrollVertical linear infinite;
-          will-change: transform; /* אומר לדפדפן להתכונן לשינוי - מונע קטיעות */
+          animation-duration: var(--marquee-mobile);
+          will-change: transform;
+        }
+        @media (min-width: 768px) {
+          .animate-scroll-vertical { animation-duration: var(--marquee-desktop); }
+        }
+        /* WCAG 2.3.3 / 2.2.2 — no autoplaying motion when the OS asks for less */
+        @media (prefers-reduced-motion: reduce) {
+          .animate-scroll-vertical { animation: none; }
         }
       `}</style>
 
       <div
         ref={columnRef}
-        className="animate-scroll-vertical flex flex-col gap-6 pb-6"
+        className="animate-scroll-vertical flex flex-col gap-3 md:gap-6 pb-6"
         style={{
-          animationDuration: `${duration}s`,
-          animationPlayState: isHovered ? "paused" : "running", // שליטה מלאה דרך ה-State
+          '--marquee-mobile': `${mobile}s`,
+          '--marquee-desktop': `${duration}s`,
+          animationPlayState: isPaused ? "paused" : "running",
         }}
       >
-        {/* אנו משכפלים את המערך פעם אחת כדי ליצור לופ אינסופי */}
+        {/* Duplicated once so the loop is seamless */}
         {[...Array(2)].map((_, groupIndex) => (
           <React.Fragment key={groupIndex}>
             {testimonials.map(({ text, image, name, role }, i) => (
               <div
                 key={`${groupIndex}-${i}`}
-                // הסרתי את backdrop-blur ושיניתי ל-bg-white נקי יותר לביצועים
-                // הוספתי transform-gpu כדי להכריח שימוש בכרטיס מסך
-                className="transform-gpu p-4 rounded-3xl border border-[#8B7F4B]/20 bg-white shadow-lg shadow-[#8B7F4B]/5 max-w-xs w-full transition-transform duration-200"
+                className="transform-gpu p-2 md:p-4 rounded-2xl md:rounded-3xl border border-[#8B7F4B]/20 bg-white shadow-lg shadow-[#8B7F4B]/5 w-full transition-transform duration-200"
               >
-                <div className={`overflow-hidden rounded-2xl bg-gray-100 ${role ? 'mb-4' : ''}`}>
+                <div className={`overflow-hidden rounded-xl md:rounded-2xl bg-gray-100 ${role ? 'mb-2 md:mb-4' : ''}`}>
                   <img
                     src={image || "/placeholder.svg"}
                     alt={role ? `הצלחה של ${role}` : 'סיפור הצלחה של מטופלת'}
                     className="w-full h-auto object-cover block"
-                    loading="eager" // חשוב! טוען את התמונות מיד כדי למנוע קפיצות בגובה
-                    draggable="false" // מונע גרירה של התמונה עצמה
+                    loading={groupIndex === 0 && i < 4 ? "eager" : "lazy"}
+                    draggable="false"
                   />
                 </div>
 
                 {role && (
                   <div className="text-center">
-                    <div className="text-sm text-[#8B7F4B] font-bold bg-[#8B7F4B]/10 rounded-full px-3 py-1 inline-block">
+                    <div className="text-xs md:text-sm text-[#8B7F4B] font-bold bg-[#8B7F4B]/10 rounded-full px-2 md:px-3 py-1 inline-block">
                       {role}
                     </div>
                   </div>
@@ -66,8 +89,7 @@ export const TestimonialsColumn = ({
           </React.Fragment>
         ))}
       </div>
-      
-      {/* שכבת הגנה למנוע קליקים בזמן גלילה מהירה (אופציונלי) */}
+
       <div className="absolute inset-0 pointer-events-none shadow-[inset_0_10px_20px_rgb(255,255,255),inset_0_-10px_20px_rgb(255,255,255)] z-10" />
     </div>
   );

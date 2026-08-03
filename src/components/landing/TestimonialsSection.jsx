@@ -329,10 +329,13 @@ export default function TestimonialsSection() {
           </p>
         </motion.div>
 
-        <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
-          <TestimonialsColumn testimonials={firstColumn} duration={14} />
-          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={17} />
-          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={20} />
+        {/* Two columns on mobile: one column moved too little content past the
+            viewport before a visitor scrolled on, so the social proof didn't land.
+            Third column stays desktop-only to keep cards readable. */}
+        <div className="flex justify-center gap-3 md:gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[600px] md:max-h-[740px] overflow-hidden">
+          <TestimonialsColumn testimonials={firstColumn} duration={14} className="flex-1 max-w-xs" />
+          <TestimonialsColumn testimonials={secondColumn} duration={17} className="flex-1 max-w-xs" />
+          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block flex-1 max-w-xs" duration={20} />
         </div>
 
         <div className="text-center mt-12 flex flex-wrap gap-4 justify-center">

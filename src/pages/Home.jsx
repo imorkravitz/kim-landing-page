@@ -63,6 +63,30 @@ export default function Home() {
   return (
     <MotionConfig reducedMotion="user">
     <div dir="rtl" className="min-h-screen bg-white font-sans page-transition">
+      {/* First focusable element on the page — WCAG 2.4.1 Bypass Blocks.
+          Must live here, not in the portalled a11y widget: there it was the
+          LAST tab stop, which defeats the purpose. */}
+      <a
+        href="#content-start"
+        className="skip-to-content"
+        onClick={(e) => {
+          // Handled here rather than by the generic anchor handler below,
+          // because a skip link must MOVE FOCUS, not just scroll — otherwise
+          // the keyboard user's tab position never actually advances.
+          e.preventDefault();
+          const target = document.getElementById('content-start');
+          if (!target) return;
+          // Instant, positional scroll — deliberately not smooth: a skip link
+          // exists to get a keyboard user past the hero immediately, and
+          // animating ~4700px works against that. The positional form is also
+          // the one UAs never suppress.
+          const top = target.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo(0, top);
+          target.focus({ preventScroll: true });
+        }}
+      >
+        דילוג לתוכן הראשי
+      </a>
       {/* Stable page H1 for SEO/screen readers — visually hidden, zero layout impact.
           The hero's visual headline lives inside the animated story phases and
           unmounts on scroll, so it can't serve as the document H1. */}
@@ -102,6 +126,9 @@ export default function Home() {
       
       <main id="main-content">
       <ScrollStorySection />
+
+      {/* Skip-link destination: first real content after the hero story */}
+      <div id="content-start" tabIndex={-1} className="outline-none" />
 
       <TrustBar />
 

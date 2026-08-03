@@ -204,3 +204,21 @@ button:focus-visible {
   .phase-bullet { font-size: 1.125rem; } /* = text-lg */
   .phase-intro  { font-size: 1.25rem; }  /* = text-xl */
 }
+
+/* WCAG 2.4.1 Bypass Blocks — visible only on keyboard focus.
+   position: fixed (not absolute) so it anchors to the viewport regardless of
+   which container it happens to sit in. */
+.skip-to-content {
+  position: fixed;
+  right: 1rem;
+  top: -100px;
+  z-index: 10000;
+  background: #1a73e8;
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top 0.15s ease-in-out;
+}
+.skip-to-content:focus { top: 0; }

@@ -195,25 +195,7 @@ export default function AccessibilityWidget() {
           border-radius: 2px;
         }
 
-        /* WCAG 2.4.1 Bypass Blocks */
-        .skip-to-content {
-          position: absolute;
-          right: 1rem;
-          top: -100px;
-          z-index: 10000;
-          background: #1a73e8;
-          color: #fff;
-          padding: 0.75rem 1.25rem;
-          border-radius: 0 0 0.5rem 0.5rem;
-          font-weight: 700;
-          transition: top 0.15s ease-in-out;
-        }
-        .skip-to-content:focus { top: 0; }
       `}</style>
-
-      <a href="#main-content" className="skip-to-content">
-        דילוג לתוכן הראשי
-      </a>
 
       <div className="fixed bottom-[72px] md:bottom-24 left-4">
         <button
