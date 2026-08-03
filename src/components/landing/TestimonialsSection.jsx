@@ -304,11 +304,50 @@ const testimonials = [
   },
 ];
 
-const firstColumn = testimonials.slice(0, 14);   // תמונות 1-14 (14 פריטים)
-const secondColumn = testimonials.slice(14, 28); // תמונות 15-28 (14 פריטים)
-const thirdColumn = testimonials.slice(28);
+/* Desktop: three columns, 14 / 14 / 13 */
+const firstColumn  = testimonials.slice(0, 14);
+const secondColumn = testimonials.slice(14, 28);
+const thirdColumn  = testimonials.slice(28);
+
+/* Mobile shows only two columns, so slicing the same way would strand the
+   third column's 13 testimonials — a third of the social proof, invisible to
+   the phone traffic that makes up most visitors. Interleave instead: every
+   testimonial appears, and the two content types (progress charts vs
+   before/after photos) stay mixed across both columns rather than clumping. */
+const mobileFirstColumn  = testimonials.filter((_, i) => i % 2 === 0);
+const mobileSecondColumn = testimonials.filter((_, i) => i % 2 === 1);
+
+/* Keep pixel speed constant as column length changes: a taller column must
+   take proportionally longer or it whips past. */
+const perItem = 0.6;
+const mobileDurationFor = (col) => Math.round(col.length * perItem);
+
+function useIsDesktop() {
+  const query = '(min-width: 768px)';
+  // Initialised synchronously — this is a client-only SPA, so reading
+  // matchMedia up front avoids a flash of the wrong column set on load.
+  const [isDesktop, setIsDesktop] = React.useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  );
+  React.useEffect(() => {
+    const mq = window.matchMedia(query);
+    const sync = () => setIsDesktop(mq.matches);
+    // Both signals: the media-query change event is the precise one, and a
+    // plain resize listener is the fallback for environments (and orientation
+    // changes on some mobile browsers) where that event doesn't fire.
+    mq.addEventListener('change', sync);
+    window.addEventListener('resize', sync);
+    sync();
+    return () => {
+      mq.removeEventListener('change', sync);
+      window.removeEventListener('resize', sync);
+    };
+  }, []);
+  return isDesktop;
+}
 
 export default function TestimonialsSection() {
+  const isDesktop = useIsDesktop();
   return (
     <section id="results" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F5F3ED]/50 to-white backdrop-blur-sm relative">
       <div className="max-w-7xl mx-auto">
@@ -333,9 +372,26 @@ export default function TestimonialsSection() {
             viewport before a visitor scrolled on, so the social proof didn't land.
             Third column stays desktop-only to keep cards readable. */}
         <div className="flex justify-center gap-3 md:gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[600px] md:max-h-[740px] overflow-hidden">
-          <TestimonialsColumn testimonials={firstColumn} duration={14} className="flex-1 max-w-xs" />
-          <TestimonialsColumn testimonials={secondColumn} duration={17} className="flex-1 max-w-xs" />
-          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block flex-1 max-w-xs" duration={20} />
+          {isDesktop ? (
+            <>
+              <TestimonialsColumn testimonials={firstColumn}  duration={14} className="flex-1 max-w-xs" />
+              <TestimonialsColumn testimonials={secondColumn} duration={17} className="flex-1 max-w-xs" />
+              <TestimonialsColumn testimonials={thirdColumn}  duration={20} className="hidden lg:block flex-1 max-w-xs" />
+            </>
+          ) : (
+            <>
+              <TestimonialsColumn
+                testimonials={mobileFirstColumn}
+                mobileDuration={mobileDurationFor(mobileFirstColumn)}
+                className="flex-1 max-w-xs"
+              />
+              <TestimonialsColumn
+                testimonials={mobileSecondColumn}
+                mobileDuration={mobileDurationFor(mobileSecondColumn) + 2}
+                className="flex-1 max-w-xs"
+              />
+            </>
+          )}
         </div>
 
         <div className="text-center mt-12 flex flex-wrap gap-4 justify-center">
