@@ -87,9 +87,13 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
           <p>© {new Date().getFullYear()} KIM - Your Health My Mission. כל הזכויות שמורות.</p>
-          <p className="mt-2">
+          <p className="mt-2 flex items-center justify-center gap-3 flex-wrap">
             <a href="/Accessibility" className="underline underline-offset-4 hover:text-[#8B7F4B] transition-colors">
               הצהרת נגישות
+            </a>
+            <span aria-hidden="true">·</span>
+            <a href="/Privacy" className="underline underline-offset-4 hover:text-[#8B7F4B] transition-colors">
+              מדיניות פרטיות
             </a>
           </p>
         </div>

@@ -11,6 +11,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://kimgafson.co.il/Privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
     <loc>https://kimgafson.co.il/Accessibility</loc>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
