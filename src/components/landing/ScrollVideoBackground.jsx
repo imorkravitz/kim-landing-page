@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
 // @ts-ignore
 import stethoscopeVideo from '../../assets/videos/stethoscope_animated_2.mp4';
@@ -27,6 +27,26 @@ export default function ScrollVideoBackground({ children }) {
   const pendingRef = useRef(false);
   const rafRef     = useRef(null);
 
+  /* This video sits roughly 5,000px down the page, but preload="auto" had it
+     racing the hero for bandwidth at first paint — a megabyte spent before the
+     visitor had seen anything. It is fetched once the section is within two
+     viewports instead, which on any real connection is far enough ahead to be
+     buffered by the time it is scrubbed. */
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const node = wrapperRef.current;
+    if (!node) return;
+    if (typeof IntersectionObserver === 'undefined') { setShouldLoad(true); return; }
+
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setShouldLoad(true); io.disconnect(); } },
+      { rootMargin: '200% 0px' }
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
     // progress = 0 when wrapper first appears at viewport bottom
@@ -37,7 +57,10 @@ export default function ScrollVideoBackground({ children }) {
   useEffect(() => {
     const video  = videoRef.current;
     const canvas = canvasRef.current;
-    if (!video || !canvas) return;
+    // Keyed on shouldLoad so that load() and the paint listeners are wired up
+    // AFTER a src exists. Run once on mount with no src, video.load() would be
+    // a no-op and nothing would ever repaint the canvas.
+    if (!video || !canvas || !shouldLoad) return;
 
     const ctx = canvas.getContext('2d', { alpha: false });
     video.pause();
@@ -126,7 +149,7 @@ export default function ScrollVideoBackground({ children }) {
       video.removeEventListener('loadeddata',     paint);
       video.removeEventListener('canplaythrough', paint);
     };
-  }, []);
+  }, [shouldLoad]);
 
   useMotionValueEvent(scrollYProgress, 'change', (rawV) => {
     targetRef.current = Math.max(0, Math.min(1, rawV));
@@ -155,10 +178,10 @@ export default function ScrollVideoBackground({ children }) {
       >
         <video
           ref={videoRef}
-          src={stethoscopeVideo}
+          src={shouldLoad ? stethoscopeVideo : undefined}
           muted
           playsInline
-          preload="auto"
+          preload={shouldLoad ? "auto" : "none"}
           style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', overflow: 'hidden' }}
         />
         <canvas

@@ -8,7 +8,7 @@ import {
   useSpring,
 } from 'framer-motion';
 // @ts-ignore
-import kimPortrait from '../../assets/images/kim_portrait.png';
+import kimPortrait from '../../assets/images/kim_portrait.webp';
 
 const BRAND = '#8B7F4B';
 // Brand olive is 4.01:1 on white — valid for fills, icons and large

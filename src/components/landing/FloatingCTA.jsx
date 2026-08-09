@@ -23,7 +23,7 @@ export default function FloatingCTA() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed right-4 z-50" style={{ bottom: `calc(1.25rem + var(--sticky-cta-h))` }}>
+    <div className="fixed bottom-5 md:bottom-6 right-4 z-50" style={{ transform: 'translateY(calc(-1 * var(--sticky-cta-h)))', transition: 'transform 260ms cubic-bezier(0.22,1,0.36,1)' }}>
       {isOpen && (
         <div className="absolute bottom-14 md:bottom-16 right-0 bg-white rounded-2xl shadow-2xl p-4 md:p-6 w-64 md:w-72 mb-2 animate-in slide-in-from-bottom-2 border border-gray-100">
           <button

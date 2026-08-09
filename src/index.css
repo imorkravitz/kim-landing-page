@@ -14,26 +14,14 @@
   }
 }
 
-@font-face {
-  font-family: 'Gveret Levin Alef';
-  src: url('./assets/fonts/Gveret Levin Alef Alef Alef copy.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Calibri';
-  src: url('./assets/fonts/calibri-regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Calibri';
-  src: url('./assets/fonts/calibri-bold.ttf') format('truetype');
-  font-weight: 800;
-  font-style: normal;
-}
+/* Three local @font-face rules used to live here and all three are gone.
+   'Gveret Levin Alef' was declared and never applied to anything.
+   'Calibri' regular + bold came to 1.6MB of uncompressed TTF, downloaded so
+   that two SVG labels reading "80:20" could render — and on iOS and Android,
+   where most of this traffic comes from, Calibri is not a system font, so
+   that download was real rather than a local-name shortcut. Those two labels
+   now use Heebo, which the page already loads. Typefaces in actual use come
+   from the Google Fonts link in index.html as woff2, with display=swap. */
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

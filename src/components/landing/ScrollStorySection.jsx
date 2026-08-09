@@ -16,11 +16,11 @@ import {
 } from 'lucide-react';
 
 // @ts-ignore
-import kimHero from '../../assets/images/kim-hero.png';
+import kimHero from '../../assets/images/kim-hero.webp';
 // @ts-ignore
 import kimLogo from '../../assets/icons/KIM - LOGO 2.png';
 // @ts-ignore
-import kimIcon from '../../assets/images/kim-icon-whatsapp.png';
+import kimIcon from '../../assets/images/kim-icon-whatsapp.webp';
 // @ts-ignore
 import animatedVideo from '../../assets/videos/animated.mp4';
 
@@ -32,7 +32,7 @@ import meal2    from '../../assets/app/meal-1.webp';   // morning-snack photo
 // @ts-ignore
 import meal3    from '../../assets/app/meal-3.webp';   // lunch photo
 // @ts-ignore
-import appGoals from '../../assets/app/app-6.png';    // daily-goals screen — water bottles at bottom
+import appGoals from '../../assets/app/app-6.webp';    // daily-goals screen — water bottles at bottom
 // @ts-ignore
 import eatDiary1 from '../../assets/app/eat_diary_1.webp'; // actual app diary screen 1
 // @ts-ignore
@@ -40,38 +40,38 @@ import eatDiary2 from '../../assets/app/eat_diary_2.webp'; // actual app diary s
 
 // Phase 4 — food sticker images for 80:20 ring
 // @ts-ignore
-import nt1 from '../../assets/8020/pizza.png';
+import nt1 from '../../assets/8020/pizza.webp';
 // @ts-ignore
-import nt2 from '../../assets/8020/wine.png';
+import nt2 from '../../assets/8020/wine.webp';
 // @ts-ignore
 import nt3 from '../../assets/8020/crossiant.webp';
 // @ts-ignore
-import nt4 from '../../assets/8020/water.png';
+import nt4 from '../../assets/8020/water.webp';
 // @ts-ignore
 import nt5 from '../../assets/8020/bread.webp';
 // @ts-ignore
 import nt7 from '../../assets/8020/healthyPlate.webp';
 // @ts-ignore
-import nt8 from '../../assets/8020/running2.png';
+import nt8 from '../../assets/8020/running2.webp';
 // @ts-ignore
-import nt9 from '../../assets/8020/banana.png';
+import nt9 from '../../assets/8020/banana.webp';
 // @ts-ignore
-import nt10 from '../../assets/8020/veggie.png';
+import nt10 from '../../assets/8020/veggie.webp';
 
 
 // Phase 1 custom images (transparent PNGs)
 // @ts-ignore
-import imgNoTime        from '../../assets/images/no-time.png';
+import imgNoTime        from '../../assets/images/no-time.webp';
 // @ts-ignore
-import imgWork          from '../../assets/images/work.png';
+import imgWork          from '../../assets/images/work.webp';
 // @ts-ignore
-import imgTierd         from '../../assets/images/tierd.png';
+import imgTierd         from '../../assets/images/tierd.webp';
 // @ts-ignore
-import imgStressCalendar from '../../assets/images/stress-calander.png';
+import imgStressCalendar from '../../assets/images/stress-calander.webp';
 // @ts-ignore
-import imgMessages      from '../../assets/images/messages.png';
+import imgMessages      from '../../assets/images/messages.webp';
 // @ts-ignore
-import imgKids          from '../../assets/images/kids.png';
+import imgKids          from '../../assets/images/kids.webp';
 
 const BRAND = '#8B7F4B';
 // Brand olive is 4.01:1 on white — valid for fills, icons and large
@@ -891,7 +891,7 @@ function PhaseRing() {
             transform="rotate(-90 100 100)"
           />
           {/* Centre labels */}
-          <text x="100" y="92" textAnchor="middle" fill={BRAND} fontSize="28" fontWeight="900" fontFamily="Calibri,sans-serif">80:20</text>
+          <text x="100" y="92" textAnchor="middle" fill={BRAND} fontSize="28" fontWeight="900" fontFamily="Heebo, sans-serif">80:20</text>
           <text x="100" y="116" textAnchor="middle" fill="#6e6e6e" fontSize="11" fontFamily="Heebo">הגישה שלנו</text>
         </svg>
 
@@ -959,7 +959,7 @@ function PhaseRing() {
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}
                   transform="rotate(-90 100 100)"
                 />
-                <text x="100" y="88" textAnchor="middle" fill={BRAND} fontSize="36" fontWeight="900" fontFamily="Calibri,sans-serif">80:20</text>
+                <text x="100" y="88" textAnchor="middle" fill={BRAND} fontSize="36" fontWeight="900" fontFamily="Heebo, sans-serif">80:20</text>
                 <text x="100" y="113" textAnchor="middle" fill="#aaa" fontSize="12" fontFamily="Heebo,sans-serif">הגישה שלנו</text>
               </svg>
 
