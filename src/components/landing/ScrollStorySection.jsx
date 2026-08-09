@@ -74,6 +74,12 @@ import imgMessages      from '../../assets/images/messages.png';
 import imgKids          from '../../assets/images/kids.png';
 
 const BRAND = '#8B7F4B';
+// Brand olive is 4.01:1 on white — valid for fills, icons and large
+// type, but NOT for body text. This is the text-safe shade (6.01:1).
+const BRAND_INK = '#6D6339';
+// ...and this is the shade for fills that carry white text (4.63:1 vs 4.01).
+// Visually a hair off BRAND; the difference only shows up in a contrast meter.
+const BRAND_SURFACE = '#807545';
 const BG    = '#e9e4ce';
 const TEXT  = '#333333';
 const PHASE_STARTS = [0, 0.15, 0.29, 0.43, 0.60, 0.78];
@@ -148,7 +154,7 @@ function PhaseHeading({ children }) {
 /* ── Inline accent span with gold underline ── */
 function Accent({ children }) {
   return (
-    <span className="relative" style={{ color: BRAND }}>
+    <span className="relative" style={{ color: BRAND_INK }}>
       {children}
       <span
         className="absolute inset-x-0 bottom-0 h-[3px] rounded-full opacity-40"
@@ -252,7 +258,7 @@ function WaBubble({ name, avatar, messages }) {
             <div className="max-w-[88%] px-2.5 py-1 rounded-xl text-[10px] leading-relaxed shadow-sm"
               style={{ background: m.from === 'kim' ? '#fff' : '#DCF8C6', color: '#333' }}>
               <p>{m.text}</p>
-              <p className="text-[8px] text-gray-400 text-left mt-0.5">{m.time}{m.from !== 'kim' && ' ✓✓'}</p>
+              <p className="text-[8px] text-[var(--text-muted)] text-left mt-0.5">{m.time}{m.from !== 'kim' && ' ✓✓'}</p>
             </div>
           </div>
         ))}
@@ -339,11 +345,11 @@ function PhaseHero() {
             dir="rtl"
             className="text-3xl sm:text-4xl md:text-5xl font-heading leading-[1.15] mb-3 lg:mb-5"
           >
-            <span style={{ color: BRAND }}>
+            <span style={{ color: BRAND_INK }}>
               לנהל את התזונה שלכם
             </span>
             <br></br>
-            <span style={{ color: BRAND }}>
+            <span style={{ color: BRAND_INK }}>
               לאכול הכל
             </span>{' '}
 
@@ -384,7 +390,7 @@ function PhaseHero() {
               <Button
                 className="rounded-full px-8 py-6 text-lg font-bold text-white min-h-[48px]
                            shadow-[0_4px_20px_rgba(139,127,75,0.35)] w-full sm:w-auto"
-                style={{ background: BRAND }}
+                style={{ background: BRAND_SURFACE }}
               >
                 לקביעת ייעוץ התאמה חינם
               </Button>
@@ -406,14 +412,14 @@ function PhaseHero() {
               >
                 {[1,2,3,4,5].map(i => (
                   <motion.span key={i} variants={heroStarItem} className="inline-block leading-none">
-                    <Star className="w-3 h-3 fill-[#8B7F4B] text-[#8B7F4B]" />
+                    <Star className="w-3 h-3 fill-[#8B7F4B] text-[var(--brand-ink)]" />
                   </motion.span>
                 ))}
               </motion.div>
               <div className="flex items-baseline gap-1.5" dir="rtl">
                 <span className="text-xs font-bold text-gray-700">סיפורי הצלחה</span>
                 {/* Count-up number */}
-                <span className="text-2xl font-black" style={{ color: BRAND }}>
+                <span className="text-2xl font-black" style={{ color: BRAND_INK }}>
                   {successCount.toLocaleString()}+
                 </span>
               </div>
@@ -426,8 +432,8 @@ function PhaseHero() {
               WhatsApp floating button pinned to the bottom-right corner */}
           <motion.div variants={item} className="hidden lg:flex gap-6 border-t border-[#8B7F4B]/20 pt-4 lg:pr-24" dir="rtl">
             <div className="flex items-center gap-2">
-              <div className="text-xs text-gray-500 font-medium leading-tight">שנות<br/>ניסיון</div>
-              <div className="text-2xl font-black" style={{ color: BRAND }}>12+</div>
+              <div className="text-xs text-[var(--text-secondary)] font-medium leading-tight">שנות<br/>ניסיון</div>
+              <div className="text-2xl font-black" style={{ color: BRAND_INK }}>12+</div>
             </div>
           </motion.div>
 
@@ -524,7 +530,7 @@ function PhaseBusyLife() {
             dir="rtl"
           >
             החיים שלך עמוסים<br/>
-            <span style={{ color: BRAND }}>השיטה שלנו מותאמת לזה.</span>
+            <span style={{ color: BRAND_INK }}>השיטה שלנו מותאמת לזה.</span>
           </motion.h2>
           <div className="hidden lg:block">
             <PhaseHeading>
@@ -745,14 +751,14 @@ function PhasePlate() {
             במקום עוד תפריט נוקשה שקשה להחזיק לאורך זמן <br></br>
              נלמד אותך איך לבנות צלחת שמתאימה לחיים האמיתיים שלך.{' '}
             בבית, בעבודה,{' '}
-            <strong style={{ color: BRAND, fontWeight: 800 }}>במסעדה</strong>,{' '}
-            <strong style={{ color: BRAND, fontWeight: 800 }}>בחופשה</strong>,{' '}
-            <strong style={{ color: BRAND, fontWeight: 800 }}>בסוף שבוע</strong>.{' '}<br></br>
+            <strong style={{ color: BRAND_INK, fontWeight: 800 }}>במסעדה</strong>,{' '}
+            <strong style={{ color: BRAND_INK, fontWeight: 800 }}>בחופשה</strong>,{' '}
+            <strong style={{ color: BRAND_INK, fontWeight: 800 }}>בסוף שבוע</strong>.{' '}<br></br>
             לא כדי שתהיי תלויה בתפריט אלא כדי שתדעי להתנהל נכון{' '} <br></br>
-            <strong style={{ color: BRAND }}>בכל סיטואציה</strong>.{' '}
+            <strong style={{ color: BRAND_INK }}>בכל סיטואציה</strong>.{' '}
             כי כשאת מבינה איך הדברים עובדים <br></br>
             הרבה יותר קל{' '}
-            <strong style={{ color: BRAND, fontWeight: 800 }}>לרדת במשקל, להתמיד ולשמור על התוצאות</strong>.
+            <strong style={{ color: BRAND_INK, fontWeight: 800 }}>לרדת במשקל, להתמיד ולשמור על התוצאות</strong>.
           </motion.p>
         </motion.div>
       </ContentPanel>
@@ -798,7 +804,7 @@ function PhaseExploded() {
                 </div>
                 <div>
                   <span className="text-base font-bold text-[#333]">{label}</span>
-                  <span className="text-xs lg:text-sm text-gray-400 block leading-tight">{sublabel}</span>
+                  <span className="text-xs lg:text-sm text-[var(--text-muted)] block leading-tight">{sublabel}</span>
                 </div>
               </div>
             ))}
@@ -983,7 +989,7 @@ function PhaseRing() {
             style={{ color: TEXT }}
             dir="rtl"
           >
-            גישת <span style={{ color: BRAND }}>80:20</span>
+            גישת <span style={{ color: BRAND_INK }}>80:20</span>
           </motion.h2>
           <div className="hidden lg:block">
             <PhaseHeading>גישת<br/><Accent>80:20</Accent></PhaseHeading>
@@ -1264,7 +1270,7 @@ function AppPhoneMockup({ compact = false }) {
           position: 'absolute',
           bottom: compact ? 18 : 44,
           left: compact ? -14 : -28,
-          background: BRAND,
+          background: BRAND_SURFACE,
           borderRadius: 18,
           padding: '9px 13px',
           boxShadow: '0 10px 28px rgba(139,127,75,0.32)',
@@ -1619,11 +1625,11 @@ function PhaseSupport() {
 
           <motion.p variants={item} className="phase-intro text-gray-600 leading-snug lg:leading-relaxed mb-2.5 lg:mb-5" dir="rtl">
            בתוכנית שלנו את לא רק מקבלת תפריט{' '}
-            <strong style={{ color: BRAND }}>את לומדת על התזונה שלך</strong>{' '}<br className="hidden lg:block"></br>
+            <strong style={{ color: BRAND_INK }}>את לומדת על התזונה שלך</strong>{' '}<br className="hidden lg:block"></br>
             כך שתדעי{' '}
-            <strong style={{ color: BRAND }}>לנהל אותה</strong>,
+            <strong style={{ color: BRAND_INK }}>לנהל אותה</strong>,
             {' '}גם{' '}
-            <strong style={{ color: BRAND }}>שהתהליך מסתיים</strong>.
+            <strong style={{ color: BRAND_INK }}>שהתהליך מסתיים</strong>.
           </motion.p>
           <motion.div variants={item} className="flex flex-col gap-2.5 lg:gap-2.5 mb-4 lg:mb-7">
             {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה (בתוכנית נבחרת)', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות עם תזונאית קלינית'].map((f) => (
@@ -1647,7 +1653,7 @@ function PhaseSupport() {
               <Button
                 className="rounded-full px-8 py-3 lg:py-6 text-base lg:text-lg font-bold text-white min-h-[44px]
                            shadow-[0_4px_20px_rgba(139,127,75,0.35)] w-full sm:w-auto"
-                style={{ background: BRAND }}
+                style={{ background: BRAND_SURFACE }}
               >
                 לקביעת ייעוץ התאמה חינם
               </Button>

@@ -193,6 +193,97 @@ button:focus-visible {
   }
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   The page previously carried seven cream backgrounds — #e9e4ce, #E5E0D1,
+   #edead4, #f7f4e9, #f9f4eb, #F5F3ED, #cdc2ab. Measured against each other
+   they sit at contrast ratios of 1.01–1.09, i.e. six of the seven are the
+   same colour to the eye while reading as sloppy in aggregate. They collapse
+   here into a deliberate three-step surface ramp whose steps are actually
+   distinguishable (1.13 / 1.13 / 1.28).
+
+   Every text-on-surface pairing below is measured, not eyeballed.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Surfaces: three steps, each visibly distinct from its neighbours ── */
+  --bg-primary:    #FFFFFF;   /* default section ground                     */
+  --bg-secondary:  #F4F1E4;   /* alternating band; replaces the 4 pale creams */
+  --bg-tertiary:   #E9E4CE;   /* brand cream, the deepest light surface     */
+
+  --surface-card:  #FFFFFF;
+  --surface-sunken:#EFEBDA;   /* insets/wells on a cream ground             */
+  --surface-highlight:#CDC2AB;/* the one deeper cream that earns its place:
+                                 it marks the featured pricing card and reads
+                                 1.19 against --bg-tertiary, so it is actually
+                                 legible as a highlight rather than a smudge  */
+
+  /* ── WhatsApp ──
+     The brand green #25D366 carries white text at 1.98:1 — not close to legal.
+     This is that green taken to the point where white passes AA (4.58:1); it
+     also reads calmer next to the olive, which is what the brand wanted from
+     it anyway. #25D366 survives only as a logo glyph on dark grounds. */
+  --wa-green:      #188741;
+  --wa-green-dark: #12692F;
+
+  /* ── Brand ──
+     -primary is the identity colour: correct for fills, icons, borders and
+     large type. At 4.01:1 on white it is NOT valid for body-size text, so it
+     deliberately has no text role.
+     -surface carries white text (4.63:1). It is -primary darkened 8%, a 1.1
+     shift — imperceptible next to the original, but over the AA line.
+     -ink is the brand colour for body text on light grounds (6.01 on white,
+     4.71 on cream). */
+  --brand-primary: #8B7F4B;
+  --brand-surface: #807545;
+  --brand-ink:     #6D6339;
+  --brand-dark:    #5F5631;   /* hover / pressed                            */
+  --brand-tint:    #8B7F4B14; /* 8% wash for soft brand fills               */
+
+  /* ── Text ── verified ≥4.5:1 on all three surfaces above ── */
+  --text-primary:   #1F2937;  /* 14.7 white · 13.2 sand · 11.5 cream        */
+  --text-secondary: #4B5563;  /*  7.6 white ·  6.7 sand ·  5.9 cream        */
+  --text-muted:     #57534E;  /* lightest still-compliant tone              */
+
+  /* ── Borders ── */
+  --border-default: rgba(0, 0, 0, 0.12);
+  --border-subtle:  rgba(0, 0, 0, 0.06);
+  --border-brand:   rgba(139, 127, 75, 0.28);
+
+  /* ── Section rhythm ──
+     Fluid mobile→desktop, matching the agreed ranges:
+     lg 48→112px · md 40→96px · sm 32→72px. Replaces the flat py-20/py-24
+     that made mobile carry desktop-sized gaps. */
+  --section-lg: clamp(3rem,   7vw,   7rem);
+  --section-md: clamp(2.5rem, 5.5vw, 6rem);
+  --section-sm: clamp(2rem,   4vw,   4.5rem);
+  --gutter:     clamp(1.25rem, 4vw, 1.5rem);
+
+  /* ── Measure ── */
+  --width-content: 1280px;
+  --width-prose:   68ch;
+
+  /* ── Elevation ── one scale, not ad-hoc shadows ── */
+  --elev-1: 0 1px 3px rgba(31, 41, 55, 0.06);
+  --elev-2: 0 4px 16px rgba(31, 41, 55, 0.08);
+  --elev-3: 0 12px 32px rgba(31, 41, 55, 0.10);
+
+  /* ── Z-index scale ── semantic, replaces scattered z-50/z-9999 ── */
+  --z-sticky:  100;
+  --z-overlay: 200;
+  --z-float:   300;
+  --z-modal:   400;
+}
+
+/* Section rhythm utilities */
+.section-lg { padding-block: var(--section-lg); }
+.section-md { padding-block: var(--section-md); }
+.section-sm { padding-block: var(--section-sm); }
+.gutter     { padding-inline: var(--gutter); }
+
+/* Constrains long-form copy to a comfortable measure. Without this, prose on
+   a 1440px screen runs to ~150 characters a line. */
+.prose-measure { max-width: var(--width-prose); }
+
 /* ── Story-phase body text (PhaseApp / PhaseSupport) ────────────────────────
    These phases live in a fixed 100svh sticky box with overflow:hidden, so the
    text must scale with viewport height or the last lines get clipped on short

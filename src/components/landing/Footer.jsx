@@ -8,32 +8,37 @@ import Logo from '../../assets/icons/KIM - LOGO 2.png';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#f7f4e9] text-white py-16">
+    /* text-white here was inherited from a dark-footer design and made every
+       unstyled child invisible against the cream. The footer sets a real text
+       colour and each column opts out where it needs to. */
+    <footer className="bg-[var(--bg-secondary)] text-[var(--text-secondary)] section-md">
       <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-3 gap-12 max-w-5xl text-right">
+        <div className="grid gap-10 md:grid-cols-3 md:gap-12 max-w-5xl mx-auto text-right">
           {/* Logo & Description */}
           <div>
-            <img 
+            <img
               src={Logo}
-              alt="KIM Logo"
-              className="h-90 mb-8"
+              alt="קים גפסון — תזונה מאפשרת"
+              width="180"
+              height="72"
+              className="h-16 w-auto mb-5 object-contain object-right"
             />
-            <p className="text-gray-600 leading-relaxed">
-              תזונה מאפשרת – הקליניקה של קים גפסון. 
+            <p className="leading-relaxed">
+              תזונה מאפשרת – הקליניקה של קים גפסון.
               ליווי מקצועי ואישי לאורח חיים בריא ומאוזן.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-bold text-lg mb-4 text-gray-800">קישורים מהירים</h3>
-            <ul className="space-y-3 text-gray-600">
+            <h3 className="font-bold text-lg mb-4 text-[var(--text-primary)]">קישורים מהירים</h3>
+            <ul className="space-y-3">
               <li>
                 <a 
                   href="https://onelink.to/zter3n"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#8B7F4B] transition-colors flex items-center gap-2"
+                  className="hover:text-[var(--brand-ink)] transition-colors flex items-center gap-2"
                 >
                   <Smartphone className="w-4 h-4" />
                   הורדת אפליקציית Liveat
@@ -44,7 +49,7 @@ export default function Footer() {
                   href="https://www.instagram.com/kimgafson/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#8B7F4B] transition-colors flex items-center gap-2"
+                  className="hover:text-[var(--brand-ink)] transition-colors flex items-center gap-2"
                 >
                   <Instagram className="w-4 h-4" />
                   אינסטגרם
@@ -55,15 +60,15 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="font-bold text-lg mb-4 text-gray-800">יצירת קשר</h3>
-            <ul className="space-y-3 text-gray-600">
+            <h3 className="font-bold text-lg mb-4 text-[var(--text-primary)]">יצירת קשר</h3>
+            <ul className="space-y-3">
               <li>
                 <a
                   href="https://wa.link/ntdrz1"
               onClick={() => trackCTA('whatsapp_consult')}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:text-[#8B7F4B] transition-colors"
+                  className="flex items-center gap-2 hover:text-[var(--brand-ink)] transition-colors"
                 >
                   <MessageCircle className="w-5 h-5" />
                   צ'אט חכם בווצאפ — זמין 24/7
@@ -75,7 +80,7 @@ export default function Footer() {
               onClick={() => trackCTA('whatsapp_support')}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:text-[#8B7F4B] transition-colors"
+                  className="flex items-center gap-2 hover:text-[var(--brand-ink)] transition-colors"
                 >
                   <Phone className="w-5 h-5" />
                   שירות לקוחות — מענה אנושי
@@ -85,17 +90,20 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
-          <p>© {new Date().getFullYear()} KIM - Your Health My Mission. כל הזכויות שמורות.</p>
-          <p className="mt-2 flex items-center justify-center gap-3 flex-wrap">
-            <a href="/Accessibility" className="underline underline-offset-4 hover:text-[#8B7F4B] transition-colors">
+        {/* border-gray-800 was a near-black rule on cream — another leftover of
+            the dark-footer origin. The subtle token reads as a divider instead
+            of a slab. The old gray-500 measured 4.36:1 on this ground, under AA. */}
+        <div className="border-t border-[var(--border-default)] mt-10 pt-6 text-center text-sm">
+          <p className="flex items-center justify-center gap-x-3 gap-y-2 flex-wrap">
+            <a href="/Accessibility" className="underline underline-offset-4 hover:text-[var(--brand-ink)] transition-colors">
               הצהרת נגישות
             </a>
             <span aria-hidden="true">·</span>
-            <a href="/Privacy" className="underline underline-offset-4 hover:text-[#8B7F4B] transition-colors">
+            <a href="/Privacy" className="underline underline-offset-4 hover:text-[var(--brand-ink)] transition-colors">
               מדיניות פרטיות
             </a>
           </p>
+          <p className="mt-3">© {new Date().getFullYear()} KIM - Your Health My Mission. כל הזכויות שמורות.</p>
         </div>
       </div>
     </footer>

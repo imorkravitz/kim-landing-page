@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion, MotionConfig } from 'framer-motion';
 
 import SEOHead from '@/components/SEOHead';
@@ -48,18 +48,6 @@ const AnimatedSection = ({ children }) => (
 );
 
 export default function Home() {
-  useEffect(() => {
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href'))?.scrollIntoView({
-          behavior: 'smooth'
-        });
-      });
-    });
-  }, []);
-
   return (
     <MotionConfig reducedMotion="user">
     <div dir="rtl" className="min-h-screen bg-white font-sans page-transition">
@@ -98,9 +86,10 @@ export default function Home() {
         description="קים גפסון -  בוגרת תואר בתזונה באוניברסיטה העברית עם 12 שנות ניסיון. ליווי תזונתי אישי לנשים עם גישת 80:20,סטודנטית לרפואה באוניברסיטה העברית במסלול 4 שנתי עתידה להתמחות ברפואת נשים, אפליקציית Liveat ותמיכה יומית בווצאפ."
       />
       <style>{`
-        html {
-          scroll-behavior: smooth;
-        }
+        /* No global scroll-behavior: smooth. On an 18,000px page it animates
+           every programmatic scroll, which is what made scrolling feel like it
+           had been taken away from the user. Controls that genuinely want an
+           animated scroll (ScrollToTop) opt in per call instead. */
 
         /* Smooth page transitions */
         .page-transition {

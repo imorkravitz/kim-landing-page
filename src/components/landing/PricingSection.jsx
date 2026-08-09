@@ -50,8 +50,8 @@ export default function PricingSection() {
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
-      bgColor: 'bg-[#f9f4eb]',
-      headerColor: 'text-[#8B7F4B]',
+      bgColor: 'bg-[var(--surface-card)]',
+      headerColor: 'text-[var(--brand-ink)]',
       isPopular: false,
       paymentLink: 'https://meshulam.co.il/quick_payment?b=0650455637b3d3165c4edf567b80d7f7'
     },
@@ -70,8 +70,8 @@ export default function PricingSection() {
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
-      bgColor: 'bg-[#edead4]',
-      headerColor: 'text-[#8B7F4B]',
+      bgColor: 'bg-[var(--surface-sunken)]',
+      headerColor: 'text-[var(--brand-ink)]',
       isPopular: true,
       popularText: 'Most Popular',
       paymentLink: 'https://meshulam.co.il/quick_payment?b=a4a8f69b137c30dbf763eb9b8576236a'
@@ -93,8 +93,8 @@ export default function PricingSection() {
         'פגישה אישית עם קים – ייעוץ על נושאים תזונתיים ואישיים לבחירתך',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
-      bgColor: 'bg-[#cdc2ab]',
-      headerColor: 'text-[#8B7F4B]',
+      bgColor: 'bg-[var(--surface-highlight)]',
+      headerColor: 'text-[var(--brand-ink)]',
       isPopular: false,
       paymentLink: 'https://meshulam.co.il/quick_payment?b=db202b67221edf8de0a441989beb51ce'
     }
@@ -103,7 +103,7 @@ export default function PricingSection() {
   return (
     <section 
       ref={sectionRef}
-      className="py-20 md:py-28 relative overflow-hidden bg-[#E5E0D1]"
+      className="section-lg relative overflow-hidden bg-[var(--bg-tertiary)]"
     >
       <style>
         {`
@@ -152,8 +152,11 @@ export default function PricingSection() {
           {plans.map((plan, index) => (
             <div
               key={plan.name}
-              className={`relative rounded-[2rem] overflow-hidden shadow-xl transition-all duration-700 flex flex-col hover:shadow-2xl${
-                plan.isPopular ? 'z-10 shadow-2xl ring-2 ring-[#8B7F4B]/20' : ''
+              /* The missing space before ${} concatenated the two classes into
+                 "hover:shadow-2xlz-10", so the featured card silently lost both
+                 its hover shadow and its stacking order. */
+              className={`relative rounded-[2rem] overflow-hidden shadow-xl transition-all duration-700 flex flex-col hover:shadow-2xl ${
+                plan.isPopular ? 'z-10 shadow-2xl ring-2 ring-[var(--border-brand)]' : ''
               } ${
                 isVisible 
                   ? 'opacity-100 translate-y-0' 
@@ -172,18 +175,25 @@ export default function PricingSection() {
                   </h3>
                   
                   <div className="flex flex-col items-center justify-center mt-4">
-                    <div className="flex items-baseline gap-1 text-[#7D7046]">
+                    <div className="flex items-baseline gap-1 text-[var(--brand-dark)]">
                       <span className="text-4xl font-bold">{plan.price}</span>
                       <span className="text-3xl font-bold">₪</span>
                       <span className="text-2xl font-bold">{plan.duration}</span>
                     </div>
-                    <div className="text-sm text-gray-600 mt-1 font-medium">{plan.commitment}</div>
-                    <div className="text-xs text-gray-500">{plan.subtitle}</div>
+                    {/* Commitment length is the single fact people most need in
+                        order to compare these plans, so it is promoted to primary
+                        ink rather than the gray-600 it used to whisper in (4.28:1
+                        on the featured card — under AA as well as under-weighted). */}
+                    <div className="text-sm text-[var(--text-primary)] mt-1.5 font-semibold">{plan.commitment}</div>
+                    {/* Secondary ink measured 4.28:1 on the deepest card, and at
+                        12px this was under the readable floor anyway. Reads as
+                        secondary through weight and scale instead of tint. */}
+                    <div className="text-[13px] font-normal text-[var(--text-primary)] mt-0.5">{plan.subtitle}</div>
                   </div>
                 </div>
 
                 {/* Separator */}
-                <div className="w-full h-px bg-[#8B7F4B]/20 mb-6"></div>
+                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-6"></div>
 
                 {/* Description */}
                 <div className="mb-8 flex-grow">
@@ -193,7 +203,7 @@ export default function PricingSection() {
                 </div>
 
                 {/* Separator */}
-                <div className="w-full h-px bg-[#8B7F4B]/20 mb-6"></div>
+                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-6"></div>
 
                 {/* Features */}
                 <div>
@@ -203,7 +213,7 @@ export default function PricingSection() {
                   <ul className="space-y-3 text-right">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                        <span className="text-[#8B7F4B] mt-1.5">•</span>
+                        <span className="text-[var(--brand-ink)] mt-1.5">•</span>
                         <span className="flex-1">{feature}</span>
                       </li>
                     ))}
@@ -213,7 +223,7 @@ export default function PricingSection() {
                 <div className="mt-8">
                   <a href={plan.paymentLink} target="_blank" rel="noopener noreferrer" className="block">
                     <Button 
-                      className="w-full py-6 rounded-full text-lg font-bold bg-[#8B7F4B] hover:bg-[#6d6339] text-white shadow-lg transition-all hover:scale-[1.02]"
+                      className="w-full py-6 rounded-full text-lg font-bold bg-[var(--brand-surface)] hover:bg-[var(--brand-dark)] text-white shadow-lg transition-all hover:scale-[1.02]"
                     >
                       <Sparkles className="w-5 h-5 ml-2" />
                       {plan.ctaText}

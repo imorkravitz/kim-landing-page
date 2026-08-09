@@ -11,6 +11,9 @@ import {
 import kimPortrait from '../../assets/images/kim_portrait.png';
 
 const BRAND = '#8B7F4B';
+// Brand olive is 4.01:1 on white — valid for fills, icons and large
+// type, but NOT for body text. This is the text-safe shade (6.01:1).
+const BRAND_INK = '#6D6339';
 const ease  = [0.22, 1, 0.36, 1];
 
 /* ── Shared motion presets ── */
@@ -49,7 +52,7 @@ export default function AboutSection() {
     <section
       ref={sectionRef}
       dir="rtl"
-      className="relative py-20 md:py-28 overflow-hidden"
+      className="relative section-lg overflow-hidden"
       style={{ background: 'transparent' }}
     >
       {/* Ambient background glow — very subtle */}
@@ -81,7 +84,7 @@ export default function AboutSection() {
               variants={itemV}
               className="font-heading text-3xl md:text-4xl leading-snug mb-6"
               style={{
-                color: BRAND,
+                color: BRAND_INK,
                 textWrap: 'balance',
                 textShadow: '0 2px 20px rgba(255,255,255,0.95), 0 1px 4px rgba(255,255,255,0.95)',
               }}
@@ -133,7 +136,7 @@ export default function AboutSection() {
                 <p
                   className="font-gveret text-xl md:text-2xl leading-relaxed italic"
                   style={{
-                    color: BRAND,
+                    color: BRAND_INK,
                     textShadow: '0 2px 20px rgba(255,255,255,0.95), 0 1px 4px rgba(255,255,255,0.95), 0 0 2px rgba(255,255,255,0.9)',
                   }}
                 >
@@ -234,7 +237,7 @@ export default function AboutSection() {
                   {title}
                 </p>
                 {sub && (
-                  <p className="text-gray-400 text-xs leading-snug">{sub}</p>
+                  <p className="text-[var(--text-muted)] text-xs leading-snug">{sub}</p>
                 )}
               </motion.div>
             ))}

@@ -3,6 +3,9 @@ import { trackCTA } from '@/lib/analytics';
 import { ChevronDown } from 'lucide-react';
 
 const BRAND = '#8B7F4B';
+// Brand olive is 4.01:1 on white — valid for fills, icons and large
+// type, but NOT for body text. This is the text-safe shade (6.01:1).
+const BRAND_INK = '#6D6339';
 
 const WaIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 shrink-0">
@@ -45,7 +48,7 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(null);
 
   return (
-    <section dir="rtl" className="py-20 md:py-28 bg-white">
+    <section dir="rtl" className="section-lg bg-[var(--bg-primary)]">
       <div className="container mx-auto px-6">
 
         <div className="text-center mb-12 md:mb-16">
@@ -55,7 +58,7 @@ export default function FAQSection() {
           >
             שאלות שכולן שואלות
           </h2>
-          <p className="text-xl text-gray-500">
+          <p className="text-xl text-[var(--text-secondary)]">
             כל מה שחשוב לדעת לפני שמתחילים — בגובה העיניים
           </p>
         </div>
@@ -117,7 +120,7 @@ export default function FAQSection() {
 
         {/* Still have a question — direct path to WhatsApp */}
         <div className="max-w-3xl mx-auto mt-10 text-center">
-          <p className="text-gray-500 mb-4">
+          <p className="text-[var(--text-secondary)] mb-4">
             לא מצאת את התשובה שלך? שאלי אותנו ישירות — עונות מהר.
           </p>
           <a href="https://wa.link/ntdrz1"
@@ -125,7 +128,7 @@ export default function FAQSection() {
             <button
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
               style={{
-                color: BRAND,
+                color: BRAND_INK,
                 background: `${BRAND}0E`,
                 border: `1.5px solid ${BRAND}44`,
               }}

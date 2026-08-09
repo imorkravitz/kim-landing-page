@@ -63,7 +63,7 @@ export default function AppSection() {
   return (
     <section
       id="app"
-      className="py-24 bg-gradient-to-br from-slate-50 via-white to-slate-50 relative overflow-hidden"
+      className="section-lg bg-[var(--bg-secondary)] relative overflow-hidden"
       dir="rtl"
     >
       <div className="max-w-6xl mx-auto px-4 relative z-10">
@@ -75,7 +75,7 @@ export default function AppSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-heading text-gray-900 mb-6">הכירי את אפליקציית Liveat</h2>
-          <div className="w-16 h-1 bg-[#8B7F4B] mx-auto rounded-full mb-8"></div>
+          <div className="w-16 h-1 bg-[var(--brand-surface)] mx-auto rounded-full mb-8"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             האפליקציה הייחודית שפותחה במיוחד עבור המטופלות שלי
           </p>
@@ -134,7 +134,7 @@ export default function AppSection() {
               <a href="https://onelink.to/zter3n" target="_blank" rel="noopener noreferrer">
                 <Button
                   size="lg"
-                  className="bg-[#8B7F4B] text-white font-medium px-8 py-6 text-lg rounded-2xl shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[#6d6339] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
+                  className="bg-[var(--brand-surface)] text-white font-medium px-8 py-6 text-lg rounded-2xl shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[var(--brand-dark)] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
                 >
                   הורידי את האפליקציה בחינם
                 </Button>
@@ -188,8 +188,8 @@ export default function AppSection() {
                   className="bg-white rounded-xl p-5 shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300"
                 >
                   <div className="flex items-start gap-4 text-right">
-                    <div className="w-12 h-12 bg-[#8B7F4B]/10 rounded-xl flex items-center justify-center shrink-0">
-                      <feature.icon className="w-6 h-6 text-[#8B7F4B]" />
+                    <div className="w-12 h-12 bg-[var(--brand-surface)]/10 rounded-xl flex items-center justify-center shrink-0">
+                      <feature.icon className="w-6 h-6 text-[var(--brand-ink)]" />
                     </div>
                     <div className="flex-1">
                       <h4 className="text-lg font-semibold text-gray-900 mb-1">{feature.title}</h4>

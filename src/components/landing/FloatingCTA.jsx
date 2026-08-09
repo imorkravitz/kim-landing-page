@@ -28,7 +28,7 @@ export default function FloatingCTA() {
         <div className="absolute bottom-14 md:bottom-16 right-0 bg-white rounded-2xl shadow-2xl p-4 md:p-6 w-64 md:w-72 mb-2 animate-in slide-in-from-bottom-2 border border-gray-100">
           <button
             onClick={() => setIsOpen(false)}
-            className="absolute top-3 left-3 text-gray-400 hover:text-gray-600"
+            className="absolute top-3 left-3 text-[var(--text-muted)] hover:text-gray-600"
           >
             <X className="w-5 h-5" />
           </button>
@@ -45,13 +45,13 @@ export default function FloatingCTA() {
             >
               <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center shrink-0 relative">
                 <div className="absolute inset-0 bg-green-200/50 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
-                <div className="w-8 h-8 bg-[#25D366] rounded-full flex items-center justify-center relative z-10">
+                <div className="w-8 h-8 bg-[var(--wa-green)] rounded-full flex items-center justify-center relative z-10">
                   <WhatsAppIcon className="w-4 h-4 text-white" />
                 </div>
               </div>
               <div>
                 <p className="font-semibold text-gray-900">צ'אט חכם — זמין 24/7</p>
-                <p className="text-xs text-gray-500">מענה מיידי בכל שעה</p>
+                <p className="text-xs text-[var(--text-secondary)]">מענה מיידי בכל שעה</p>
               </div>
             </a>
             
@@ -64,13 +64,13 @@ export default function FloatingCTA() {
             >
               <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center shrink-0 relative">
                 <div className="absolute inset-0 bg-green-200/50 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
-                <div className="w-8 h-8 bg-[#25D366] rounded-full flex items-center justify-center relative z-10">
+                <div className="w-8 h-8 bg-[var(--wa-green)] rounded-full flex items-center justify-center relative z-10">
                   <WhatsAppIcon className="w-4 h-4 text-white" />
                 </div>
               </div>
               <div>
                 <p className="font-semibold text-gray-900">שירות לקוחות</p>
-                <p className="text-xs text-gray-500">מענה אנושי בשעות הפעילות</p>
+                <p className="text-xs text-[var(--text-secondary)]">מענה אנושי בשעות הפעילות</p>
               </div>
             </a>
           </div>
@@ -86,7 +86,7 @@ export default function FloatingCTA() {
           className={`relative z-10 w-12 h-12 md:w-14 md:h-14 rounded-full shadow-xl flex items-center justify-center transition-all ${
             isOpen 
               ? 'bg-gray-800 hover:bg-gray-700' 
-              : 'bg-[#25D366] hover:bg-[#20BA5C]'
+              : 'bg-[var(--wa-green)] hover:bg-[var(--wa-green-dark)]'
           }`}
         >
           {isOpen ? (
