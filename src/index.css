@@ -272,6 +272,76 @@ button:focus-visible {
    a 1440px screen runs to ~150 characters a line. */
 .prose-measure { max-width: var(--width-prose); }
 
+/* `clip`, not `hidden`. overflow-x:hidden would turn <html> into a scroll
+   container and break the position:sticky the scroll-video background depends
+   on; overflow-x:clip simply refuses to scroll sideways. This is the backstop
+   for stray sub-pixel overflow (the sr-only h1 carries white-space:nowrap, so
+   at 200% text its unrendered line still counts toward scroll width in some
+   engines) — the actual causes are fixed above, not papered over here. */
+html { overflow-x: clip; }
+
+/* ── Text scaling (WCAG 1.4.4) ─────────────────────────────────────────────
+   shadcn's Button ships `whitespace-nowrap`. At the 200% text size this
+   site's own accessibility widget offers, "לקביעת ייעוץ התאמה חינם" measures
+   549px and cannot wrap, so it pushed a 375px viewport out to 629px and put
+   the page into horizontal scrolling — for precisely the visitors who turned
+   the text size up. Buttons wrap instead, and are held inside the viewport. */
+#main-content button,
+#main-content a,
+.sticky-cta a {
+  white-space: normal;
+  max-width: 100%;
+}
+
+/* Tailwind's animate-ping scales to 2x. On the fixed WhatsApp bubble that
+   halo reaches 48px past the button at 200% text against a 32px margin, and a
+   fixed element overflowing the viewport still produces a scrollbar. 1.5x
+   keeps the same effect inside the margin it has to live in. */
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  75%, 100% { transform: scale(1.5); opacity: 0; }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-ring { animation: none; opacity: 0; }
+}
+
+/* ── Keyboard focus ────────────────────────────────────────────────────────
+   WCAG 2.4.7 / IS 5568 both require a clearly visible focus indicator, and
+   until now most links relied on whatever the browser happened to draw. That
+   is not something to leave to chance on a page that has to demonstrate
+   compliance, and a single-colour ring cannot work across surfaces that run
+   from white through cream to the olive CTA band.
+
+   Two rings solve it: a dark inner outline plus a white outer shadow. On
+   light grounds the dark ring carries it; on the olive band the white one
+   does. Only :focus-visible, so pointer users never see it. */
+/* The doubled :focus-visible is deliberate. shadcn's buttons ship
+   `focus-visible:outline-none focus-visible:ring-1`, which is specificity
+   (0,2,0) and would otherwise beat a plain rule here and leave a 1px ring as
+   the only indicator. Repeating the pseudo-class raises this to (0,3,0)
+   without needing !important. */
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible:focus-visible {
+  outline: 3px solid var(--text-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.9);
+}
+
+/* On the brand band the emphasis inverts. */
+[class*="brand-surface"] :is(a, button):focus-visible:focus-visible,
+.sticky-cta :is(a, button):focus-visible:focus-visible {
+  outline-color: #ffffff;
+  box-shadow: 0 0 0 6px rgba(31, 41, 55, 0.65);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(a, button):focus-visible { transition: none; }
+}
+
 /* ── Mobile sticky CTA ─────────────────────────────────────────────────────
    Height is published by the component as --sticky-cta-h (0px when hidden),
    so the floating controls and the page's bottom padding both follow it

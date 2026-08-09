@@ -83,7 +83,7 @@ export default function StickyCTA() {
           href="https://wa.link/ntdrz1"
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => trackCTA('sticky_cta')}
+          onClick={() => trackCTA('whatsapp_consult', 'sticky')}
           tabIndex={show ? 0 : -1}
           className="flex items-center justify-center gap-2.5 w-full min-h-[52px] rounded-full
                      text-white font-bold text-[17px] bg-[var(--wa-green)]

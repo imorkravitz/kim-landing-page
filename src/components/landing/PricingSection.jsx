@@ -5,6 +5,7 @@ import img_8fa64f760_1 from '../../assets/remote/8fa64f760_1.webp';
 import img_df0c9358a_2 from '../../assets/remote/df0c9358a_2.webp';
 import { Check, Star, Sparkles } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { trackCTA } from '@/lib/analytics';
 import { Badge } from "@/components/ui/badge";
 
 const WhatsAppIcon = ({ className }) => (
@@ -50,6 +51,7 @@ export default function PricingSection() {
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
+      slug: 'basic',
       bgColor: 'bg-[var(--surface-card)]',
       headerColor: 'text-[var(--brand-ink)]',
       isPopular: false,
@@ -70,6 +72,7 @@ export default function PricingSection() {
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
+      slug: 'gold',
       bgColor: 'bg-[var(--surface-sunken)]',
       headerColor: 'text-[var(--brand-ink)]',
       isPopular: true,
@@ -93,6 +96,7 @@ export default function PricingSection() {
         'פגישה אישית עם קים – ייעוץ על נושאים תזונתיים ואישיים לבחירתך',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
+      slug: 'nivheret',
       bgColor: 'bg-[var(--surface-highlight)]',
       headerColor: 'text-[var(--brand-ink)]',
       isPopular: false,
@@ -240,7 +244,13 @@ export default function PricingSection() {
                 </div>
 
                 <div className="mt-8">
-                  <a href={plan.paymentLink} target="_blank" rel="noopener noreferrer" className="block">
+                  <a
+                    href={plan.paymentLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackCTA(`program_select_${plan.slug}`, 'pricing')}
+                    className="block"
+                  >
                     <Button 
                       className="w-full py-6 rounded-full text-lg font-bold bg-[var(--brand-surface)] hover:bg-[var(--brand-dark)] text-white shadow-lg transition-all hover:scale-[1.02]"
                     >

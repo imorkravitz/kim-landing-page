@@ -38,13 +38,13 @@ export default function FloatingCTA() {
           <div className="space-y-3">
             <a
               href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')}
+              onClick={() => trackCTA('whatsapp_consult', 'floating_bubble')}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-3 bg-green-50 rounded-xl hover:bg-green-100 transition-colors text-right"
             >
               <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center shrink-0 relative">
-                <div className="absolute inset-0 bg-green-200/50 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
+                <div className="absolute inset-0 bg-green-200/50 rounded-full animate-pulse-ring"></div>
                 <div className="w-8 h-8 bg-[var(--wa-green)] rounded-full flex items-center justify-center relative z-10">
                   <WhatsAppIcon className="w-4 h-4 text-white" />
                 </div>
@@ -57,13 +57,13 @@ export default function FloatingCTA() {
             
             <a
               href="https://wa.link/r2etxn"
-              onClick={() => trackCTA('whatsapp_support')}
+              onClick={() => trackCTA('whatsapp_support', 'floating_bubble')}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-3 bg-green-50 rounded-xl hover:bg-green-100 transition-colors text-right"
             >
               <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center shrink-0 relative">
-                <div className="absolute inset-0 bg-green-200/50 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
+                <div className="absolute inset-0 bg-green-200/50 rounded-full animate-pulse-ring"></div>
                 <div className="w-8 h-8 bg-[var(--wa-green)] rounded-full flex items-center justify-center relative z-10">
                   <WhatsAppIcon className="w-4 h-4 text-white" />
                 </div>
@@ -78,7 +78,7 @@ export default function FloatingCTA() {
       )}
       
       <div className="relative">
-        <div className={`absolute inset-0 bg-green-300/50 rounded-full ${!isOpen ? 'animate-ping' : ''}`} style={{ animationDuration: '2s' }}></div>
+        <div className={`absolute inset-0 bg-green-300/50 rounded-full ${!isOpen ? 'animate-pulse-ring' : ''}`}></div>
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? 'סגירת תפריט יצירת קשר' : 'פתיחת תפריט יצירת קשר בווצאפ'}

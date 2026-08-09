@@ -39,11 +39,20 @@ export function initAnalytics() {
 }
 
 /**
- * Track a conversion-intent click (WhatsApp / questionnaire CTA).
- * Call with a short label, e.g. trackCTA('whatsapp_consult').
+ * Track a conversion-intent click.
+ *
+ * `label` is WHAT the visitor asked for (whatsapp_consult, program_select_gold).
+ * `placement` is WHERE they asked from (hero, pricing, faq, sticky, footer).
+ *
+ * The two are separate because the primary CTA deliberately repeats the same
+ * wording and destination down the whole page — so without a placement, five
+ * different buttons collapse into one indistinguishable number and there is no
+ * way to learn which position actually earns the click. Reported as its own
+ * parameter rather than baked into the label, so totals per intent still add up.
  */
-export function trackCTA(label) {
-  if (window.gtag) window.gtag('event', 'cta_click', { cta: label });
-  if (window.fbq) window.fbq('track', 'Lead', { content_name: label });
+export function trackCTA(label, placement) {
+  const payload = placement ? { cta: label, placement } : { cta: label };
+  if (window.gtag) window.gtag('event', 'cta_click', payload);
+  if (window.fbq) window.fbq('track', 'Lead', { content_name: label, source: placement });
 }
 // deploy-connection test: 2026-07-07T17:38:10Z

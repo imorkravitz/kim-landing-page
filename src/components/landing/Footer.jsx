@@ -65,7 +65,7 @@ export default function Footer() {
               <li>
                 <a
                   href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')}
+              onClick={() => trackCTA('whatsapp_consult', 'footer')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-[var(--brand-ink)] transition-colors"
@@ -77,7 +77,7 @@ export default function Footer() {
               <li>
                 <a
                   href="https://wa.link/r2etxn"
-              onClick={() => trackCTA('whatsapp_support')}
+              onClick={() => trackCTA('whatsapp_support', 'footer')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-[var(--brand-ink)] transition-colors"

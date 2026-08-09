@@ -88,7 +88,7 @@ export default function ProcessSection() {
             אלפי נשים ששינו את מערכת היחסים עם אוכל ולמדו לנהל את התזונה שלהן בצורה שמתאימה לחיים.
           </p>
           <a href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
+              onClick={() => trackCTA('whatsapp_consult', 'process')} target="_blank" rel="noopener noreferrer">
             <button
               className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
               style={{
@@ -151,7 +151,7 @@ export default function ProcessSection() {
         <div className="text-center mt-14">
           <a
             href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')}
+              onClick={() => trackCTA('whatsapp_consult', 'process')}
             target="_blank"
             rel="noopener noreferrer"
           >

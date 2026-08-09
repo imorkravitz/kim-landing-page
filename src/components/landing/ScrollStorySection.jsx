@@ -9,6 +9,7 @@ import {
   AnimatePresence,
 } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { trackCTA } from '@/lib/analytics';
 import {
   Star, GraduationCap, Stethoscope,
   Leaf, Droplets, Flame, Apple,
@@ -381,6 +382,7 @@ function PhaseHero() {
               href="https://wa.link/ntdrz1"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackCTA('whatsapp_consult', 'hero')}
               aria-label="קביעת ייעוץ חינם עם קים בווצאפ"
               className="block sm:inline-block w-full sm:w-auto"
               whileHover={{ y: -4, scale: 1.05, filter: 'drop-shadow(0 8px 24px rgba(139,127,75,0.50))' }}
@@ -1484,7 +1486,7 @@ function WaPhoneMockup({ compact = false }) {
               <p style={{ margin: 0, color: '#fff', fontSize: compact ? 10 : 12, fontWeight: 700, lineHeight: 1.2 }}>קים גפסון</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                 <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4CAF50', flexShrink: 0 }} />
-                <p style={{ margin: 0, color: '#80CBC4', fontSize: compact ? 8 : 9.5, lineHeight: 1 }}>מחוברת עכשיו</p>
+                <p style={{ margin: 0, color: '#A5DFDA', fontSize: compact ? 8 : 9.5, lineHeight: 1 }}>מחוברת עכשיו</p>
               </div>
             </div>
           </div>
@@ -1522,7 +1524,7 @@ function WaPhoneMockup({ compact = false }) {
                     )}
                     <p style={{ margin: 0, fontSize: fs, color: '#333', lineHeight: 1.45 }}>{text}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 3, marginTop: 2, justifyContent: 'flex-end' }}>
-                      <span style={{ fontSize: compact ? 6 : 7.5, color: '#aaa' }}>{CHAT_TIMES[i]}</span>
+                      <span style={{ fontSize: compact ? 6 : 7.5, color: '#6B6B6B' }}>{CHAT_TIMES[i]}</span>
                       {!isKim && <span style={{ fontSize: compact ? 7 : 9, color: '#53BDEB' }}>✓✓</span>}
                     </div>
                   </div>
@@ -1555,7 +1557,10 @@ function WaPhoneMockup({ compact = false }) {
             <div style={{
               flex: 1, background: '#fff', borderRadius: 16,
               padding: `${compact ? 3 : 5}px ${compact ? 8 : 10}px`,
-              fontSize: compact ? 7.5 : 9, color: '#bbb',
+              // #bbb measured 1.92:1 on the white input — this mockup mimics
+              // WhatsApp's chrome, but it is live DOM text, not a screenshot,
+              // so it answers to the same contrast rule as the rest of the page.
+              fontSize: compact ? 7.5 : 9, color: '#6B6B6B',
               textAlign: 'right',
             }}>הקלידי הודעה...</div>
             <div style={{
@@ -1644,6 +1649,7 @@ function PhaseSupport() {
               href="https://wa.link/ntdrz1"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackCTA('whatsapp_consult', 'hero')}
               aria-label="קביעת ייעוץ חינם עם קים בווצאפ"
               className="block sm:inline-block"
               whileHover={{ y: -4, scale: 1.05, filter: 'drop-shadow(0 8px 24px rgba(139,127,75,0.50))' }}

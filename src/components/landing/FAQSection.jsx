@@ -127,7 +127,7 @@ export default function FAQSection() {
             לא מצאת את התשובה שלך? שאלי אותנו ישירות — עונות מהר.
           </p>
           <a href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
+              onClick={() => trackCTA('whatsapp_consult', 'faq')} target="_blank" rel="noopener noreferrer">
             <button
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
               style={{

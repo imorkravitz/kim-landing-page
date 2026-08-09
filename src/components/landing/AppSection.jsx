@@ -8,6 +8,7 @@ import img_7b8e2dc17_app_2 from '../../assets/remote/7b8e2dc17_app_2.webp';
 import img_cbbd3e3fd_app_5 from '../../assets/remote/cbbd3e3fd_app_5.webp';
 import { motion, useInView } from 'framer-motion';
 import { Button } from "@/components/ui/button";
+import { trackCTA } from '@/lib/analytics';
 import { Check, User, BarChart3, Clock, Zap } from 'lucide-react';
 import CardSwap, { Card } from '@/components/ui/card-swap';
 // Store badges are served from our own origin. They were hotlinked from
@@ -212,7 +213,7 @@ export default function AppSection() {
             arrived before the reasons to. Below the grid it closes the
             section for both layouts. */}
       <div className="text-center mt-12 space-y-4">
-        <a href="https://onelink.to/zter3n" target="_blank" rel="noopener noreferrer">
+        <a href="https://onelink.to/zter3n" target="_blank" rel="noopener noreferrer" onClick={() => trackCTA('app_download', 'app')}>
           <Button
             size="lg"
             className="bg-[var(--brand-surface)] text-white font-medium px-8 py-6 text-lg rounded-2xl shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[var(--brand-dark)] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"

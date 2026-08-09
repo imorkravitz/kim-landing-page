@@ -396,7 +396,7 @@ export default function TestimonialsSection() {
 
         <div className="text-center mt-12 flex flex-wrap gap-4 justify-center">
           <a href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
+              onClick={() => trackCTA('whatsapp_consult', 'testimonials')} target="_blank" rel="noopener noreferrer">
             <
 // @ts-ignore
             Button
