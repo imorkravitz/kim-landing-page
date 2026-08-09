@@ -95,11 +95,11 @@ export default function Footer() {
             of a slab. The old gray-500 measured 4.36:1 on this ground, under AA. */}
         <div className="border-t border-[var(--border-default)] mt-10 pt-6 text-center text-sm">
           <p className="flex items-center justify-center gap-x-3 gap-y-2 flex-wrap">
-            <a href="/Accessibility" className="underline underline-offset-4 hover:text-[var(--brand-ink)] transition-colors">
+            <a href="/Accessibility" className="inline-block py-2 underline underline-offset-4 hover:text-[var(--brand-ink)] transition-colors">
               הצהרת נגישות
             </a>
             <span aria-hidden="true">·</span>
-            <a href="/Privacy" className="underline underline-offset-4 hover:text-[var(--brand-ink)] transition-colors">
+            <a href="/Privacy" className="inline-block py-2 underline underline-offset-4 hover:text-[var(--brand-ink)] transition-colors">
               מדיניות פרטיות
             </a>
           </p>

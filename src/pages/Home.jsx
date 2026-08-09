@@ -17,6 +17,7 @@ import Footer from '@/components/landing/Footer';
 import ScrollToTop from '@/components/landing/ScrollToTop';
 import AccessibilityWidget from '@/components/landing/AccessibilityWidget';
 import FloatingCTA from '@/components/landing/FloatingCTA';
+import StickyCTA from '@/components/landing/StickyCTA';
 import ScrollProgressBar from '@/components/landing/ScrollProgressBar';
 
 const sectionVariants = {
@@ -161,6 +162,7 @@ export default function Home() {
       <ScrollToTop />
       <AccessibilityWidget />
       <FloatingCTA />
+      <StickyCTA />
     </div>
     </MotionConfig>
   );

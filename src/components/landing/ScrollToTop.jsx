@@ -40,7 +40,8 @@ export default function ScrollToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className={`fixed bottom-5 md:bottom-6 left-4 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full bg-[var(--brand-surface)] text-white shadow-lg hover:bg-[var(--brand-dark)] transition-all duration-300 flex items-center justify-center ${
+      style={{ bottom: `calc(1.25rem + var(--sticky-cta-h))` }}
+      className={`fixed left-4 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full bg-[var(--brand-surface)] text-white shadow-lg hover:bg-[var(--brand-dark)] transition-all duration-300 flex items-center justify-center ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
       }`}
       aria-label="חזרה למעלה"

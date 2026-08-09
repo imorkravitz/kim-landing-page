@@ -284,6 +284,33 @@ button:focus-visible {
    a 1440px screen runs to ~150 characters a line. */
 .prose-measure { max-width: var(--width-prose); }
 
+/* ── Mobile sticky CTA ─────────────────────────────────────────────────────
+   Height is published by the component as --sticky-cta-h (0px when hidden),
+   so the floating controls and the page's bottom padding both follow it
+   rather than each hard-coding an offset that drifts out of sync. */
+:root { --sticky-cta-h: 0px; }
+
+.sticky-cta {
+  z-index: var(--z-sticky);
+  transform: translateY(100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease-out, visibility 260ms;
+}
+.sticky-cta.is-shown {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticky-cta { transition: opacity 120ms linear, visibility 120ms; transform: none; }
+}
+
+/* Keep the last of the page clear of the bar. */
+@media (max-width: 1023px) {
+  body { padding-bottom: var(--sticky-cta-h); }
+}
+
 /* ── Story-phase body text (PhaseApp / PhaseSupport) ────────────────────────
    These phases live in a fixed 100svh sticky box with overflow:hidden, so the
    text must scale with viewport height or the last lines get clipped on short

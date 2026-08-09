@@ -11,7 +11,9 @@ const WhatsAppIcon = ({ className }) => (
 
 export default function CTASection() {
   return (
-    <section className="section-lg bg-[var(--brand-surface)] relative overflow-hidden">
+    /* data-closing-cta: StickyCTA hides itself once this is on screen, so the
+       visitor never sees the same button twice at once. */
+    <section data-closing-cta className="section-lg bg-[var(--brand-surface)] relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />

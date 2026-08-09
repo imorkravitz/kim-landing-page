@@ -197,7 +197,7 @@ export default function AccessibilityWidget() {
 
       `}</style>
 
-      <div className="fixed bottom-[72px] md:bottom-24 left-4">
+      <div className="fixed left-4" style={{ bottom: 'calc(4.5rem + var(--sticky-cta-h))' }}>
         <button
           ref={triggerRef}
           onClick={() => setIsOpen(!isOpen)}
