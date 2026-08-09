@@ -140,12 +140,28 @@ export default function PricingSection() {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-16 ">
+        {/* This section had no <h2> at all: a 320px-tall logo stood where the
+            heading belonged, so the document went from the page H1 straight to
+            the plan names as H3, and screen-reader and search-engine users had
+            no way to know what the section was. The logo is decorative, so it
+            keeps its place as a brand mark at a sane size and hands the
+            heading role to real text. Saves ~230px of mobile scroll. */}
+        <div className="text-center mb-10 md:mb-14">
           <img
             src={img_4dfadad4e_KIM_LOGO}
-            alt="KIM"
-            className="h-80 md:h-96 mx-auto mb-10 opacity-100"
+            alt=""
+            aria-hidden="true"
+            width="240"
+            height="240"
+            className="h-28 md:h-36 w-auto mx-auto mb-5"
           />
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-[var(--text-primary)] mb-4"
+              style={{ textWrap: 'balance' }}>
+            התוכניות שלנו
+          </h2>
+          <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
+            כל התוכניות כוללות ליווי אישי יומיומי — ההבדל הוא באורך התהליך ובמה שנכלל בו
+          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-7xl mx-auto lg:px-20">
@@ -169,7 +185,10 @@ export default function PricingSection() {
                 
                 {/* Header */}
                 <div className="text-center mb-6 relative">
-                  <h3 className={`text-6xl md:text-7xl font-bold mb-1 font-heading ${plan.headerColor} relative inline-block`}>
+                  {/* Was text-6xl/7xl — 60px, twice the size of the section's
+                      own h2. A plan name should lead its card, not outrank the
+                      heading the card sits under. */}
+                  <h3 className={`text-4xl md:text-5xl font-bold mb-1 font-heading ${plan.headerColor} relative inline-block`}>
                     {plan.name}
                     {plan.name === 'גולד' && <span className="absolute -top-2 -left-6 text-4xl">*</span>}
                   </h3>
