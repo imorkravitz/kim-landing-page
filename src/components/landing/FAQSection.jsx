@@ -108,7 +108,10 @@ export default function FAQSection() {
                   style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
                 >
                   <div className="overflow-hidden">
-                    <p className="px-5 md:px-6 pb-6 text-gray-600 leading-relaxed">
+                    {/* Answers ran 79–107 characters a line on desktop. The
+                        measure token caps them near 68, which is where Hebrew
+                        prose stops costing the reader a re-scan per line. */}
+                    <p className="px-5 md:px-6 pb-6 text-[var(--text-secondary)] leading-relaxed prose-measure">
                       {faq.answer}
                     </p>
                   </div>

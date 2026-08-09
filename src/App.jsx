@@ -1,8 +1,6 @@
 import './App.css'
-import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import VisualEditAgent from '@/lib/VisualEditAgent'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -75,8 +73,15 @@ function App() {
           <NavigationTracker />
           <AuthenticatedApp />
         </Router>
-        <Toaster />
-        <VisualEditAgent />
+        {/* <Toaster/> and <VisualEditAgent/> both removed.
+            The Toaster was never fired from anywhere in the app, but its
+            viewport still rendered fixed at top-0, full width, z-100 with
+            pointer-events:auto — a permanent 32px dead strip across the top of
+            every screen that quietly swallowed taps on mobile.
+            VisualEditAgent was the base44 editor bridge: 647 lines shipped to
+            every visitor, listening for window 'message' events with its origin
+            check commented out and posting element data to window.parent with
+            '*'. Nothing here needs it. */}
       </QueryClientProvider>
     </AuthProvider>
   )

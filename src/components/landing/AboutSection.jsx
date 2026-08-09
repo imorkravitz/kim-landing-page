@@ -95,7 +95,7 @@ export default function AboutSection() {
             {/* Intro — slightly larger for hierarchy */}
             <motion.p
               variants={itemV}
-              className="text-base text-gray-600 leading-relaxed mb-5"
+              className="text-base text-[var(--text-secondary)] leading-relaxed mb-5 prose-measure"
               style={{ textWrap: 'pretty' }}
             >
               היי, אני <strong>קים גפסון קרביץ</strong> בוגרת תואר בתזונה באוניברסיטה
@@ -105,7 +105,7 @@ export default function AboutSection() {
             {/* Story paragraph 1 */}
             <motion.p
               variants={itemV}
-              className="text-gray-600 leading-relaxed mb-5"
+              className="text-[var(--text-secondary)] leading-relaxed mb-5 prose-measure"
               style={{ textWrap: 'pretty' }}
             >
               בגיל 23 חוויתי מהפך בחיים כשחליתי בסרטן מסוג הודג'קין לימפומה.
@@ -116,7 +116,7 @@ export default function AboutSection() {
             {/* Story paragraph 2 */}
             <motion.p
               variants={itemV}
-              className="text-gray-600 leading-relaxed mb-8"
+              className="text-[var(--text-secondary)] leading-relaxed mb-8 prose-measure"
               style={{ textWrap: 'pretty' }}
             >
               בדרך למדתי שאיזון אמיתי לא נמצא בקיצוניות, אלא בהקשבה, בגמישות,
