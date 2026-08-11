@@ -50,7 +50,7 @@ export default function ProcessSection() {
       icon: WhatsAppIcon,
       title: 'ליווי יומי בווצאפ',
       description: 'מענה אישי, פידבק מקצועי ותמיכה מהתזונאית שלך בזמן אמת לאורך כל התהליך.',
-      color: 'bg-[var(--wa-green)]'
+      color: 'bg-[#5E8C6A]'
     },
     {
       number: '4',

@@ -1,4 +1,5 @@
 import React from 'react';
+import ResponsiveImage from '@/components/ui/responsive-image';
 import { trackCTA } from '@/lib/analytics';
 import { Instagram, MessageCircle, Phone, MapPin, Smartphone } from 'lucide-react';
 
@@ -13,18 +14,20 @@ export default function Footer() {
        colour and each column opts out where it needs to. */
     <footer className="bg-[var(--bg-secondary)] text-[var(--text-secondary)] section-md">
       <div className="container mx-auto px-6">
-        <div className="grid gap-10 md:grid-cols-3 md:gap-12 max-w-5xl mx-auto text-right">
+        <div className="flex flex-row items-center gap-10 md:grid-cols-3 justify-between md:justify-start md:gap-20 lg:gap-32 flex-wrap">
           {/* Logo & Description */}
           <div>
-            <img
+            <ResponsiveImage
               src={Logo}
+              stem="/src/assets/icons/kim-logo"
+              sizes="240px"
               alt="קים גפסון — תזונה מאפשרת"
-              width="180"
-              height="72"
-              className="h-16 w-auto mb-5 object-contain object-right"
+              width="640"
+              height="640"
+              className="h-40 md:h-48 w-auto mb-5 object-contain object-right"
             />
             <p className="leading-relaxed">
-              תזונה מאפשרת – הקליניקה של קים גפסון.
+              תזונה מאפשרת – הקליניקה של קים גפסון.<br></br>
               ליווי מקצועי ואישי לאורח חיים בריא ומאוזן.
             </p>
           </div>

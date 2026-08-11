@@ -164,6 +164,10 @@ export default function AppSection() {
                         <img
                           src={image.src}
                           alt={image.alt}
+                          width="512"
+                          height="1024"
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover"
                         />
                       </div>

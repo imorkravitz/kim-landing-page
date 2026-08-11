@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import img_4dfadad4e_KIM_LOGO from '../../assets/remote/4dfadad4e_KIM-LOGO.webp';
-import img_6a474e22f_Untitleddesign7 from '../../assets/remote/6a474e22f_Untitleddesign7.webp';
-import img_8fa64f760_1 from '../../assets/remote/8fa64f760_1.webp';
-import img_df0c9358a_2 from '../../assets/remote/df0c9358a_2.webp';
+import img_6a474e22f_Untitleddesign7 from '../../assets/remote/6a474e22f_Untitleddesign7.avif';
+import img_8fa64f760_1 from '../../assets/remote/8fa64f760_1.avif';
+import img_df0c9358a_2 from '../../assets/remote/df0c9358a_2.avif';
 import { Check, Star, Sparkles } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { trackCTA } from '@/lib/analytics';
@@ -51,6 +51,7 @@ export default function PricingSection() {
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
+      months: '3',
       slug: 'basic',
       bgColor: 'bg-[var(--surface-card)]',
       headerColor: 'text-[var(--brand-ink)]',
@@ -72,6 +73,7 @@ export default function PricingSection() {
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
+      months: '6',
       slug: 'gold',
       bgColor: 'bg-[var(--surface-sunken)]',
       headerColor: 'text-[var(--brand-ink)]',
@@ -96,6 +98,7 @@ export default function PricingSection() {
         'פגישה אישית עם קים – ייעוץ על נושאים תזונתיים ואישיים לבחירתך',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
+      months: '12',
       slug: 'nivheret',
       bgColor: 'bg-[var(--surface-highlight)]',
       headerColor: 'text-[var(--brand-ink)]',
@@ -120,13 +123,13 @@ export default function PricingSection() {
       
       {/* Background Texture/Image */}
       <div className="absolute inset-0 pointer-events-none bg-cover bg-center"
-           style={{ backgroundImage: `url(${img_6a474e22f_Untitleddesign7})` }}>
+           style={{ backgroundImage: isVisible ? `url(${img_6a474e22f_Untitleddesign7})` : 'none' }}>
       </div>
 
       {/* Bottom Left Decoration - Beet */}
       <div className="absolute bottom-0 left-0 w-[36rem] h-[48rem] md:w-[54rem] md:h-[72rem] pointer-events-none z-0 opacity-90"
            style={{
-             backgroundImage: `url(${img_8fa64f760_1})`,
+             backgroundImage: isVisible ? `url(${img_8fa64f760_1})` : 'none',
              backgroundRepeat: 'no-repeat',
              backgroundPosition: 'bottom left',
              backgroundSize: 'contain'
@@ -136,7 +139,7 @@ export default function PricingSection() {
       {/* Top Right Decoration - Flower */}
       <div className="absolute top-0 right-0 w-[18rem] h-[24rem] md:w-[27rem] md:h-[36rem] pointer-events-none z-0 opacity-90"
            style={{
-             backgroundImage: `url(${img_df0c9358a_2})`,
+             backgroundImage: isVisible ? `url(${img_df0c9358a_2})` : 'none',
              backgroundRepeat: 'no-repeat',
              backgroundPosition: 'top right',
              backgroundSize: 'contain'
@@ -157,7 +160,7 @@ export default function PricingSection() {
             aria-hidden="true"
             width="240"
             height="240"
-            className="h-28 md:h-36 w-auto mx-auto mb-5"
+            className="h-100 md:h-100 w-auto mx-auto mb-5"
           />
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-[var(--text-primary)] mb-4"
               style={{ textWrap: 'balance' }}>
@@ -185,10 +188,10 @@ export default function PricingSection() {
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Card Content */}
-              <div className={`p-8 h-full flex flex-col ${plan.bgColor} text-gray-800 relative`}>
+              <div className={`p-6 md:p-7 h-full flex flex-col ${plan.bgColor} text-gray-800 relative`}>
                 
                 {/* Header */}
-                <div className="text-center mb-6 relative">
+                <div className="text-center mb-4 relative">
                   {/* Was text-6xl/7xl — 60px, twice the size of the section's
                       own h2. A plan name should lead its card, not outrank the
                       heading the card sits under. */}
@@ -207,35 +210,42 @@ export default function PricingSection() {
                         order to compare these plans, so it is promoted to primary
                         ink rather than the gray-600 it used to whisper in (4.28:1
                         on the featured card — under AA as well as under-weighted). */}
-                    <div className="text-sm text-[var(--text-primary)] mt-1.5 font-semibold">{plan.commitment}</div>
-                    {/* Secondary ink measured 4.28:1 on the deepest card, and at
-                        12px this was under the readable floor anyway. Reads as
-                        secondary through weight and scale instead of tint. */}
-                    <div className="text-[13px] font-normal text-[var(--text-primary)] mt-0.5">{plan.subtitle}</div>
+                    {/* Programme length is what the three plans actually differ
+                        by, so it is set as the headline fact rather than buried
+                        mid-sentence in the standing-order line. */}
+                    <div className="mt-3 text-[var(--text-primary)]">
+                      <span className="text-base">תוכנית של </span>
+                      <span className="text-xl md:text-[24px] font-extrabold underline decoration-2 underline-offset-4 decoration-[var(--brand-primary)]">
+                        {plan.months} חודשים
+                      </span>
+                    </div>
+                    <div className="text-[13px] text-[var(--text-primary)] mt-1.5">
+                      {plan.commitment} <span className="opacity-80">{plan.subtitle}</span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Separator */}
-                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-6"></div>
+                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-4"></div>
 
                 {/* Description */}
-                <div className="mb-8 flex-grow">
+                <div className="mb-5 flex-grow">
                   <p className="text-right text-gray-700 leading-relaxed font-medium text-base md:text-lg">
                     {plan.description}
                   </p>
                 </div>
 
                 {/* Separator */}
-                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-6"></div>
+                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-4"></div>
 
                 {/* Features */}
                 <div>
-                  <h4 className={`text-2xl font-heading ${plan.headerColor} mb-4 text-right font-bold `}>
+                  <h4 className={`text-xl font-heading ${plan.headerColor} mb-3 text-right font-bold`}>
                     {plan.featuresTitle}
                   </h4>
-                  <ul className="space-y-3 text-right">
+                  <ul className="space-y-2 text-right">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                      <li key={i} className="flex items-start gap-2 text-lg text-gray-700">
                         <span className="text-[var(--brand-ink)] mt-1.5">•</span>
                         <span className="flex-1">{feature}</span>
                       </li>
@@ -243,7 +253,7 @@ export default function PricingSection() {
                   </ul>
                 </div>
 
-                <div className="mt-8">
+                <div className="mt-6">
                   <a
                     href={plan.paymentLink}
                     target="_blank"

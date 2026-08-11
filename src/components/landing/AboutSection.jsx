@@ -174,9 +174,15 @@ export default function AboutSection() {
               />
 
               {/* Portrait with bottom fade — blends into bg naturally */}
+              {/* Sits roughly seven screens down and carried no loading
+                  attribute, so it was fetched during first paint. */}
               <motion.img
                 src={kimPortrait}
                 alt="קים גפסון קרביץ"
+                width="720"
+                height="1080"
+                loading="lazy"
+                decoding="async"
                 className="relative w-full object-contain"
                 style={{
                   maskImage:

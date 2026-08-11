@@ -57,9 +57,8 @@ export default function ScrollVideoBackground({ children }) {
   useEffect(() => {
     const video  = videoRef.current;
     const canvas = canvasRef.current;
-    // Keyed on shouldLoad so that load() and the paint listeners are wired up
-    // AFTER a src exists. Run once on mount with no src, video.load() would be
-    // a no-op and nothing would ever repaint the canvas.
+    // Keyed on shouldLoad so the paint listeners are attached only once a src
+    // exists — otherwise nothing would ever repaint the canvas.
     if (!video || !canvas || !shouldLoad) return;
 
     const ctx = canvas.getContext('2d', { alpha: false });
@@ -99,6 +98,15 @@ export default function ScrollVideoBackground({ children }) {
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+      /* The source is 960x540. Full-bleed on a desktop that is 1425 device
+         pixels wide means a 1.5x upscale (worse on a retina laptop), and no
+         re-encode can invent those pixels — a higher-resolution export of the
+         original is the only real fix. High-quality smoothing is what is
+         available meanwhile; it costs nothing and visibly softens the
+         stair-stepping the default bilinear filter leaves behind. */
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
       // Fit by WIDTH always — guarantees the full horizontal extent of the
       // video (where the stethoscope sits) is visible on every device,
       // mobile included. Object-cover (fit by height) on a narrow/tall
@@ -123,7 +131,6 @@ export default function ScrollVideoBackground({ children }) {
     video.addEventListener('seeked',         paint);
     video.addEventListener('loadeddata',     paint);
     video.addEventListener('canplaythrough', paint);
-    video.load(); // explicit — some browsers defer buffering of display:none videos
 
     // Observe the container, not the canvas — see the note in paint() about
     // why watching the canvas while resizing it feeds back on itself.
@@ -196,7 +203,7 @@ export default function ScrollVideoBackground({ children }) {
           src={shouldLoad ? stethoscopeVideo : undefined}
           muted
           playsInline
-          preload="none"
+          preload="auto"
           style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', overflow: 'hidden' }}
         />
         <canvas

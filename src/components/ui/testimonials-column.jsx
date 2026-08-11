@@ -87,6 +87,8 @@ export const TestimonialsColumn = ({
                     src={image || "/placeholder.svg"}
                     stem={stemFor(image)}
                     sizes="(min-width: 768px) 286px, 148px"
+                    width="640"
+                    height="640"
                     alt={role ? `הצלחה של ${role}` : 'סיפור הצלחה של מטופלת'}
                     className="w-full h-auto object-cover block"
                     loading={groupIndex === 0 && i < 4 ? "eager" : "lazy"}

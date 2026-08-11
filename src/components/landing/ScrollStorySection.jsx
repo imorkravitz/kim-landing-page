@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import ResponsiveImage from '@/components/ui/responsive-image';
 import img_4a45529a3_app_icon from '../../assets/remote/4a45529a3_app-icon.webp';
 import {
   motion,
@@ -96,6 +97,28 @@ const TEXT  = '#333333';
  * six. No phase is removed and no content changes — this is the scroll
  * DISTANCE mapped onto the story, not the story.
  */
+
+/* Only one hero should exist in the DOM at a time.
+   The two Kim images are CSS-hidden per breakpoint (hidden lg:flex / lg:hidden),
+   but display:none does not stop a browser fetching an <img> — so on a phone
+   BOTH the desktop and mobile hero were being downloaded, and the hero is the
+   LCP asset. Rendering conditionally means exactly one is ever requested. */
+function useIsWide() {
+  const query = '(min-width: 1024px)';
+  const [wide, setWide] = React.useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  );
+  React.useEffect(() => {
+    const mq = window.matchMedia(query);
+    const sync = () => setWide(mq.matches);
+    mq.addEventListener('change', sync);
+    window.addEventListener('resize', sync);
+    sync();
+    return () => { mq.removeEventListener('change', sync); window.removeEventListener('resize', sync); };
+  }, []);
+  return wide;
+}
+
 const PHASE_STARTS = [0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6];
 const ease = [0.25, 0.1, 0.25, 1];
 
@@ -331,6 +354,7 @@ const mobileTestimonials = [
 // Phase 0 · Hero
 // ─────────────────────────────────────────────────────────────────────────────
 function PhaseHero() {
+  const isWide = useIsWide();
   const successCount = useCountUp(5000, { duration: 1.3, delay: 0.6 });
 
   return (
@@ -343,15 +367,33 @@ function PhaseHero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <img src={kimLogo} alt="KIM" className="h-32 drop-shadow-md" />
+        <ResponsiveImage
+          src={kimLogo}
+          stem="/src/assets/icons/kim-logo"
+          sizes="80px"
+          width="640"
+          height="640"
+          loading="eager"
+          alt="KIM"
+          className="h-20 w-auto drop-shadow-md"
+        />
       </motion.div>
 
       <ContentPanel mobilePt="pt-[38svh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
-          <motion.div variants={item} className="hidden lg:inline-block mb-2 lg:mb-4">
-            <img src={kimLogo} alt="KIM" className="md:h-56 lg:h-80 drop-shadow-lg" />
-          </motion.div>
+          {isWide && <motion.div variants={item} className="hidden lg:inline-block mb-2 lg:mb-4">
+            <ResponsiveImage
+              src={kimLogo}
+              stem="/src/assets/icons/kim-logo"
+              sizes="320px"
+              width="640"
+              height="640"
+              loading="eager"
+              alt="KIM"
+              className="md:h-56 lg:h-80 w-auto drop-shadow-lg"
+            />
+          </motion.div>}
 
           {/* Main headline */}
           <motion.h2
@@ -500,6 +542,10 @@ function PhaseBusyLife() {
           <img
             src={src}
             alt={label}
+            width="128"
+            height="128"
+            loading="lazy"
+            decoding="async"
             className="w-32 h-32 object-contain"
             style={{ filter: 'drop-shadow(0 6px 18px rgba(0,0,0,0.20))' }}
           />
@@ -525,6 +571,10 @@ function PhaseBusyLife() {
           <img
             src={src}
             alt={label}
+            width="80"
+            height="80"
+            loading="lazy"
+            decoding="async"
             className="w-20 h-20 object-contain"
             style={{ filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.18))' }}
           />
@@ -617,7 +667,24 @@ function ScrollVideoPlayer({ plateProgress }) {
   const pendingRef = useRef(false); // true while browser decodes a seek
   const rafRef     = useRef(null);
 
+  /* preload="auto" buffers the file once, which is what makes scrubbing cheap:
+     with preload="none" every seek became its own range request and a single
+     2.9MB video was fetched 51 times over one pass down the page. But buffering
+     it during first paint puts 2.9MB in front of the hero for a video this
+     phase does not even show yet. So the src is attached one idle tick after
+     mount — first paint stays light, and the buffer is ready well before the
+     visitor scrolls far enough to need a frame. */
+  const [videoSrc, setVideoSrc] = useState(null);
   useEffect(() => {
+    const start = () => setVideoSrc(animatedVideo);
+    const id = 'requestIdleCallback' in window
+      ? requestIdleCallback(start, { timeout: 1500 })
+      : setTimeout(start, 600);
+    return () => ('cancelIdleCallback' in window ? cancelIdleCallback(id) : clearTimeout(id));
+  }, []);
+
+  useEffect(() => {
+
     const video  = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
@@ -658,6 +725,15 @@ function ScrollVideoPlayer({ plateProgress }) {
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+      /* The source is 960x540. Full-bleed on a desktop that is 1425 device
+         pixels wide means a 1.5x upscale (worse on a retina laptop), and no
+         re-encode can invent those pixels — a higher-resolution export of the
+         original is the only real fix. High-quality smoothing is what is
+         available meanwhile; it costs nothing and visibly softens the
+         stair-stepping the default bilinear filter leaves behind. */
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
       // object-contain: scale to fit, centred
       const scale = Math.min(cw / vw, ch / vh);
       const dw = Math.round(vw * scale);
@@ -676,7 +752,6 @@ function ScrollVideoPlayer({ plateProgress }) {
     video.addEventListener('seeked',         paint);
     video.addEventListener('loadeddata',     paint); // paint frame 0 when ready
     video.addEventListener('canplaythrough', paint);
-    video.load(); // explicit — some browsers defer buffering of display:none videos
 
     // ── RAF scrub loop ────────────────────────────────────────────────────────
     // pendingSince: watchdog — if a seek never fires `seeked` (unbuffered
@@ -737,10 +812,10 @@ function ScrollVideoPlayer({ plateProgress }) {
       {/* Hidden video — decode source only, never rendered directly */}
       <video
         ref={videoRef}
-        src={animatedVideo}
+        src={videoSrc || undefined}
         muted
         playsInline
-        preload="none"
+        preload="auto"
         style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', overflow: 'hidden' }}
       />
       {/* Canvas — always shows last good frame; zero black-flash between frames */}
@@ -1321,7 +1396,9 @@ function AppPhoneMockup({ compact = false }) {
             border: '1.5px solid rgba(255,255,255,0.30)',
           }}
           alt="Kim"
-        />
+            width="94"
+            height="95"
+          />
         <div>
           <p style={{ margin: 0, fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.75)', lineHeight: 1.2 }}>דיאטנית</p>
           <p style={{ margin: 0, fontSize: 10.5, color: 'white', lineHeight: 1.4 }}>ראיתי את היומן שלך, כל הכבוד! 🌟</p>
@@ -1508,7 +1585,9 @@ function WaPhoneMockup({ compact = false }) {
               src={kimIcon}
               alt="Kim"
               style={{ width: compact ? 24 : 30, height: compact ? 24 : 30, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.25)' }}
-            />
+            width="94"
+            height="95"
+          />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ margin: 0, color: '#fff', fontSize: compact ? 10 : 12, fontWeight: 700, lineHeight: 1.2 }}>קים גפסון</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
@@ -1537,7 +1616,9 @@ function WaPhoneMockup({ compact = false }) {
                   {isKim && (
                     <img src={kimIcon} alt="Kim"
                       style={{ width: compact ? 18 : 22, height: compact ? 18 : 22, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, marginBottom: 2 }}
-                    />
+            width="94"
+            height="95"
+          />
                   )}
                   <div style={{
                     maxWidth: '82%',
@@ -1747,7 +1828,10 @@ export default function ScrollStorySection() {
   );
   const videoOpacity = useSpring(_videoOpacity, springCfg);
 
+
   // Phase 3 is PhaseRing (PhaseExploded removed)
+    const isWide = useIsWide();
+
   const phases = [PhaseHero, PhaseBusyLife, PhasePlate, PhaseRing, PhaseApp, PhaseSupport];
   const PhaseComponent = phases[phase];
 
@@ -1769,29 +1853,56 @@ export default function ScrollStorySection() {
         style={{ height: '100svh', background: BG }}
       >
         {/* ── Kim desktop — physically LEFT, always behind text column ── */}
+        {isWide && (
         <motion.div
           className="absolute inset-y-0 left-0 hidden lg:flex items-end justify-center pointer-events-none z-10"
           style={{ width: '80%', opacity: kimOpacity, y: kimY, scale: kimScale }}
         >
-          <img
+          {/* The LCP asset. eager + high priority per the asset spec, and the
+              only two images on the page that get either. */}
+          <ResponsiveImage
             src={kimHero}
+            stem="/src/assets/images/kim-hero"
+            sizes="80vw"
             alt="קים גפסון"
             className="w-full h-full object-contain object-bottom"
+            width="1920"
+            height="1080"
+            loading="eager"
+            fetchPriority="high"
           />
         </motion.div>
+        )}
 
         {/* ── Kim mobile — top strip (fades out when video appears) ── */}
         {/* pt-3 (12px) gives a little breathing room from the device top edge.
             h-36 (144px) keeps Kim visible but compact → bottom of strip = 156px,
             matching ContentPanel's pt-[156px] so text starts right below. */}
+        {!isWide && (
         <motion.div
           className={`lg:hidden absolute top-0 left-0 right-0 flex justify-center pt-3 z-10 pointer-events-none ${phase >= 4 ? 'hidden' : ''}`}
           style={{ opacity: kimOpacity }}
         >
           {/* Hidden in phases 4-5 (App/Support): on mobile the phone mockups own
               the top strip, and Kim behind them muddied the heading legibility */}
-          <img src={kimHero} alt="קים גפסון" className="object-contain object-bottom w-auto" style={{ height: '36svh', maxHeight: '320px' }} />
+          {/* Mobile LCP. sizes is generous because the box is height-driven
+              (36svh, capped 320px) and the width follows the aspect ratio —
+              a 320px-tall 16:9 crop is ~570px wide on a dpr-2 phone, so the
+              800w variant is the right pick and the 1600w one never loads. */}
+          <ResponsiveImage
+            src={kimHero}
+            stem="/src/assets/images/kim-hero"
+            sizes="400px"
+            alt="קים גפסון"
+            className="object-contain object-bottom w-auto"
+            style={{ height: '36svh', maxHeight: '320px' }}
+            width="1920"
+            height="1080"
+            loading="eager"
+            fetchPriority="high"
+          />
         </motion.div>
+        )}
 
         {/* ── Video layer — responsive ──────────────────────────────────────────
              Mobile  : top strip — 48vh so the plate fills a meaningful portion
