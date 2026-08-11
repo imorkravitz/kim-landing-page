@@ -59,7 +59,7 @@ export default function FAQSection() {
             שאלות שכולן שואלות
           </h2>
           <p className="text-xl text-[var(--text-secondary)]">
-            כל מה שחשוב לדעת לפני שמתחילים — בגובה העיניים
+            כל מה שחשוב לדעת לפני שמתחילים בגובה העיניים
           </p>
         </div>
 
@@ -124,7 +124,7 @@ export default function FAQSection() {
         {/* Still have a question — direct path to WhatsApp */}
         <div className="max-w-3xl mx-auto mt-10 text-center">
           <p className="text-[var(--text-secondary)] mb-4">
-            לא מצאת את התשובה שלך? שאלי אותנו ישירות — עונות מהר.
+            לא מצאת את התשובה שלך? שאלי אותנו ישירות, עונות מהר.
           </p>
           <a href="https://wa.link/ntdrz1"
               onClick={() => trackCTA('whatsapp_consult', 'faq')} target="_blank" rel="noopener noreferrer">

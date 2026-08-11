@@ -123,7 +123,7 @@ export default function AppSection() {
           <h2 className="text-4xl md:text-5xl font-heading text-gray-900 mb-4">הכירי את אפליקציית Liveat</h2>
           <div className="w-16 h-1 bg-[var(--brand-surface)] mx-auto rounded-full mb-6"></div>
           <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
-            האפליקציה הייחודית שפותחה במיוחד עבור המטופלות שלי — הכלי המושלם למסע התזונתי שלך
+            האפליקציה הייחודית שפותחה במיוחד עבור המטופלות שלי <br></br>הכלי המושלם למסע התזונתי שלך
           </p>
         </motion.div>
 

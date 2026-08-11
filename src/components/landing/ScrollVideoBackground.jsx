@@ -1,7 +1,16 @@
 import React, {useRef, useEffect, useState} from 'react';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
+/* Two encodes of the same 1920x1080 master, because one file cannot be right
+   for both. The canvas paints the video fitted to the viewport WIDTH, so a
+   375px phone at dpr 2 needs ~750 pixels across while a 1440px desktop needs
+   ~2880 — the old single 960px file was fine on the phone and stretched 1.5x
+   on the desktop, which is what made it look soft there.
+   Both are encoded with every frame as a keyframe (241/241) so seeking stays
+   instant, and measured at SSIM 0.998 against the master. */
 // @ts-ignore
-import stethoscopeVideo from '../../assets/videos/stethoscope_animated_2.mp4';
+import stethoscope1920 from '../../assets/videos/stethoscope-1920.mp4';
+// @ts-ignore
+import stethoscope1280 from '../../assets/videos/stethoscope-1280.mp4';
 
 /**
  * Shared scroll-driven video background — ProblemSolution + Features + Process.
@@ -33,6 +42,15 @@ export default function ScrollVideoBackground({ children }) {
      viewports instead, which on any real connection is far enough ahead to be
      buffered by the time it is scrubbed. */
   const [shouldLoad, setShouldLoad] = useState(false);
+
+  /* Chosen once, from the widest the canvas could need on this device. Read
+     synchronously so the correct file is requested on the first attempt
+     rather than swapped after a render. */
+  const [videoSrc] = useState(() => {
+    if (typeof window === 'undefined') return stethoscope1280;
+    const needed = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
+    return needed > 1280 ? stethoscope1920 : stethoscope1280;
+  });
 
   useEffect(() => {
     const node = wrapperRef.current;
@@ -129,6 +147,17 @@ export default function ScrollVideoBackground({ children }) {
     };
 
     video.addEventListener('seeked',         paint);
+
+    /* Mobile needs an explicit kick, desktop does not.
+       These <video> elements are 1px and effectively invisible, and iOS and
+       Android Chrome routinely decline to buffer those from preload="auto"
+       alone — which is why removing video.load() made the canvas render blank
+       on phones while desktop kept working. Calling load() unconditionally is
+       what caused the file to be fetched twice, so it is called only if the
+       element has genuinely not started after a beat. */
+    const kick = setTimeout(() => {
+      if (video.readyState === 0) video.load();
+    }, 800);
     video.addEventListener('loadeddata',     paint);
     video.addEventListener('canplaythrough', paint);
 
@@ -165,6 +194,7 @@ export default function ScrollVideoBackground({ children }) {
     rafRef.current = requestAnimationFrame(tick);
 
     return () => {
+      clearTimeout(kick);
       cancelAnimationFrame(rafRef.current);
       ro.disconnect();
       video.removeEventListener('seeked',         paint);
@@ -200,7 +230,7 @@ export default function ScrollVideoBackground({ children }) {
       >
         <video
           ref={videoRef}
-          src={shouldLoad ? stethoscopeVideo : undefined}
+          src={shouldLoad ? videoSrc : undefined}
           muted
           playsInline
           preload="auto"

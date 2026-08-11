@@ -22,15 +22,31 @@ const CardSwap = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  /* Hover-pause only where hovering is a real thing.
+     iOS synthesises a mouseenter on tap but frequently never sends the
+     matching mouseleave, so on a phone one touch latched isPaused true and the
+     carousel stopped for good after a single swap — which is exactly the
+     "swaps once then freezes" behaviour. Pointer capability is the honest
+     test; touch devices get tap-to-advance instead. */
+  const canHover =
+    typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+
+  const next = React.useCallback(
+    () => setCurrentIndex((prev) => (prev + 1) % childArray.length),
+    [childArray.length]
+  );
+
+  /* Tapping advances, and `tick` is in the timer's deps so the interval
+     restarts from that moment — the card the visitor just asked for gets a
+     full dwell rather than whatever was left of the previous one. */
+  const [tick, setTick] = useState(0);
+  const advance = () => { next(); setTick((t) => t + 1); };
+
   useEffect(() => {
     if (isPaused) return;
-    
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % childArray.length);
-    }, delay);
-
+    const interval = setInterval(next, delay);
     return () => clearInterval(interval);
-  }, [delay, childArray.length, isPaused]);
+  }, [delay, next, isPaused, tick]);
 
   /* Offsets are clamped to VISIBLE_DEPTH slots.
      Unclamped, the nth card sat at n*cardDistance right and n*verticalDistance
@@ -55,11 +71,18 @@ const CardSwap = ({
   };
 
   return (
-    <div 
-      className="relative flex items-center justify-center"
+    <div
+      role="button"
+      tabIndex={0}
+      aria-label="מסך הבא באפליקציה"
+      className="relative flex items-center justify-center cursor-pointer group select-none
+                 rounded-[3rem] transition-transform duration-200 active:scale-[0.98]
+                 focus-visible:outline-none"
       style={{ width, height, perspective: "1000px" }}
-      onMouseEnter={() => pauseOnHover && setIsPaused(true)}
-      onMouseLeave={() => pauseOnHover && setIsPaused(false)}
+      onClick={advance}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); advance(); } }}
+      onMouseEnter={() => canHover && pauseOnHover && setIsPaused(true)}
+      onMouseLeave={() => canHover && pauseOnHover && setIsPaused(false)}
     >
       {childArray.map((child, index) => {
         const style = getCardStyle(index);
@@ -86,6 +109,23 @@ const CardSwap = ({
           </motion.div>
         );
       })}
+
+      {/* Affordance: without it the stack looks decorative and nobody learns it
+          responds. Shown on hover where hover exists, and always on touch,
+          where there is no hover state to reveal it. */}
+      <div
+        aria-hidden="true"
+        className={`absolute bottom-3 left-1/2 -translate-x-1/2 z-50 pointer-events-none
+                    flex items-center gap-1.5 rounded-full px-3 py-1.5
+                    bg-black/55 text-white text-xs font-medium backdrop-blur-sm
+                    transition-opacity duration-200
+                    ${canHover ? 'opacity-0 group-hover:opacity-100' : 'opacity-90'}`}
+      >
+        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.2">
+          <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        למסך הבא
+      </div>
     </div>
   );
 };

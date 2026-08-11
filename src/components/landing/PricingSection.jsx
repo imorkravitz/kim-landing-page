@@ -167,7 +167,7 @@ export default function PricingSection() {
             התוכניות שלנו
           </h2>
           <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
-            כל התוכניות כוללות ליווי אישי יומיומי — ההבדל הוא באורך התהליך ובמה שנכלל בו
+            כל התוכניות כוללות ליווי אישי יומיומי ההבדל הוא באורך התהליך ובמה שנכלל בו
           </p>
         </div>
 
