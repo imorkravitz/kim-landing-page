@@ -361,7 +361,7 @@ export default function TestimonialsSection() {
           <div className="flex justify-center mb-4">
           </div>
           <h2 className="text-4xl md:text-5xl font-heading text-gray-900 mb-6">
-            כשהמסגרת חכמה והליווי עקבי - <span className="text-[var(--brand-ink)]">השינוי מגיע</span>
+            כשהמסגרת חכמה והליווי עקבי <br></br><span className="text-[var(--brand-ink)]">השינוי מגיע</span>
           </h2>
           <p className="text-xl text-slate-700 max-w-3xl mx-auto">
             התוצאות מדברות בעד עצמן.<br></br> צילומי מסך ושיתופים של לקוחות מרוצות שהצליחו לשנות את אורח החיים שלהןד

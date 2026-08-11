@@ -149,13 +149,36 @@ const item = {
  *   pt-[156px]     → starts below Kim's strip (pt-3 + h-36 = 12+144=156px)
  *   pb-28          → clears bottom banner (44px) + phase dots (52px) + breathing
  */
+/**
+ * Phase content column.
+ *
+ * The mobile offset used to be top padding on a top-aligned box: the padding
+ * cleared the artwork, and then the text sat immediately beneath it and left
+ * whatever remained of the screen empty — on the shorter phases that was most
+ * of the bottom third.
+ *
+ * It is now a reserved spacer plus a flex-1 region that CENTRES the text in
+ * the space the artwork does not use. The artwork keeps exactly the room it
+ * had, the text no longer clings to the top of the leftover, and short and
+ * long phases both sit evenly on the screen. Desktop is unchanged.
+ */
 function ContentPanel({ children, mobilePt = 'pt-[24svh]', mobileAlign = 'items-start', mobilePb = 'pb-16' }) {
+  // the offsets are authored as Tailwind arbitrary values; read the length back
+  const reserve = (mobilePt.match(/\[([^\]]+)\]/) || [, null])[1]
+    || { 'pt-2': '0.5rem', 'pt-3': '0.75rem' }[mobilePt]
+    || '0px';
+
   return (
-    <div className={`h-full flex ${mobileAlign} lg:items-center`}>
-      <div className={`w-full ${mobilePt} ${mobilePb} px-5 lg:pt-0 lg:pb-0 lg:px-0 lg:pl-[50%] lg:pr-12`}>
-        {/* dir="rtl" is re-applied here so text inside is always RTL */}
-        <div dir="rtl" className="text-right">
-          {children}
+    <div className="h-full flex flex-col lg:block">
+      {/* Space the artwork occupies above the copy */}
+      <div className="shrink-0 lg:hidden" style={{ height: reserve }} aria-hidden="true" />
+
+      <div className={`flex-1 min-h-0 flex ${mobileAlign === 'items-center' ? 'items-center' : 'items-center'} lg:h-full lg:items-center`}>
+        <div className={`w-full ${mobilePb} px-5 lg:pt-0 lg:pb-0 lg:px-0 lg:pl-[50%] lg:pr-12`}>
+          {/* dir="rtl" is re-applied here so text inside is always RTL */}
+          <div dir="rtl" className="text-right">
+            {children}
+          </div>
         </div>
       </div>
     </div>
@@ -750,6 +773,17 @@ function ScrollVideoPlayer({ plateProgress }) {
     };
 
     video.addEventListener('seeked',         paint);
+
+    /* Mobile needs an explicit kick, desktop does not.
+       These <video> elements are 1px and effectively invisible, and iOS and
+       Android Chrome routinely decline to buffer those from preload="auto"
+       alone — which is why removing video.load() made the canvas render blank
+       on phones while desktop kept working. Calling load() unconditionally is
+       what caused the file to be fetched twice, so it is called only if the
+       element has genuinely not started after a beat. */
+    const kick = setTimeout(() => {
+      if (video.readyState === 0) video.load();
+    }, 800);
     video.addEventListener('loadeddata',     paint); // paint frame 0 when ready
     video.addEventListener('canplaythrough', paint);
 
@@ -789,6 +823,7 @@ function ScrollVideoPlayer({ plateProgress }) {
     rafRef.current = requestAnimationFrame(tick);
 
     return () => {
+      clearTimeout(kick);
       cancelAnimationFrame(rafRef.current);
       video.removeEventListener('seeked',         paint);
       video.removeEventListener('loadeddata',     paint);
@@ -1435,7 +1470,7 @@ function PhaseApp() {
             </div>
           </motion.div>
 
-          <PhaseHeading>יומן אכילה<br/><Accent>שיתוף הדיאטנית המלווה באפליקציה שלנו</Accent></PhaseHeading>
+          <PhaseHeading>יומן אכילה<br/><Accent>שיתוף הדיאטנית<br></br> המלווה באפליקציה שלנו</Accent></PhaseHeading>
 
           <motion.p variants={item} className="phase-intro text-gray-600 leading-snug lg:leading-relaxed mb-2.5 lg:mb-5" dir="rtl">
             כבר בפגישה הראשונה נבנה עבורך תפריט אישי, גמיש, מפורט עם הנחיות ושפת תזונה ברורה. <br className="hidden lg:block"></br>
@@ -1808,22 +1843,33 @@ export default function ScrollStorySection() {
   // ── Spring config for silky-smooth fade / scale on Kim and video layer ──
   const springCfg = { stiffness: 60, damping: 20, restDelta: 0.001 };
 
-  // Kim's image — fades mid-scroll; hidden during video (phases 2→3), returns in phase 3+ (Ring)
+  /* These ramps are DERIVED from PHASE_STARTS rather than hard-coded.
+     They used to be literals ([0.25, 0.30, 0.39, 0.43] and friends) tuned to
+     the original uneven phase boundaries. Re-pacing the story changed those
+     boundaries but not the literals, so the plate video's fade-out landed in
+     the middle of its own phase and the plate simply was not there on the
+     screen that announces it. Expressed against the phase table, any future
+     pacing change carries the ramps with it. */
+  const P = PHASE_STARTS;                 // [hero, busy, plate, ring, app, support]
+  const PLATE_IN = P[2], PLATE_OUT = P[3];
+  const lead = 0.035;                     // how early a fade starts
+
+  // Kim fades out while the plate owns the screen, and returns for the Ring.
   const _kimOpacity = useTransform(
     scrollYProgress,
-    [0, 0.13, 0.16, 0.24, 0.29, 0.52, 0.57, 0.75, 0.80, 1],
-    [1,    1,  0.2,  0.2,    0,    0,  0.2,  0.2,    1,  1]
+    [0, P[1] - 0.02, P[1] + 0.01, PLATE_IN - lead, PLATE_IN, PLATE_OUT, PLATE_OUT + 0.05, P[4] - 0.03, P[4] + 0.02, 1],
+    [1,           1,         0.2,             0.2,        0,         0,             0.2,          0.2,           1, 1]
   );
   const kimOpacity = useSpring(_kimOpacity, springCfg);
-  const _kimScale  = useTransform(scrollYProgress, [0, 0.14, 0.85, 1], [1, 0.86, 0.86, 1]);
+  const _kimScale  = useTransform(scrollYProgress, [0, P[1], 0.85, 1], [1, 0.86, 0.86, 1]);
   const kimScale   = useSpring(_kimScale, springCfg);
   const kimY       = useTransform(scrollYProgress, [0, 1], [0, -60]);
 
-  // Video overlay — covers phase 2 (Plate) only; fades out completely before PhaseRing (0.43)
-  const plateScrollProgress = useTransform(scrollYProgress, [0.29, 0.40], [0, 1]);
+  // Plate video — visible for exactly the plate phase, in and out at its edges.
+  const plateScrollProgress = useTransform(scrollYProgress, [PLATE_IN, PLATE_OUT - 0.02], [0, 1]);
   const _videoOpacity = useTransform(
     scrollYProgress,
-    [0.25, 0.30, 0.39, 0.43],
+    [PLATE_IN - lead, PLATE_IN + 0.01, PLATE_OUT - 0.02, PLATE_OUT],
     [0, 1, 1, 0]
   );
   const videoOpacity = useSpring(_videoOpacity, springCfg);
@@ -1839,14 +1885,14 @@ export default function ScrollStorySection() {
     <section
       ref={sectionRef}
       dir="rtl"
-      /* 560svh -> 420svh: 5.6 screens of scrolling become 4.2, removing ~1,140px
-         from a 812px phone without dropping a phase or a word. Combined with the
-         even PHASE_STARTS above, each phase now holds for 70svh instead of
-         78-123, so the reduction comes almost entirely out of the two phases
-         that were dawdling. Not lower: six phases below ~70svh each start
-         passing faster than their own 0.6s crossfade, and the story would flash
-         rather than play. */
-      style={{ height: '420svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative', background: BG }}
+      /* 560 -> 420 -> 520svh. The first cut was driven by page-length data and
+         it was too aggressive: at 420svh each phase held for 70svh and the
+         story read as flashing past rather than playing, which is what you saw
+         on the plate phase. 520svh with the even PHASE_STARTS gives every phase
+         ~87svh — still tighter than the original 78-123 spread, and the slack
+         still comes out of the two phases that were dawdling rather than off
+         all six evenly. */
+      style={{ height: '520svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative', background: BG }}
     >
       <div
         className="sticky top-0 overflow-hidden"
