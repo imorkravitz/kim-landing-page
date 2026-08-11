@@ -740,7 +740,7 @@ function ScrollVideoPlayer({ plateProgress }) {
         src={animatedVideo}
         muted
         playsInline
-        preload="auto"
+        preload="none"
         style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', overflow: 'hidden' }}
       />
       {/* Canvas — always shows last good frame; zero black-flash between frames */}

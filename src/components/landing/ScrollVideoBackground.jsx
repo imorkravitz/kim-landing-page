@@ -196,7 +196,7 @@ export default function ScrollVideoBackground({ children }) {
           src={shouldLoad ? stethoscopeVideo : undefined}
           muted
           playsInline
-          preload={shouldLoad ? "auto" : "none"}
+          preload="none"
           style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', overflow: 'hidden' }}
         />
         <canvas

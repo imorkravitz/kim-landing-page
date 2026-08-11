@@ -1,4 +1,14 @@
 import React, { useState, useRef } from "react";
+import ResponsiveImage from "@/components/ui/responsive-image";
+
+/* The bundled URL is hashed, so the source path has to be recovered from the
+   original filename to find its pre-generated variants. */
+const stemFor = (url) => {
+  if (!url) return null;
+  const file = String(url).split("/").pop().split("?")[0];
+  const m = file.match(/^(\d+)[-.]/);
+  return m ? `/src/assets/patientsSuccess/${m[1]}` : null;
+};
 
 /**
  * Vertical marquee column of testimonial screenshots.
@@ -68,8 +78,15 @@ export const TestimonialsColumn = ({
                 className="transform-gpu p-2 md:p-4 rounded-2xl md:rounded-3xl border border-[#8B7F4B]/20 bg-white shadow-lg shadow-[#8B7F4B]/5 w-full transition-transform duration-200"
               >
                 <div className={`overflow-hidden rounded-xl md:rounded-2xl bg-gray-100 ${role ? 'mb-2 md:mb-4' : ''}`}>
-                  <img
+                  {/* sizes mirrors the measured render width: 148css inside the
+                      two mobile columns, 286css inside the three desktop ones.
+                      Without it the browser assumes full viewport width and
+                      picks the largest variant every time, which would undo
+                      the point of having variants at all. */}
+                  <ResponsiveImage
                     src={image || "/placeholder.svg"}
+                    stem={stemFor(image)}
+                    sizes="(min-width: 768px) 286px, 148px"
                     alt={role ? `הצלחה של ${role}` : 'סיפור הצלחה של מטופלת'}
                     className="w-full h-auto object-cover block"
                     loading={groupIndex === 0 && i < 4 ? "eager" : "lazy"}
