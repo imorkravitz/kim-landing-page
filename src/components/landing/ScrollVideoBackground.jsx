@@ -116,27 +116,54 @@ export default function ScrollVideoBackground({ children }) {
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      /* The source is 960x540. Full-bleed on a desktop that is 1425 device
-         pixels wide means a 1.5x upscale (worse on a retina laptop), and no
-         re-encode can invent those pixels — a higher-resolution export of the
-         original is the only real fix. High-quality smoothing is what is
-         available meanwhile; it costs nothing and visibly softens the
-         stair-stepping the default bilinear filter leaves behind. */
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
 
-      // Fit by WIDTH always — guarantees the full horizontal extent of the
-      // video (where the stethoscope sits) is visible on every device,
-      // mobile included. Object-cover (fit by height) on a narrow/tall
-      // mobile viewport forced a severe horizontal crop, hiding most of
-      // the stethoscope; a fixed posX guess couldn't reliably compensate.
-      // Cropping only vertically (top/bottom) is safe since the subject
-      // is vertically centered in the source video.
-      const scale = cssW / vw;
-      const dw = Math.round(vw * scale);
-      const dh = Math.round(vh * scale);
-      const dx = 0;
-      const dy = Math.round((cssH - dh) / 2);
+      /* ── Framing ──────────────────────────────────────────────────────────
+         Desktop fits by WIDTH. That is the right call there and it is why the
+         original code did it: the stethoscope is not parked in the middle of
+         the frame, it TRAVELS across it — measured on the master, the subject
+         occupies x 75-95% at the start, sweeps the full width around the
+         two-thirds mark, and ends at x 0-31%. Any fixed horizontal crop loses
+         it for part of the animation.
+
+         On a phone that same rule is what made it disappear. A 16:9 video
+         fitted to a 375px width draws just 211px tall inside an 812px canvas —
+         a thin band of mostly-white frame with a small subject in it.
+
+         So mobile fills the HEIGHT instead and pans the window horizontally in
+         step with the scrub, tracking the subject from its start position on
+         the right to its end position on the left. The stethoscope stays large
+         and in frame for the whole section, which is what the width-fit was
+         protecting but at a size worth looking at. The pan is derived from the
+         same smoothed progress value that drives the video, so it moves with
+         the animation rather than alongside it. */
+      const isNarrow = cssW < 768;
+
+      let scale, dw, dh, dx, dy;
+      if (isNarrow) {
+        scale = cssH / vh;                        // fill the viewport height
+        dw = Math.round(vw * scale);
+        dh = Math.round(vh * scale);
+        dy = 0;
+
+        // Where the subject sits, as a fraction of the source width, at the
+        // start and end of the animation. Measured, not guessed.
+        const SUBJECT_START = 0.85;
+        const SUBJECT_END   = 0.16;
+        const p = Math.max(0, Math.min(1, smoothRef.current));
+        const focus = SUBJECT_START + (SUBJECT_END - SUBJECT_START) * p;
+
+        // Centre that point in the viewport, without exposing either edge.
+        const ideal = cssW / 2 - focus * dw;
+        dx = Math.round(Math.max(Math.min(ideal, 0), cssW - dw));
+      } else {
+        scale = cssW / vw;
+        dw = Math.round(vw * scale);
+        dh = Math.round(vh * scale);
+        dx = 0;
+        dy = Math.round((cssH - dh) / 2);
+      }
 
       // White fill — video's white areas are seamlessly invisible on white BG
       ctx.fillStyle = '#ffffff';
