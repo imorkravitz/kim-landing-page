@@ -83,7 +83,20 @@ const BRAND_INK = '#6D6339';
 const BRAND_SURFACE = '#807545';
 const BG    = '#e9e4ce';
 const TEXT  = '#333333';
-const PHASE_STARTS = [0, 0.15, 0.29, 0.43, 0.60, 0.78];
+/* Phase pacing.
+ *
+ * These were [0, 0.15, 0.29, 0.43, 0.60, 0.78], which over the old 560svh
+ * gave 84 / 78 / 78 / 95 / 101 / 123svh of scroll per phase — the last two
+ * phases each held for more than a full screen while the tightest held for
+ * 0.78. That slack at the END is the worst place to have it: it is the part a
+ * visitor reaches only after already deciding to stay.
+ *
+ * Even sixths spend the same scroll on every phase, so shortening the section
+ * takes its reduction out of the loose phases rather than uniformly off all
+ * six. No phase is removed and no content changes — this is the scroll
+ * DISTANCE mapped onto the story, not the story.
+ */
+const PHASE_STARTS = [0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6];
 const ease = [0.25, 0.1, 0.25, 1];
 
 // Phase wrapper: subtle y-lift + crossfade — cinematic without jarring jumps.
@@ -1742,7 +1755,14 @@ export default function ScrollStorySection() {
     <section
       ref={sectionRef}
       dir="rtl"
-      style={{ height: '560svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative', background: BG }}
+      /* 560svh -> 420svh: 5.6 screens of scrolling become 4.2, removing ~1,140px
+         from a 812px phone without dropping a phase or a word. Combined with the
+         even PHASE_STARTS above, each phase now holds for 70svh instead of
+         78-123, so the reduction comes almost entirely out of the two phases
+         that were dawdling. Not lower: six phases below ~70svh each start
+         passing faster than their own 0.6s crossfade, and the story would flash
+         rather than play. */
+      style={{ height: '420svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative', background: BG }}
     >
       <div
         className="sticky top-0 overflow-hidden"

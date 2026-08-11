@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, MotionConfig } from 'framer-motion';
+import { initScrollTracking } from '@/lib/analytics';
 
 import SEOHead from '@/components/SEOHead';
 import ScrollStorySection from '@/components/landing/ScrollStorySection';
@@ -49,6 +50,9 @@ const AnimatedSection = ({ children }) => (
 );
 
 export default function Home() {
+  /* Runs after mount so [data-track-section] elements exist to observe. */
+  useEffect(() => initScrollTracking(), []);
+
   return (
     <MotionConfig reducedMotion="user">
     <div dir="rtl" className="min-h-screen bg-white font-sans page-transition">
@@ -115,42 +119,42 @@ export default function Home() {
       `}</style>
       
       <main id="main-content">
-      <ScrollStorySection />
+      <div data-track-section="hero_story"><ScrollStorySection /></div>
 
       {/* Skip-link destination: first real content after the hero story */}
       <div id="content-start" tabIndex={-1} className="outline-none" />
 
-      <TrustBar />
+      <div data-track-section="trust_bar"><TrustBar /></div>
 
       {/* Stethoscope scrub spans ProblemSolution + About — the animation
           completes only at the bottom of About (Kim's full portrait) */}
       <ScrollVideoBackground>
-        <ProblemSolutionSection />
-        <AboutSection />
+        <div data-track-section="problem_solution"><ProblemSolutionSection /></div>
+        <div data-track-section="about_kim"><AboutSection /></div>
       </ScrollVideoBackground>
 
       <AnimatedSection>
-        <TestimonialsSection />
+        <div data-track-section="testimonials"><TestimonialsSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
-        <ProcessSection />
+        <div data-track-section="process"><ProcessSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
-        <AppSection />
+        <div data-track-section="liveat_app"><AppSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
-        <PricingSection />
+        <div data-track-section="pricing"><PricingSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
-        <FAQSection />
+        <div data-track-section="faq"><FAQSection /></div>
       </AnimatedSection>
       
       <AnimatedSection>
-        <CTASection />
+        <div data-track-section="closing_cta"><CTASection /></div>
       </AnimatedSection>
       
       </main>

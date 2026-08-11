@@ -55,4 +55,92 @@ export function trackCTA(label, placement) {
   if (window.gtag) window.gtag('event', 'cta_click', payload);
   if (window.fbq) window.fbq('track', 'Lead', { content_name: label, source: placement });
 }
+
+/**
+ * Scroll-depth and section-reach instrumentation.
+ *
+ * Every judgement about "the page is too long" or "the hero earns its scroll"
+ * is a guess until this exists. Depth milestones say how far people get;
+ * section events say WHICH section they stop at, which is the part that
+ * actually tells you where to cut. Both fire at most once per page view.
+ *
+ * Deliberately cheap: one rAF-coalesced scroll handler for depth, and an
+ * IntersectionObserver for sections, so it costs nothing per frame.
+ */
+export function initScrollTracking() {
+  if (typeof window === 'undefined' || !window.gtag) return () => {};
+
+  const send = (name, params) => window.gtag('event', name, params);
+
+  /* ── Depth milestones ── */
+  const marks = [25, 50, 75, 90];
+  const hit = new Set();
+  let frame = null;
+
+  const measure = () => {
+    frame = null;
+    const doc = document.documentElement;
+    const scrollable = doc.scrollHeight - window.innerHeight;
+    if (scrollable <= 0) return;
+    const pct = (window.scrollY / scrollable) * 100;
+    for (const m of marks) {
+      if (pct >= m && !hit.has(m)) {
+        hit.add(m);
+        send('scroll_depth', { percent: m });
+      }
+    }
+  };
+  const onScroll = () => { if (frame === null) frame = requestAnimationFrame(measure); };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  measure();
+
+  /* ── Section reach ──
+     data-track-section names a section; the event fires the first time enough
+     of it has been on screen to count as seen.
+
+     "Enough" cannot be a fixed ratio of the element. The hero story is 3,410px
+     and pricing is 2,713px, so on an 812px phone neither can ever put 50% of
+     itself in view — with a 0.5 threshold those two sections, the two most
+     important on the page, silently never reported at all. The bar is instead
+     the smaller of half the element and half the viewport, which behaves
+     sensibly for a short trust bar and a five-screen story alike. */
+  const seen = new Set();
+  let io = null;
+  const sections = document.querySelectorAll('[data-track-section]');
+  if (sections.length && typeof IntersectionObserver !== 'undefined') {
+    io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const name = e.target.dataset.trackSection;
+        if (seen.has(name) || !e.isIntersecting) continue;
+        const needed = Math.min(e.boundingClientRect.height * 0.5, window.innerHeight * 0.5);
+        if (e.intersectionRect.height >= needed) {
+          seen.add(name);
+          send('section_view', { section: name });
+        }
+      }
+    }, { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
+    sections.forEach((s) => io.observe(s));
+  }
+
+  /* Deepest point reached, reported once as the visitor leaves. Without this
+     you only learn about people who cross a milestone, never where the ones
+     who left early actually stopped. */
+  const reportExit = () => {
+    const doc = document.documentElement;
+    const scrollable = doc.scrollHeight - window.innerHeight;
+    if (scrollable <= 0) return;
+    send('scroll_exit', {
+      max_percent: Math.round((window.scrollY / scrollable) * 100),
+      sections_seen: seen.size,
+    });
+  };
+  window.addEventListener('pagehide', reportExit, { once: true });
+
+  return () => {
+    window.removeEventListener('scroll', onScroll);
+    window.removeEventListener('pagehide', reportExit);
+    if (frame !== null) cancelAnimationFrame(frame);
+    if (io) io.disconnect();
+  };
+}
 // deploy-connection test: 2026-07-07T17:38:10Z
