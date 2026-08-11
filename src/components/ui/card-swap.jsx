@@ -32,12 +32,23 @@ const CardSwap = ({
     return () => clearInterval(interval);
   }, [delay, childArray.length, isPaused]);
 
+  /* Offsets are clamped to VISIBLE_DEPTH slots.
+     Unclamped, the nth card sat at n*cardDistance right and n*verticalDistance
+     up, so with six cards the deepest one rendered 250px right and 300px above
+     the container it nominally lives in — outside the box the layout reserves
+     for it, overlapping whatever sits above and pushing the page sideways on
+     narrow screens. Cards past the visible depth now stack in place and fade,
+     which is what the effect was trying to suggest anyway. */
+  const VISIBLE_DEPTH = 3;
+
   const getCardStyle = (index) => {
     const relativeIndex = (index - currentIndex + childArray.length) % childArray.length;
+    const depth = Math.min(relativeIndex, VISIBLE_DEPTH);
     return {
-      x: relativeIndex * cardDistance,
-      y: -relativeIndex * verticalDistance,
-      scale: 1 - relativeIndex * 0.05,
+      x: depth * cardDistance,
+      y: -depth * verticalDistance,
+      scale: 1 - depth * 0.05,
+      opacity: relativeIndex > VISIBLE_DEPTH ? 0 : 1,
       zIndex: childArray.length - relativeIndex,
       rotateY: skewAmount,
     };
@@ -61,6 +72,7 @@ const CardSwap = ({
               x: style.x,
               y: style.y,
               scale: style.scale,
+              opacity: style.opacity,
               zIndex: style.zIndex,
             }}
             transition={{

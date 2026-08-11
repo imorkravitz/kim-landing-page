@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
 // @ts-ignore
 import stethoscopeVideo from '../../assets/videos/stethoscope_animated_2.mp4';
@@ -27,6 +27,26 @@ export default function ScrollVideoBackground({ children }) {
   const pendingRef = useRef(false);
   const rafRef     = useRef(null);
 
+  /* This video sits roughly 5,000px down the page, but preload="auto" had it
+     racing the hero for bandwidth at first paint — a megabyte spent before the
+     visitor had seen anything. It is fetched once the section is within two
+     viewports instead, which on any real connection is far enough ahead to be
+     buffered by the time it is scrubbed. */
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const node = wrapperRef.current;
+    if (!node) return;
+    if (typeof IntersectionObserver === 'undefined') { setShouldLoad(true); return; }
+
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setShouldLoad(true); io.disconnect(); } },
+      { rootMargin: '200% 0px' }
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
     // progress = 0 when wrapper first appears at viewport bottom
@@ -37,7 +57,9 @@ export default function ScrollVideoBackground({ children }) {
   useEffect(() => {
     const video  = videoRef.current;
     const canvas = canvasRef.current;
-    if (!video || !canvas) return;
+    // Keyed on shouldLoad so the paint listeners are attached only once a src
+    // exists — otherwise nothing would ever repaint the canvas.
+    if (!video || !canvas || !shouldLoad) return;
 
     const ctx = canvas.getContext('2d', { alpha: false });
     video.pause();
@@ -50,10 +72,24 @@ export default function ScrollVideoBackground({ children }) {
       const vh = video.videoHeight;
       if (!vw || !vh) { pendingRef.current = false; return; }
 
-      // DPR-aware canvas sizing — sharp on retina / HiDPI
-      const dpr  = window.devicePixelRatio || 1;
-      const cssW = canvas.offsetWidth  || window.innerWidth;
-      const cssH = canvas.offsetHeight || window.innerHeight;
+      /* Size from the CONTAINER, never from the canvas itself.
+         Reading canvas.offsetWidth/Height here and then writing canvas.width/
+         height is a feedback loop: those attributes are the element's intrinsic
+         size, so writing them can change its own layout box, which re-triggers
+         the ResizeObserver below, which paints again. In practice it settled
+         with a 375x357 backing store on a devicePixelRatio-2 screen — i.e. the
+         video was being drawn at half resolution and then upscaled by the
+         browser, which is what made this look soft on phones and retina
+         displays. Measuring the parent breaks the loop. */
+      const box  = (canvas.parentElement || canvas).getBoundingClientRect();
+      const cssW = Math.round(box.width)  || window.innerWidth;
+      const cssH = Math.round(box.height) || window.innerHeight;
+
+      /* Capped at 2. Beyond that the extra pixels are invisible on a
+         full-bleed background video but the per-frame fill+draw cost keeps
+         rising, and this repaints on every scroll frame. */
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
       const physW = Math.round(cssW * dpr);
       const physH = Math.round(cssH * dpr);
       if (canvas.width !== physW || canvas.height !== physH) {
@@ -61,6 +97,15 @@ export default function ScrollVideoBackground({ children }) {
         canvas.height = physH;
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      /* The source is 960x540. Full-bleed on a desktop that is 1425 device
+         pixels wide means a 1.5x upscale (worse on a retina laptop), and no
+         re-encode can invent those pixels — a higher-resolution export of the
+         original is the only real fix. High-quality smoothing is what is
+         available meanwhile; it costs nothing and visibly softens the
+         stair-stepping the default bilinear filter leaves behind. */
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
 
       // Fit by WIDTH always — guarantees the full horizontal extent of the
       // video (where the stethoscope sits) is visible on every device,
@@ -86,11 +131,11 @@ export default function ScrollVideoBackground({ children }) {
     video.addEventListener('seeked',         paint);
     video.addEventListener('loadeddata',     paint);
     video.addEventListener('canplaythrough', paint);
-    video.load(); // explicit — some browsers defer buffering of display:none videos
 
-    // Repaint on resize / orientation change (mobile chrome bar)
+    // Observe the container, not the canvas — see the note in paint() about
+    // why watching the canvas while resizing it feeds back on itself.
     const ro = new ResizeObserver(() => paint());
-    ro.observe(canvas);
+    if (canvas.parentElement) ro.observe(canvas.parentElement);
 
     // ── RAF scrub loop ───────────────────────────────────────────────────────
     // pendingSince: watchdog — if a seek never fires `seeked` (unbuffered
@@ -126,7 +171,7 @@ export default function ScrollVideoBackground({ children }) {
       video.removeEventListener('loadeddata',     paint);
       video.removeEventListener('canplaythrough', paint);
     };
-  }, []);
+  }, [shouldLoad]);
 
   useMotionValueEvent(scrollYProgress, 'change', (rawV) => {
     targetRef.current = Math.max(0, Math.min(1, rawV));
@@ -155,7 +200,7 @@ export default function ScrollVideoBackground({ children }) {
       >
         <video
           ref={videoRef}
-          src={stethoscopeVideo}
+          src={shouldLoad ? stethoscopeVideo : undefined}
           muted
           playsInline
           preload="auto"

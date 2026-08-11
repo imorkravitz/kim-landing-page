@@ -8,9 +8,12 @@ import {
   useSpring,
 } from 'framer-motion';
 // @ts-ignore
-import kimPortrait from '../../assets/images/kim_portrait.png';
+import kimPortrait from '../../assets/images/kim_portrait.webp';
 
 const BRAND = '#8B7F4B';
+// Brand olive is 4.01:1 on white — valid for fills, icons and large
+// type, but NOT for body text. This is the text-safe shade (6.01:1).
+const BRAND_INK = '#6D6339';
 const ease  = [0.22, 1, 0.36, 1];
 
 /* ── Shared motion presets ── */
@@ -49,7 +52,7 @@ export default function AboutSection() {
     <section
       ref={sectionRef}
       dir="rtl"
-      className="relative py-20 md:py-28 overflow-hidden"
+      className="relative section-lg overflow-hidden"
       style={{ background: 'transparent' }}
     >
       {/* Ambient background glow — very subtle */}
@@ -81,7 +84,7 @@ export default function AboutSection() {
               variants={itemV}
               className="font-heading text-3xl md:text-4xl leading-snug mb-6"
               style={{
-                color: BRAND,
+                color: BRAND_INK,
                 textWrap: 'balance',
                 textShadow: '0 2px 20px rgba(255,255,255,0.95), 0 1px 4px rgba(255,255,255,0.95)',
               }}
@@ -92,7 +95,7 @@ export default function AboutSection() {
             {/* Intro — slightly larger for hierarchy */}
             <motion.p
               variants={itemV}
-              className="text-base text-gray-600 leading-relaxed mb-5"
+              className="text-base text-[var(--text-secondary)] leading-relaxed mb-5 prose-measure"
               style={{ textWrap: 'pretty' }}
             >
               היי, אני <strong>קים גפסון קרביץ</strong> בוגרת תואר בתזונה באוניברסיטה
@@ -102,7 +105,7 @@ export default function AboutSection() {
             {/* Story paragraph 1 */}
             <motion.p
               variants={itemV}
-              className="text-gray-600 leading-relaxed mb-5"
+              className="text-[var(--text-secondary)] leading-relaxed mb-5 prose-measure"
               style={{ textWrap: 'pretty' }}
             >
               בגיל 23 חוויתי מהפך בחיים כשחליתי בסרטן מסוג הודג'קין לימפומה.
@@ -113,7 +116,7 @@ export default function AboutSection() {
             {/* Story paragraph 2 */}
             <motion.p
               variants={itemV}
-              className="text-gray-600 leading-relaxed mb-8"
+              className="text-[var(--text-secondary)] leading-relaxed mb-8 prose-measure"
               style={{ textWrap: 'pretty' }}
             >
               בדרך למדתי שאיזון אמיתי לא נמצא בקיצוניות, אלא בהקשבה, בגמישות,
@@ -133,7 +136,7 @@ export default function AboutSection() {
                 <p
                   className="font-gveret text-xl md:text-2xl leading-relaxed italic"
                   style={{
-                    color: BRAND,
+                    color: BRAND_INK,
                     textShadow: '0 2px 20px rgba(255,255,255,0.95), 0 1px 4px rgba(255,255,255,0.95), 0 0 2px rgba(255,255,255,0.9)',
                   }}
                 >
@@ -171,9 +174,15 @@ export default function AboutSection() {
               />
 
               {/* Portrait with bottom fade — blends into bg naturally */}
+              {/* Sits roughly seven screens down and carried no loading
+                  attribute, so it was fetched during first paint. */}
               <motion.img
                 src={kimPortrait}
                 alt="קים גפסון קרביץ"
+                width="720"
+                height="1080"
+                loading="lazy"
+                decoding="async"
                 className="relative w-full object-contain"
                 style={{
                   maskImage:
@@ -234,7 +243,7 @@ export default function AboutSection() {
                   {title}
                 </p>
                 {sub && (
-                  <p className="text-gray-400 text-xs leading-snug">{sub}</p>
+                  <p className="text-[var(--text-muted)] text-xs leading-snug">{sub}</p>
                 )}
               </motion.div>
             ))}

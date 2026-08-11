@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import img_4dfadad4e_KIM_LOGO from '../../assets/remote/4dfadad4e_KIM-LOGO.webp';
-import img_6a474e22f_Untitleddesign7 from '../../assets/remote/6a474e22f_Untitleddesign7.webp';
-import img_8fa64f760_1 from '../../assets/remote/8fa64f760_1.webp';
-import img_df0c9358a_2 from '../../assets/remote/df0c9358a_2.webp';
+import img_6a474e22f_Untitleddesign7 from '../../assets/remote/6a474e22f_Untitleddesign7.avif';
+import img_8fa64f760_1 from '../../assets/remote/8fa64f760_1.avif';
+import img_df0c9358a_2 from '../../assets/remote/df0c9358a_2.avif';
 import { Check, Star, Sparkles } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { trackCTA } from '@/lib/analytics';
 import { Badge } from "@/components/ui/badge";
 
 const WhatsAppIcon = ({ className }) => (
@@ -50,8 +51,10 @@ export default function PricingSection() {
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
-      bgColor: 'bg-[#f9f4eb]',
-      headerColor: 'text-[#8B7F4B]',
+      months: '3',
+      slug: 'basic',
+      bgColor: 'bg-[var(--surface-card)]',
+      headerColor: 'text-[var(--brand-ink)]',
       isPopular: false,
       paymentLink: 'https://meshulam.co.il/quick_payment?b=0650455637b3d3165c4edf567b80d7f7'
     },
@@ -70,8 +73,10 @@ export default function PricingSection() {
         '2 ערכות קיט לבחירתך במתנה',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
-      bgColor: 'bg-[#edead4]',
-      headerColor: 'text-[#8B7F4B]',
+      months: '6',
+      slug: 'gold',
+      bgColor: 'bg-[var(--surface-sunken)]',
+      headerColor: 'text-[var(--brand-ink)]',
       isPopular: true,
       popularText: 'Most Popular',
       paymentLink: 'https://meshulam.co.il/quick_payment?b=a4a8f69b137c30dbf763eb9b8576236a'
@@ -93,8 +98,10 @@ export default function PricingSection() {
         'פגישה אישית עם קים – ייעוץ על נושאים תזונתיים ואישיים לבחירתך',
         'הרצאות תזונה בזום עם קים לכל הקהילה'
       ],
-      bgColor: 'bg-[#cdc2ab]',
-      headerColor: 'text-[#8B7F4B]',
+      months: '12',
+      slug: 'nivheret',
+      bgColor: 'bg-[var(--surface-highlight)]',
+      headerColor: 'text-[var(--brand-ink)]',
       isPopular: false,
       paymentLink: 'https://meshulam.co.il/quick_payment?b=db202b67221edf8de0a441989beb51ce'
     }
@@ -103,7 +110,7 @@ export default function PricingSection() {
   return (
     <section 
       ref={sectionRef}
-      className="py-20 md:py-28 relative overflow-hidden bg-[#E5E0D1]"
+      className="section-lg relative overflow-hidden bg-[var(--bg-tertiary)]"
     >
       <style>
         {`
@@ -116,13 +123,13 @@ export default function PricingSection() {
       
       {/* Background Texture/Image */}
       <div className="absolute inset-0 pointer-events-none bg-cover bg-center"
-           style={{ backgroundImage: `url(${img_6a474e22f_Untitleddesign7})` }}>
+           style={{ backgroundImage: isVisible ? `url(${img_6a474e22f_Untitleddesign7})` : 'none' }}>
       </div>
 
       {/* Bottom Left Decoration - Beet */}
       <div className="absolute bottom-0 left-0 w-[36rem] h-[48rem] md:w-[54rem] md:h-[72rem] pointer-events-none z-0 opacity-90"
            style={{
-             backgroundImage: `url(${img_8fa64f760_1})`,
+             backgroundImage: isVisible ? `url(${img_8fa64f760_1})` : 'none',
              backgroundRepeat: 'no-repeat',
              backgroundPosition: 'bottom left',
              backgroundSize: 'contain'
@@ -132,7 +139,7 @@ export default function PricingSection() {
       {/* Top Right Decoration - Flower */}
       <div className="absolute top-0 right-0 w-[18rem] h-[24rem] md:w-[27rem] md:h-[36rem] pointer-events-none z-0 opacity-90"
            style={{
-             backgroundImage: `url(${img_df0c9358a_2})`,
+             backgroundImage: isVisible ? `url(${img_df0c9358a_2})` : 'none',
              backgroundRepeat: 'no-repeat',
              backgroundPosition: 'top right',
              backgroundSize: 'contain'
@@ -140,20 +147,39 @@ export default function PricingSection() {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-16 ">
+        {/* This section had no <h2> at all: a 320px-tall logo stood where the
+            heading belonged, so the document went from the page H1 straight to
+            the plan names as H3, and screen-reader and search-engine users had
+            no way to know what the section was. The logo is decorative, so it
+            keeps its place as a brand mark at a sane size and hands the
+            heading role to real text. Saves ~230px of mobile scroll. */}
+        <div className="text-center mb-10 md:mb-14">
           <img
             src={img_4dfadad4e_KIM_LOGO}
-            alt="KIM"
-            className="h-80 md:h-96 mx-auto mb-10 opacity-100"
+            alt=""
+            aria-hidden="true"
+            width="240"
+            height="240"
+            className="h-100 md:h-100 w-auto mx-auto mb-5"
           />
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-[var(--text-primary)] mb-4"
+              style={{ textWrap: 'balance' }}>
+            התוכניות שלנו
+          </h2>
+          <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
+            כל התוכניות כוללות ליווי אישי יומיומי — ההבדל הוא באורך התהליך ובמה שנכלל בו
+          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-7xl mx-auto lg:px-20">
           {plans.map((plan, index) => (
             <div
               key={plan.name}
-              className={`relative rounded-[2rem] overflow-hidden shadow-xl transition-all duration-700 flex flex-col hover:shadow-2xl${
-                plan.isPopular ? 'z-10 shadow-2xl ring-2 ring-[#8B7F4B]/20' : ''
+              /* The missing space before ${} concatenated the two classes into
+                 "hover:shadow-2xlz-10", so the featured card silently lost both
+                 its hover shadow and its stacking order. */
+              className={`relative rounded-[2rem] overflow-hidden shadow-xl transition-all duration-700 flex flex-col hover:shadow-2xl ${
+                plan.isPopular ? 'z-10 shadow-2xl ring-2 ring-[var(--border-brand)]' : ''
               } ${
                 isVisible 
                   ? 'opacity-100 translate-y-0' 
@@ -162,58 +188,81 @@ export default function PricingSection() {
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Card Content */}
-              <div className={`p-8 h-full flex flex-col ${plan.bgColor} text-gray-800 relative`}>
+              <div className={`p-6 md:p-7 h-full flex flex-col ${plan.bgColor} text-gray-800 relative`}>
                 
                 {/* Header */}
-                <div className="text-center mb-6 relative">
-                  <h3 className={`text-6xl md:text-7xl font-bold mb-1 font-heading ${plan.headerColor} relative inline-block`}>
+                <div className="text-center mb-4 relative">
+                  {/* Was text-6xl/7xl — 60px, twice the size of the section's
+                      own h2. A plan name should lead its card, not outrank the
+                      heading the card sits under. */}
+                  <h3 className={`text-4xl md:text-5xl font-bold mb-1 font-heading ${plan.headerColor} relative inline-block`}>
                     {plan.name}
                     {plan.name === 'גולד' && <span className="absolute -top-2 -left-6 text-4xl">*</span>}
                   </h3>
                   
                   <div className="flex flex-col items-center justify-center mt-4">
-                    <div className="flex items-baseline gap-1 text-[#7D7046]">
+                    <div className="flex items-baseline gap-1 text-[var(--brand-dark)]">
                       <span className="text-4xl font-bold">{plan.price}</span>
                       <span className="text-3xl font-bold">₪</span>
                       <span className="text-2xl font-bold">{plan.duration}</span>
                     </div>
-                    <div className="text-sm text-gray-600 mt-1 font-medium">{plan.commitment}</div>
-                    <div className="text-xs text-gray-500">{plan.subtitle}</div>
+                    {/* Commitment length is the single fact people most need in
+                        order to compare these plans, so it is promoted to primary
+                        ink rather than the gray-600 it used to whisper in (4.28:1
+                        on the featured card — under AA as well as under-weighted). */}
+                    {/* Programme length is what the three plans actually differ
+                        by, so it is set as the headline fact rather than buried
+                        mid-sentence in the standing-order line. */}
+                    <div className="mt-3 text-[var(--text-primary)]">
+                      <span className="text-base">תוכנית של </span>
+                      <span className="text-xl md:text-[24px] font-extrabold underline decoration-2 underline-offset-4 decoration-[var(--brand-primary)]">
+                        {plan.months} חודשים
+                      </span>
+                    </div>
+                    <div className="text-[13px] text-[var(--text-primary)] mt-1.5">
+                      {plan.commitment} <span className="opacity-80">{plan.subtitle}</span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Separator */}
-                <div className="w-full h-px bg-[#8B7F4B]/20 mb-6"></div>
+                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-4"></div>
 
                 {/* Description */}
-                <div className="mb-8 flex-grow">
+                <div className="mb-5 flex-grow">
                   <p className="text-right text-gray-700 leading-relaxed font-medium text-base md:text-lg">
                     {plan.description}
                   </p>
                 </div>
 
                 {/* Separator */}
-                <div className="w-full h-px bg-[#8B7F4B]/20 mb-6"></div>
+                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-4"></div>
 
                 {/* Features */}
                 <div>
-                  <h4 className={`text-2xl font-heading ${plan.headerColor} mb-4 text-right font-bold `}>
+                  <h4 className={`text-xl font-heading ${plan.headerColor} mb-3 text-right font-bold`}>
                     {plan.featuresTitle}
                   </h4>
-                  <ul className="space-y-3 text-right">
+                  <ul className="space-y-2 text-right">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                        <span className="text-[#8B7F4B] mt-1.5">•</span>
+                      <li key={i} className="flex items-start gap-2 text-lg text-gray-700">
+                        <span className="text-[var(--brand-ink)] mt-1.5">•</span>
                         <span className="flex-1">{feature}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="mt-8">
-                  <a href={plan.paymentLink} target="_blank" rel="noopener noreferrer" className="block">
+                <div className="mt-6">
+                  <a
+                    href={plan.paymentLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackCTA(`program_select_${plan.slug}`, 'pricing')}
+                    className="block"
+                  >
                     <Button 
-                      className="w-full py-6 rounded-full text-lg font-bold bg-[#8B7F4B] hover:bg-[#6d6339] text-white shadow-lg transition-all hover:scale-[1.02]"
+                      className="w-full py-6 rounded-full text-lg font-bold bg-[var(--brand-surface)] hover:bg-[var(--brand-dark)] text-white shadow-lg transition-all hover:scale-[1.02]"
                     >
                       <Sparkles className="w-5 h-5 ml-2" />
                       {plan.ctaText}

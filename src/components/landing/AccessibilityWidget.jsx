@@ -197,7 +197,7 @@ export default function AccessibilityWidget() {
 
       `}</style>
 
-      <div className="fixed bottom-[72px] md:bottom-24 left-4">
+      <div className="fixed bottom-[72px] md:bottom-24 left-4" style={{ transform: 'translateY(calc(-1 * var(--sticky-cta-h)))', transition: 'transform 260ms cubic-bezier(0.22,1,0.36,1)' }}>
         <button
           ref={triggerRef}
           onClick={() => setIsOpen(!isOpen)}

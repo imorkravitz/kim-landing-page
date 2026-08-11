@@ -4,35 +4,59 @@ import { ChevronUp } from 'lucide-react';
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
+  /* rAF-throttled and passive. The unthrottled version called setState on every
+     scroll event, re-rendering during the scroll itself — on a 17,000px page
+     that is a steady source of jank on mobile. Coalescing to one read per frame
+     and bailing when the boolean is unchanged keeps re-renders to two per page. */
   useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+    let frame = null;
+
+    const onScroll = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        setIsVisible((prev) => {
+          const next = window.scrollY > 300;
+          return next === prev ? prev : next;
+        });
+      });
     };
 
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    // Honour reduced-motion: animating a 17,000px flight is exactly the kind of
+    // vestibular trigger the preference exists for.
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
   };
 
   return (
-    <button
-      onClick={scrollToTop}
-      className={`fixed bottom-5 md:bottom-6 left-4 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#8B7F4B] text-white shadow-lg hover:bg-[#6d6339] transition-all duration-300 flex items-center justify-center ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
-      }`}
-      aria-label="חזרה למעלה"
+    /* The sticky-CTA lift lives on this wrapper, not on the button. The button
+       already animates itself with Tailwind translate-y-* for its show/hide, and
+       an inline transform on the same element would overwrite that outright. */
+    <div
+      className="fixed bottom-5 md:bottom-6 left-4 z-50"
+      style={{
+        transform: 'translateY(calc(-1 * var(--sticky-cta-h)))',
+        transition: 'transform 260ms cubic-bezier(0.22,1,0.36,1)',
+      }}
     >
-      <ChevronUp className="w-6 h-6" />
-    </button>
+      <button
+        onClick={scrollToTop}
+        className={`w-11 h-11 md:w-12 md:h-12 rounded-full bg-[var(--brand-surface)] text-white shadow-lg hover:bg-[var(--brand-dark)] transition-all duration-300 flex items-center justify-center ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
+        }`}
+        aria-label="חזרה למעלה"
+      >
+        <ChevronUp className="w-6 h-6" />
+      </button>
+    </div>
   );
 }

@@ -5,7 +5,7 @@ import img_eeac41e3b_kim_t from '../../assets/remote/eeac41e3b_kim-t.webp';
 import { Button } from "@/components/ui/button";
 import { Star, GraduationCap } from 'lucide-react';
 // @ts-ignore
-import kim_pic from '../../assets/images/kim-whiteshirt-trasparent5.png';
+import kim_pic from '../../assets/images/kim-whiteshirt-trasparent5.webp';
 
 /* ── WhatsApp mock chat card ── */
 function WaChat({ messages, name, avatar, className = '' }) {

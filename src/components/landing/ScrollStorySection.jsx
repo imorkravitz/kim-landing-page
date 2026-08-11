@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import ResponsiveImage from '@/components/ui/responsive-image';
 import img_4a45529a3_app_icon from '../../assets/remote/4a45529a3_app-icon.webp';
 import {
   motion,
@@ -9,6 +10,7 @@ import {
   AnimatePresence,
 } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { trackCTA } from '@/lib/analytics';
 import {
   Star, GraduationCap, Stethoscope,
   Leaf, Droplets, Flame, Apple,
@@ -16,11 +18,11 @@ import {
 } from 'lucide-react';
 
 // @ts-ignore
-import kimHero from '../../assets/images/kim-hero.png';
+import kimHero from '../../assets/images/kim-hero.webp';
 // @ts-ignore
 import kimLogo from '../../assets/icons/KIM - LOGO 2.png';
 // @ts-ignore
-import kimIcon from '../../assets/images/kim-icon-whatsapp.png';
+import kimIcon from '../../assets/images/kim-icon-whatsapp.webp';
 // @ts-ignore
 import animatedVideo from '../../assets/videos/animated.mp4';
 
@@ -32,7 +34,7 @@ import meal2    from '../../assets/app/meal-1.webp';   // morning-snack photo
 // @ts-ignore
 import meal3    from '../../assets/app/meal-3.webp';   // lunch photo
 // @ts-ignore
-import appGoals from '../../assets/app/app-6.png';    // daily-goals screen — water bottles at bottom
+import appGoals from '../../assets/app/app-6.webp';    // daily-goals screen — water bottles at bottom
 // @ts-ignore
 import eatDiary1 from '../../assets/app/eat_diary_1.webp'; // actual app diary screen 1
 // @ts-ignore
@@ -40,43 +42,84 @@ import eatDiary2 from '../../assets/app/eat_diary_2.webp'; // actual app diary s
 
 // Phase 4 — food sticker images for 80:20 ring
 // @ts-ignore
-import nt1 from '../../assets/8020/pizza.png';
+import nt1 from '../../assets/8020/pizza.webp';
 // @ts-ignore
-import nt2 from '../../assets/8020/wine.png';
+import nt2 from '../../assets/8020/wine.webp';
 // @ts-ignore
 import nt3 from '../../assets/8020/crossiant.webp';
 // @ts-ignore
-import nt4 from '../../assets/8020/water.png';
+import nt4 from '../../assets/8020/water.webp';
 // @ts-ignore
 import nt5 from '../../assets/8020/bread.webp';
 // @ts-ignore
 import nt7 from '../../assets/8020/healthyPlate.webp';
 // @ts-ignore
-import nt8 from '../../assets/8020/running2.png';
+import nt8 from '../../assets/8020/running2.webp';
 // @ts-ignore
-import nt9 from '../../assets/8020/banana.png';
+import nt9 from '../../assets/8020/banana.webp';
 // @ts-ignore
-import nt10 from '../../assets/8020/veggie.png';
+import nt10 from '../../assets/8020/veggie.webp';
 
 
 // Phase 1 custom images (transparent PNGs)
 // @ts-ignore
-import imgNoTime        from '../../assets/images/no-time.png';
+import imgNoTime        from '../../assets/images/no-time.webp';
 // @ts-ignore
-import imgWork          from '../../assets/images/work.png';
+import imgWork          from '../../assets/images/work.webp';
 // @ts-ignore
-import imgTierd         from '../../assets/images/tierd.png';
+import imgTierd         from '../../assets/images/tierd.webp';
 // @ts-ignore
-import imgStressCalendar from '../../assets/images/stress-calander.png';
+import imgStressCalendar from '../../assets/images/stress-calander.webp';
 // @ts-ignore
-import imgMessages      from '../../assets/images/messages.png';
+import imgMessages      from '../../assets/images/messages.webp';
 // @ts-ignore
-import imgKids          from '../../assets/images/kids.png';
+import imgKids          from '../../assets/images/kids.webp';
 
 const BRAND = '#8B7F4B';
+// Brand olive is 4.01:1 on white — valid for fills, icons and large
+// type, but NOT for body text. This is the text-safe shade (6.01:1).
+const BRAND_INK = '#6D6339';
+// ...and this is the shade for fills that carry white text (4.63:1 vs 4.01).
+// Visually a hair off BRAND; the difference only shows up in a contrast meter.
+const BRAND_SURFACE = '#807545';
 const BG    = '#e9e4ce';
 const TEXT  = '#333333';
-const PHASE_STARTS = [0, 0.15, 0.29, 0.43, 0.60, 0.78];
+/* Phase pacing.
+ *
+ * These were [0, 0.15, 0.29, 0.43, 0.60, 0.78], which over the old 560svh
+ * gave 84 / 78 / 78 / 95 / 101 / 123svh of scroll per phase — the last two
+ * phases each held for more than a full screen while the tightest held for
+ * 0.78. That slack at the END is the worst place to have it: it is the part a
+ * visitor reaches only after already deciding to stay.
+ *
+ * Even sixths spend the same scroll on every phase, so shortening the section
+ * takes its reduction out of the loose phases rather than uniformly off all
+ * six. No phase is removed and no content changes — this is the scroll
+ * DISTANCE mapped onto the story, not the story.
+ */
+
+/* Only one hero should exist in the DOM at a time.
+   The two Kim images are CSS-hidden per breakpoint (hidden lg:flex / lg:hidden),
+   but display:none does not stop a browser fetching an <img> — so on a phone
+   BOTH the desktop and mobile hero were being downloaded, and the hero is the
+   LCP asset. Rendering conditionally means exactly one is ever requested. */
+function useIsWide() {
+  const query = '(min-width: 1024px)';
+  const [wide, setWide] = React.useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  );
+  React.useEffect(() => {
+    const mq = window.matchMedia(query);
+    const sync = () => setWide(mq.matches);
+    mq.addEventListener('change', sync);
+    window.addEventListener('resize', sync);
+    sync();
+    return () => { mq.removeEventListener('change', sync); window.removeEventListener('resize', sync); };
+  }, []);
+  return wide;
+}
+
+const PHASE_STARTS = [0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6];
 const ease = [0.25, 0.1, 0.25, 1];
 
 // Phase wrapper: subtle y-lift + crossfade — cinematic without jarring jumps.
@@ -148,7 +191,7 @@ function PhaseHeading({ children }) {
 /* ── Inline accent span with gold underline ── */
 function Accent({ children }) {
   return (
-    <span className="relative" style={{ color: BRAND }}>
+    <span className="relative" style={{ color: BRAND_INK }}>
       {children}
       <span
         className="absolute inset-x-0 bottom-0 h-[3px] rounded-full opacity-40"
@@ -252,7 +295,7 @@ function WaBubble({ name, avatar, messages }) {
             <div className="max-w-[88%] px-2.5 py-1 rounded-xl text-[10px] leading-relaxed shadow-sm"
               style={{ background: m.from === 'kim' ? '#fff' : '#DCF8C6', color: '#333' }}>
               <p>{m.text}</p>
-              <p className="text-[8px] text-gray-400 text-left mt-0.5">{m.time}{m.from !== 'kim' && ' ✓✓'}</p>
+              <p className="text-[8px] text-[var(--text-muted)] text-left mt-0.5">{m.time}{m.from !== 'kim' && ' ✓✓'}</p>
             </div>
           </div>
         ))}
@@ -311,6 +354,7 @@ const mobileTestimonials = [
 // Phase 0 · Hero
 // ─────────────────────────────────────────────────────────────────────────────
 function PhaseHero() {
+  const isWide = useIsWide();
   const successCount = useCountUp(5000, { duration: 1.3, delay: 0.6 });
 
   return (
@@ -323,15 +367,33 @@ function PhaseHero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <img src={kimLogo} alt="KIM" className="h-32 drop-shadow-md" />
+        <ResponsiveImage
+          src={kimLogo}
+          stem="/src/assets/icons/kim-logo"
+          sizes="80px"
+          width="640"
+          height="640"
+          loading="eager"
+          alt="KIM"
+          className="h-20 w-auto drop-shadow-md"
+        />
       </motion.div>
 
       <ContentPanel mobilePt="pt-[38svh]">
         <motion.div variants={stagger} initial="initial" animate="animate">
 
-          <motion.div variants={item} className="hidden lg:inline-block mb-2 lg:mb-4">
-            <img src={kimLogo} alt="KIM" className="md:h-56 lg:h-80 drop-shadow-lg" />
-          </motion.div>
+          {isWide && <motion.div variants={item} className="hidden lg:inline-block mb-2 lg:mb-4">
+            <ResponsiveImage
+              src={kimLogo}
+              stem="/src/assets/icons/kim-logo"
+              sizes="320px"
+              width="640"
+              height="640"
+              loading="eager"
+              alt="KIM"
+              className="md:h-56 lg:h-80 w-auto drop-shadow-lg"
+            />
+          </motion.div>}
 
           {/* Main headline */}
           <motion.h2
@@ -339,11 +401,11 @@ function PhaseHero() {
             dir="rtl"
             className="text-3xl sm:text-4xl md:text-5xl font-heading leading-[1.15] mb-3 lg:mb-5"
           >
-            <span style={{ color: BRAND }}>
+            <span style={{ color: BRAND_INK }}>
               לנהל את התזונה שלכם
             </span>
             <br></br>
-            <span style={{ color: BRAND }}>
+            <span style={{ color: BRAND_INK }}>
               לאכול הכל
             </span>{' '}
 
@@ -375,6 +437,7 @@ function PhaseHero() {
               href="https://wa.link/ntdrz1"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackCTA('whatsapp_consult', 'hero')}
               aria-label="קביעת ייעוץ חינם עם קים בווצאפ"
               className="block sm:inline-block w-full sm:w-auto"
               whileHover={{ y: -4, scale: 1.05, filter: 'drop-shadow(0 8px 24px rgba(139,127,75,0.50))' }}
@@ -384,7 +447,7 @@ function PhaseHero() {
               <Button
                 className="rounded-full px-8 py-6 text-lg font-bold text-white min-h-[48px]
                            shadow-[0_4px_20px_rgba(139,127,75,0.35)] w-full sm:w-auto"
-                style={{ background: BRAND }}
+                style={{ background: BRAND_SURFACE }}
               >
                 לקביעת ייעוץ התאמה חינם
               </Button>
@@ -406,14 +469,14 @@ function PhaseHero() {
               >
                 {[1,2,3,4,5].map(i => (
                   <motion.span key={i} variants={heroStarItem} className="inline-block leading-none">
-                    <Star className="w-3 h-3 fill-[#8B7F4B] text-[#8B7F4B]" />
+                    <Star className="w-3 h-3 fill-[#8B7F4B] text-[var(--brand-ink)]" />
                   </motion.span>
                 ))}
               </motion.div>
               <div className="flex items-baseline gap-1.5" dir="rtl">
                 <span className="text-xs font-bold text-gray-700">סיפורי הצלחה</span>
                 {/* Count-up number */}
-                <span className="text-2xl font-black" style={{ color: BRAND }}>
+                <span className="text-2xl font-black" style={{ color: BRAND_INK }}>
                   {successCount.toLocaleString()}+
                 </span>
               </div>
@@ -426,8 +489,8 @@ function PhaseHero() {
               WhatsApp floating button pinned to the bottom-right corner */}
           <motion.div variants={item} className="hidden lg:flex gap-6 border-t border-[#8B7F4B]/20 pt-4 lg:pr-24" dir="rtl">
             <div className="flex items-center gap-2">
-              <div className="text-xs text-gray-500 font-medium leading-tight">שנות<br/>ניסיון</div>
-              <div className="text-2xl font-black" style={{ color: BRAND }}>12+</div>
+              <div className="text-xs text-[var(--text-secondary)] font-medium leading-tight">שנות<br/>ניסיון</div>
+              <div className="text-2xl font-black" style={{ color: BRAND_INK }}>12+</div>
             </div>
           </motion.div>
 
@@ -479,6 +542,10 @@ function PhaseBusyLife() {
           <img
             src={src}
             alt={label}
+            width="128"
+            height="128"
+            loading="lazy"
+            decoding="async"
             className="w-32 h-32 object-contain"
             style={{ filter: 'drop-shadow(0 6px 18px rgba(0,0,0,0.20))' }}
           />
@@ -504,6 +571,10 @@ function PhaseBusyLife() {
           <img
             src={src}
             alt={label}
+            width="80"
+            height="80"
+            loading="lazy"
+            decoding="async"
             className="w-20 h-20 object-contain"
             style={{ filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.18))' }}
           />
@@ -524,7 +595,7 @@ function PhaseBusyLife() {
             dir="rtl"
           >
             החיים שלך עמוסים<br/>
-            <span style={{ color: BRAND }}>השיטה שלנו מותאמת לזה.</span>
+            <span style={{ color: BRAND_INK }}>השיטה שלנו מותאמת לזה.</span>
           </motion.h2>
           <div className="hidden lg:block">
             <PhaseHeading>
@@ -596,7 +667,24 @@ function ScrollVideoPlayer({ plateProgress }) {
   const pendingRef = useRef(false); // true while browser decodes a seek
   const rafRef     = useRef(null);
 
+  /* preload="auto" buffers the file once, which is what makes scrubbing cheap:
+     with preload="none" every seek became its own range request and a single
+     2.9MB video was fetched 51 times over one pass down the page. But buffering
+     it during first paint puts 2.9MB in front of the hero for a video this
+     phase does not even show yet. So the src is attached one idle tick after
+     mount — first paint stays light, and the buffer is ready well before the
+     visitor scrolls far enough to need a frame. */
+  const [videoSrc, setVideoSrc] = useState(null);
   useEffect(() => {
+    const start = () => setVideoSrc(animatedVideo);
+    const id = 'requestIdleCallback' in window
+      ? requestIdleCallback(start, { timeout: 1500 })
+      : setTimeout(start, 600);
+    return () => ('cancelIdleCallback' in window ? cancelIdleCallback(id) : clearTimeout(id));
+  }, []);
+
+  useEffect(() => {
+
     const video  = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
@@ -614,14 +702,37 @@ function ScrollVideoPlayer({ plateProgress }) {
       const vh = video.videoHeight;
       if (!vw || !vh)           { pendingRef.current = false; return; }
 
-      const cw = canvas.offsetWidth  || 640;
-      const ch = canvas.offsetHeight || 360;
+      /* Measure the container, not the canvas: writing canvas.width/height
+         changes the element's own intrinsic size, so reading its offsetWidth
+         here fed back into the value being written. */
+      const box = (canvas.parentElement || canvas).getBoundingClientRect();
+      const cw = Math.round(box.width)  || 640;
+      const ch = Math.round(box.height) || 360;
 
-      // Sync logical px to CSS px (no blurry canvas)
-      if (canvas.width !== cw || canvas.height !== ch) {
-        canvas.width  = cw;
-        canvas.height = ch;
+      /* The backing store must be CSS pixels TIMES devicePixelRatio. The
+         previous code set it equal to CSS pixels — the comment claimed this
+         avoided a blurry canvas, but it is what caused one: on a dpr-2 phone
+         or retina display every frame was rasterised at half resolution and
+         then scaled up by the browser. Capped at 2 because past that the
+         extra pixels cost real time on a canvas repainted every scroll frame
+         and buy nothing visible. */
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const physW = Math.round(cw * dpr);
+      const physH = Math.round(ch * dpr);
+      if (canvas.width !== physW || canvas.height !== physH) {
+        canvas.width  = physW;
+        canvas.height = physH;
       }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      /* The source is 960x540. Full-bleed on a desktop that is 1425 device
+         pixels wide means a 1.5x upscale (worse on a retina laptop), and no
+         re-encode can invent those pixels — a higher-resolution export of the
+         original is the only real fix. High-quality smoothing is what is
+         available meanwhile; it costs nothing and visibly softens the
+         stair-stepping the default bilinear filter leaves behind. */
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
 
       // object-contain: scale to fit, centred
       const scale = Math.min(cw / vw, ch / vh);
@@ -641,7 +752,6 @@ function ScrollVideoPlayer({ plateProgress }) {
     video.addEventListener('seeked',         paint);
     video.addEventListener('loadeddata',     paint); // paint frame 0 when ready
     video.addEventListener('canplaythrough', paint);
-    video.load(); // explicit — some browsers defer buffering of display:none videos
 
     // ── RAF scrub loop ────────────────────────────────────────────────────────
     // pendingSince: watchdog — if a seek never fires `seeked` (unbuffered
@@ -702,7 +812,7 @@ function ScrollVideoPlayer({ plateProgress }) {
       {/* Hidden video — decode source only, never rendered directly */}
       <video
         ref={videoRef}
-        src={animatedVideo}
+        src={videoSrc || undefined}
         muted
         playsInline
         preload="auto"
@@ -745,14 +855,14 @@ function PhasePlate() {
             במקום עוד תפריט נוקשה שקשה להחזיק לאורך זמן <br></br>
              נלמד אותך איך לבנות צלחת שמתאימה לחיים האמיתיים שלך.{' '}
             בבית, בעבודה,{' '}
-            <strong style={{ color: BRAND, fontWeight: 800 }}>במסעדה</strong>,{' '}
-            <strong style={{ color: BRAND, fontWeight: 800 }}>בחופשה</strong>,{' '}
-            <strong style={{ color: BRAND, fontWeight: 800 }}>בסוף שבוע</strong>.{' '}<br></br>
+            <strong style={{ color: BRAND_INK, fontWeight: 800 }}>במסעדה</strong>,{' '}
+            <strong style={{ color: BRAND_INK, fontWeight: 800 }}>בחופשה</strong>,{' '}
+            <strong style={{ color: BRAND_INK, fontWeight: 800 }}>בסוף שבוע</strong>.{' '}<br></br>
             לא כדי שתהיי תלויה בתפריט אלא כדי שתדעי להתנהל נכון{' '} <br></br>
-            <strong style={{ color: BRAND }}>בכל סיטואציה</strong>.{' '}
+            <strong style={{ color: BRAND_INK }}>בכל סיטואציה</strong>.{' '}
             כי כשאת מבינה איך הדברים עובדים <br></br>
             הרבה יותר קל{' '}
-            <strong style={{ color: BRAND, fontWeight: 800 }}>לרדת במשקל, להתמיד ולשמור על התוצאות</strong>.
+            <strong style={{ color: BRAND_INK, fontWeight: 800 }}>לרדת במשקל, להתמיד ולשמור על התוצאות</strong>.
           </motion.p>
         </motion.div>
       </ContentPanel>
@@ -798,7 +908,7 @@ function PhaseExploded() {
                 </div>
                 <div>
                   <span className="text-base font-bold text-[#333]">{label}</span>
-                  <span className="text-xs lg:text-sm text-gray-400 block leading-tight">{sublabel}</span>
+                  <span className="text-xs lg:text-sm text-[var(--text-muted)] block leading-tight">{sublabel}</span>
                 </div>
               </div>
             ))}
@@ -885,7 +995,7 @@ function PhaseRing() {
             transform="rotate(-90 100 100)"
           />
           {/* Centre labels */}
-          <text x="100" y="92" textAnchor="middle" fill={BRAND} fontSize="28" fontWeight="900" fontFamily="Calibri,sans-serif">80:20</text>
+          <text x="100" y="92" textAnchor="middle" fill={BRAND} fontSize="28" fontWeight="900" fontFamily="Heebo, sans-serif">80:20</text>
           <text x="100" y="116" textAnchor="middle" fill="#6e6e6e" fontSize="11" fontFamily="Heebo">הגישה שלנו</text>
         </svg>
 
@@ -953,7 +1063,7 @@ function PhaseRing() {
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}
                   transform="rotate(-90 100 100)"
                 />
-                <text x="100" y="88" textAnchor="middle" fill={BRAND} fontSize="36" fontWeight="900" fontFamily="Calibri,sans-serif">80:20</text>
+                <text x="100" y="88" textAnchor="middle" fill={BRAND} fontSize="36" fontWeight="900" fontFamily="Heebo, sans-serif">80:20</text>
                 <text x="100" y="113" textAnchor="middle" fill="#aaa" fontSize="12" fontFamily="Heebo,sans-serif">הגישה שלנו</text>
               </svg>
 
@@ -983,7 +1093,7 @@ function PhaseRing() {
             style={{ color: TEXT }}
             dir="rtl"
           >
-            גישת <span style={{ color: BRAND }}>80:20</span>
+            גישת <span style={{ color: BRAND_INK }}>80:20</span>
           </motion.h2>
           <div className="hidden lg:block">
             <PhaseHeading>גישת<br/><Accent>80:20</Accent></PhaseHeading>
@@ -1264,7 +1374,7 @@ function AppPhoneMockup({ compact = false }) {
           position: 'absolute',
           bottom: compact ? 18 : 44,
           left: compact ? -14 : -28,
-          background: BRAND,
+          background: BRAND_SURFACE,
           borderRadius: 18,
           padding: '9px 13px',
           boxShadow: '0 10px 28px rgba(139,127,75,0.32)',
@@ -1286,7 +1396,9 @@ function AppPhoneMockup({ compact = false }) {
             border: '1.5px solid rgba(255,255,255,0.30)',
           }}
           alt="Kim"
-        />
+            width="94"
+            height="95"
+          />
         <div>
           <p style={{ margin: 0, fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.75)', lineHeight: 1.2 }}>דיאטנית</p>
           <p style={{ margin: 0, fontSize: 10.5, color: 'white', lineHeight: 1.4 }}>ראיתי את היומן שלך, כל הכבוד! 🌟</p>
@@ -1473,12 +1585,14 @@ function WaPhoneMockup({ compact = false }) {
               src={kimIcon}
               alt="Kim"
               style={{ width: compact ? 24 : 30, height: compact ? 24 : 30, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.25)' }}
-            />
+            width="94"
+            height="95"
+          />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ margin: 0, color: '#fff', fontSize: compact ? 10 : 12, fontWeight: 700, lineHeight: 1.2 }}>קים גפסון</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                 <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4CAF50', flexShrink: 0 }} />
-                <p style={{ margin: 0, color: '#80CBC4', fontSize: compact ? 8 : 9.5, lineHeight: 1 }}>מחוברת עכשיו</p>
+                <p style={{ margin: 0, color: '#A5DFDA', fontSize: compact ? 8 : 9.5, lineHeight: 1 }}>מחוברת עכשיו</p>
               </div>
             </div>
           </div>
@@ -1502,7 +1616,9 @@ function WaPhoneMockup({ compact = false }) {
                   {isKim && (
                     <img src={kimIcon} alt="Kim"
                       style={{ width: compact ? 18 : 22, height: compact ? 18 : 22, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, marginBottom: 2 }}
-                    />
+            width="94"
+            height="95"
+          />
                   )}
                   <div style={{
                     maxWidth: '82%',
@@ -1516,7 +1632,7 @@ function WaPhoneMockup({ compact = false }) {
                     )}
                     <p style={{ margin: 0, fontSize: fs, color: '#333', lineHeight: 1.45 }}>{text}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 3, marginTop: 2, justifyContent: 'flex-end' }}>
-                      <span style={{ fontSize: compact ? 6 : 7.5, color: '#aaa' }}>{CHAT_TIMES[i]}</span>
+                      <span style={{ fontSize: compact ? 6 : 7.5, color: '#6B6B6B' }}>{CHAT_TIMES[i]}</span>
                       {!isKim && <span style={{ fontSize: compact ? 7 : 9, color: '#53BDEB' }}>✓✓</span>}
                     </div>
                   </div>
@@ -1549,7 +1665,10 @@ function WaPhoneMockup({ compact = false }) {
             <div style={{
               flex: 1, background: '#fff', borderRadius: 16,
               padding: `${compact ? 3 : 5}px ${compact ? 8 : 10}px`,
-              fontSize: compact ? 7.5 : 9, color: '#bbb',
+              // #bbb measured 1.92:1 on the white input — this mockup mimics
+              // WhatsApp's chrome, but it is live DOM text, not a screenshot,
+              // so it answers to the same contrast rule as the rest of the page.
+              fontSize: compact ? 7.5 : 9, color: '#6B6B6B',
               textAlign: 'right',
             }}>הקלידי הודעה...</div>
             <div style={{
@@ -1619,11 +1738,11 @@ function PhaseSupport() {
 
           <motion.p variants={item} className="phase-intro text-gray-600 leading-snug lg:leading-relaxed mb-2.5 lg:mb-5" dir="rtl">
            בתוכנית שלנו את לא רק מקבלת תפריט{' '}
-            <strong style={{ color: BRAND }}>את לומדת על התזונה שלך</strong>{' '}<br className="hidden lg:block"></br>
+            <strong style={{ color: BRAND_INK }}>את לומדת על התזונה שלך</strong>{' '}<br className="hidden lg:block"></br>
             כך שתדעי{' '}
-            <strong style={{ color: BRAND }}>לנהל אותה</strong>,
+            <strong style={{ color: BRAND_INK }}>לנהל אותה</strong>,
             {' '}גם{' '}
-            <strong style={{ color: BRAND }}>שהתהליך מסתיים</strong>.
+            <strong style={{ color: BRAND_INK }}>שהתהליך מסתיים</strong>.
           </motion.p>
           <motion.div variants={item} className="flex flex-col gap-2.5 lg:gap-2.5 mb-4 lg:mb-7">
             {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה (בתוכנית נבחרת)', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות עם תזונאית קלינית'].map((f) => (
@@ -1638,6 +1757,7 @@ function PhaseSupport() {
               href="https://wa.link/ntdrz1"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackCTA('whatsapp_consult', 'hero')}
               aria-label="קביעת ייעוץ חינם עם קים בווצאפ"
               className="block sm:inline-block"
               whileHover={{ y: -4, scale: 1.05, filter: 'drop-shadow(0 8px 24px rgba(139,127,75,0.50))' }}
@@ -1647,7 +1767,7 @@ function PhaseSupport() {
               <Button
                 className="rounded-full px-8 py-3 lg:py-6 text-base lg:text-lg font-bold text-white min-h-[44px]
                            shadow-[0_4px_20px_rgba(139,127,75,0.35)] w-full sm:w-auto"
-                style={{ background: BRAND }}
+                style={{ background: BRAND_SURFACE }}
               >
                 לקביעת ייעוץ התאמה חינם
               </Button>
@@ -1708,7 +1828,10 @@ export default function ScrollStorySection() {
   );
   const videoOpacity = useSpring(_videoOpacity, springCfg);
 
+
   // Phase 3 is PhaseRing (PhaseExploded removed)
+    const isWide = useIsWide();
+
   const phases = [PhaseHero, PhaseBusyLife, PhasePlate, PhaseRing, PhaseApp, PhaseSupport];
   const PhaseComponent = phases[phase];
 
@@ -1716,36 +1839,70 @@ export default function ScrollStorySection() {
     <section
       ref={sectionRef}
       dir="rtl"
-      style={{ height: '560svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative', background: BG }}
+      /* 560svh -> 420svh: 5.6 screens of scrolling become 4.2, removing ~1,140px
+         from a 812px phone without dropping a phase or a word. Combined with the
+         even PHASE_STARTS above, each phase now holds for 70svh instead of
+         78-123, so the reduction comes almost entirely out of the two phases
+         that were dawdling. Not lower: six phases below ~70svh each start
+         passing faster than their own 0.6s crossfade, and the story would flash
+         rather than play. */
+      style={{ height: '420svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative', background: BG }}
     >
       <div
         className="sticky top-0 overflow-hidden"
         style={{ height: '100svh', background: BG }}
       >
         {/* ── Kim desktop — physically LEFT, always behind text column ── */}
+        {isWide && (
         <motion.div
           className="absolute inset-y-0 left-0 hidden lg:flex items-end justify-center pointer-events-none z-10"
           style={{ width: '80%', opacity: kimOpacity, y: kimY, scale: kimScale }}
         >
-          <img
+          {/* The LCP asset. eager + high priority per the asset spec, and the
+              only two images on the page that get either. */}
+          <ResponsiveImage
             src={kimHero}
+            stem="/src/assets/images/kim-hero"
+            sizes="80vw"
             alt="קים גפסון"
             className="w-full h-full object-contain object-bottom"
+            width="1920"
+            height="1080"
+            loading="eager"
+            fetchPriority="high"
           />
         </motion.div>
+        )}
 
         {/* ── Kim mobile — top strip (fades out when video appears) ── */}
         {/* pt-3 (12px) gives a little breathing room from the device top edge.
             h-36 (144px) keeps Kim visible but compact → bottom of strip = 156px,
             matching ContentPanel's pt-[156px] so text starts right below. */}
+        {!isWide && (
         <motion.div
           className={`lg:hidden absolute top-0 left-0 right-0 flex justify-center pt-3 z-10 pointer-events-none ${phase >= 4 ? 'hidden' : ''}`}
           style={{ opacity: kimOpacity }}
         >
           {/* Hidden in phases 4-5 (App/Support): on mobile the phone mockups own
               the top strip, and Kim behind them muddied the heading legibility */}
-          <img src={kimHero} alt="קים גפסון" className="object-contain object-bottom w-auto" style={{ height: '36svh', maxHeight: '320px' }} />
+          {/* Mobile LCP. sizes is generous because the box is height-driven
+              (36svh, capped 320px) and the width follows the aspect ratio —
+              a 320px-tall 16:9 crop is ~570px wide on a dpr-2 phone, so the
+              800w variant is the right pick and the 1600w one never loads. */}
+          <ResponsiveImage
+            src={kimHero}
+            stem="/src/assets/images/kim-hero"
+            sizes="400px"
+            alt="קים גפסון"
+            className="object-contain object-bottom w-auto"
+            style={{ height: '36svh', maxHeight: '320px' }}
+            width="1920"
+            height="1080"
+            loading="eager"
+            fetchPriority="high"
+          />
         </motion.div>
+        )}
 
         {/* ── Video layer — responsive ──────────────────────────────────────────
              Mobile  : top strip — 48vh so the plate fills a meaningful portion

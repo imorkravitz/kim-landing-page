@@ -36,7 +36,7 @@ export default function ProcessSection() {
       icon: ClipboardList,
       title: 'מילוי שאלון אישי',
       description: 'שאלון קצר שיעזור לנו להבין את השגרה, ההעדפות, המטרות והאתגרים שלך.',
-      color: 'bg-[#8B7F4B]'
+      color: 'bg-[var(--brand-surface)]'
     },
     {
       number: '2',
@@ -50,7 +50,7 @@ export default function ProcessSection() {
       icon: WhatsAppIcon,
       title: 'ליווי יומי בווצאפ',
       description: 'מענה אישי, פידבק מקצועי ותמיכה מהתזונאית שלך בזמן אמת לאורך כל התהליך.',
-      color: 'bg-[#25D366]'
+      color: 'bg-[#5E8C6A]'
     },
     {
       number: '4',
@@ -64,7 +64,7 @@ export default function ProcessSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-10 md:py-16 min-h-[55vh] md:min-h-[85vh]"
+      className="section-md"
       style={{ background: 'transparent' }}
     >
       <div className="container mx-auto px-6">
@@ -88,11 +88,11 @@ export default function ProcessSection() {
             אלפי נשים ששינו את מערכת היחסים עם אוכל ולמדו לנהל את התזונה שלהן בצורה שמתאימה לחיים.
           </p>
           <a href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
+              onClick={() => trackCTA('whatsapp_consult', 'process')} target="_blank" rel="noopener noreferrer">
             <button
               className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
               style={{
-                background: '#25D366',
+                background: 'var(--wa-green-ink)',
                 boxShadow: '0 4px 16px rgba(37,211,102,0.30)',
               }}
             >
@@ -106,7 +106,7 @@ export default function ProcessSection() {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-gray-900 mb-4" style={{ textWrap: 'balance' }}>
           מוזמנת להשאיר פרטים ולצאת לדרך
           </h2>
-          <p className="text-2xl text-gray-500">
+          <p className="text-2xl text-[var(--text-secondary)]">
             4 צעדים פשוטים לתהליך שמותאם <strong style={{ color: '#8B7F4B' }}>אליך</strong>
           </p>
         </div>
@@ -151,25 +151,25 @@ export default function ProcessSection() {
         <div className="text-center mt-14">
           <a
             href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')}
+              onClick={() => trackCTA('whatsapp_consult', 'process')}
             target="_blank"
             rel="noopener noreferrer"
           >
             <Button
               size="lg"
-              className="bg-[#8B7F4B] text-white px-10 py-6 text-lg rounded-full shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[#6d6339] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
+              className="bg-[var(--brand-surface)] text-white px-10 py-6 text-lg rounded-full shadow-[0_4px_6px_-1px_rgba(139,127,75,0.4)] hover:bg-[var(--brand-dark)] hover:shadow-[0_10px_15px_-3px_rgba(139,127,75,0.3)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
             >
               <ClipboardList className="w-5 h-5 ml-2" />
               לקביעת ייעוץ התאמה חינם
             </Button>
           </a>
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm text-[var(--text-secondary)]">
             <a
               href="https://tinyurl.com/nutrition-diary"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block underline underline-offset-4 font-medium py-3 px-2 -my-3"
-              style={{ color: '#8B7F4B' }}
+              style={{ color: 'var(--brand-ink)' }}
             >
               מלאי את שאלון ההתאמה
             </a>

@@ -3,6 +3,9 @@ import { motion, useInView } from 'framer-motion';
 import { MessageCircle, Smartphone, Users, UtensilsCrossed } from 'lucide-react';
 
 const BRAND   = '#8B7F4B';
+// Brand olive is 4.01:1 on white — valid for fills, icons and large
+// type, but NOT for body text. This is the text-safe shade (6.01:1).
+const BRAND_INK = '#6D6339';
 const TERRA   = '#C49A7A';
 const WA_GREEN = '#25D366';
 
@@ -75,7 +78,7 @@ const pillars = [
   },
   {
     Icon: Smartphone,
-    color: BRAND,
+    color: BRAND_INK,
     title: 'אפליקציה תומכת',
     desc:  'צילום ארוחות, מעקב אחר מדדים וכלים שיעזרו לך להתמיד טוב יותר.',
   },
@@ -92,7 +95,7 @@ export default function ProblemSolutionSection() {
   return (
     <section
       dir="rtl"
-      className="relative min-h-[100vh] py-20 md:py-28"
+      className="relative section-lg"
       style={{ background: 'transparent' }}
     >
       <div className="container mx-auto px-6 max-w-3xl">
@@ -105,7 +108,7 @@ export default function ProblemSolutionSection() {
             style={{ textWrap: 'balance', textShadow: '0 2px 24px rgba(255,255,255,0.9), 0 1px 3px rgba(255,255,255,0.9)' }}
           >
             לא עוד ניסיון לרדת במשקל.{' '}<br></br>
-            <span style={{ color: BRAND }}>שיטה שמלמדת אותך  <br></br>על התזונה שלך באמת.</span>
+            <span style={{ color: BRAND_INK }}>שיטה שמלמדת אותך  <br></br>על התזונה שלך באמת.</span>
           </motion.h2>
    
         </Reveal>

@@ -14,26 +14,14 @@
   }
 }
 
-@font-face {
-  font-family: 'Gveret Levin Alef';
-  src: url('./assets/fonts/Gveret Levin Alef Alef Alef copy.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Calibri';
-  src: url('./assets/fonts/calibri-regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Calibri';
-  src: url('./assets/fonts/calibri-bold.ttf') format('truetype');
-  font-weight: 800;
-  font-style: normal;
-}
+/* Three local @font-face rules used to live here and all three are gone.
+   'Gveret Levin Alef' was declared and never applied to anything.
+   'Calibri' regular + bold came to 1.6MB of uncompressed TTF, downloaded so
+   that two SVG labels reading "80:20" could render — and on iOS and Android,
+   where most of this traffic comes from, Calibri is not a system font, so
+   that download was real rather than a local-name shortcut. Those two labels
+   now use Heebo, which the page already loads. Typefaces in actual use come
+   from the Google Fonts link in index.html as woff2, with display=swap. */
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -191,6 +179,196 @@ button:focus-visible {
   h1, h2, h3, .cta {
     font-family: 'Heebo', sans-serif;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   The page previously carried seven cream backgrounds — #e9e4ce, #E5E0D1,
+   #edead4, #f7f4e9, #f9f4eb, #F5F3ED, #cdc2ab. Measured against each other
+   they sit at contrast ratios of 1.01–1.09, i.e. six of the seven are the
+   same colour to the eye while reading as sloppy in aggregate. They collapse
+   here into a deliberate three-step surface ramp whose steps are actually
+   distinguishable (1.13 / 1.13 / 1.28).
+
+   Every text-on-surface pairing below is measured, not eyeballed.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Surfaces: three steps, each visibly distinct from its neighbours ── */
+  --bg-primary:    #FFFFFF;   /* default section ground                     */
+  --bg-secondary:  #F4F1E4;   /* alternating band; replaces the 4 pale creams */
+  --bg-tertiary:   #E9E4CE;   /* brand cream, the deepest light surface     */
+
+  --surface-card:  #FFFFFF;
+  --surface-sunken:#EFEBDA;   /* insets/wells on a cream ground             */
+  --surface-highlight:#CDC2AB;/* the one deeper cream that earns its place:
+                                 it marks the featured pricing card and reads
+                                 1.19 against --bg-tertiary, so it is actually
+                                 legible as a highlight rather than a smudge  */
+
+  /* ── WhatsApp ──
+     #25D366 is WhatsApp's actual brand green and is used as-is: it is a
+     recognised mark, and recolouring it costs more in recognition than it
+     buys in contrast. It carries white text at only 1.98:1, so anywhere
+     white sits ON the green we use --wa-green-ink instead, which is the same
+     hue taken to 4.58:1. Small glyphs on the brand green stay branded. */
+  --wa-green:      #25D366;
+  --wa-green-ink:  #188741;
+  --wa-green-dark: #1DBF5C;
+
+  /* ── Brand ──
+     -primary is the identity colour: correct for fills, icons, borders and
+     large type. At 4.01:1 on white it is NOT valid for body-size text, so it
+     deliberately has no text role.
+     -surface carries white text (4.63:1). It is -primary darkened 8%, a 1.1
+     shift — imperceptible next to the original, but over the AA line.
+     -ink is the brand colour for body text on light grounds (6.01 on white,
+     4.71 on cream). */
+  --brand-primary: #8B7F4B;
+  --brand-surface: #807545;
+  --brand-ink:     #6D6339;
+  --brand-dark:    #5F5631;   /* hover / pressed                            */
+  --brand-tint:    #8B7F4B14; /* 8% wash for soft brand fills               */
+
+  /* ── Text ── verified ≥4.5:1 on all three surfaces above ── */
+  --text-primary:   #1F2937;  /* 14.7 white · 13.2 sand · 11.5 cream        */
+  --text-secondary: #4B5563;  /*  7.6 white ·  6.7 sand ·  5.9 cream        */
+  --text-muted:     #57534E;  /* lightest still-compliant tone              */
+
+  /* ── Borders ── */
+  --border-default: rgba(0, 0, 0, 0.12);
+  --border-subtle:  rgba(0, 0, 0, 0.06);
+  --border-brand:   rgba(139, 127, 75, 0.28);
+
+  /* ── Section rhythm ──
+     Fluid mobile→desktop, matching the agreed ranges:
+     lg 48→112px · md 40→96px · sm 32→72px. Replaces the flat py-20/py-24
+     that made mobile carry desktop-sized gaps. */
+  --section-lg: clamp(3rem,   7vw,   7rem);
+  --section-md: clamp(2.5rem, 5.5vw, 6rem);
+  --section-sm: clamp(2rem,   4vw,   4.5rem);
+  --gutter:     clamp(1.25rem, 4vw, 1.5rem);
+
+  /* ── Measure ── */
+  --width-content: 1280px;
+  --width-prose:   68ch;
+
+  /* ── Elevation ── one scale, not ad-hoc shadows ── */
+  --elev-1: 0 1px 3px rgba(31, 41, 55, 0.06);
+  --elev-2: 0 4px 16px rgba(31, 41, 55, 0.08);
+  --elev-3: 0 12px 32px rgba(31, 41, 55, 0.10);
+
+  /* ── Z-index scale ── semantic, replaces scattered z-50/z-9999 ── */
+  --z-sticky:  100;
+  --z-overlay: 200;
+  --z-float:   300;
+  --z-modal:   400;
+}
+
+/* Section rhythm utilities */
+.section-lg { padding-block: var(--section-lg); }
+.section-md { padding-block: var(--section-md); }
+.section-sm { padding-block: var(--section-sm); }
+.gutter     { padding-inline: var(--gutter); }
+
+/* Constrains long-form copy to a comfortable measure. Without this, prose on
+   a 1440px screen runs to ~150 characters a line. */
+.prose-measure { max-width: var(--width-prose); }
+
+/* `clip`, not `hidden`. overflow-x:hidden would turn <html> into a scroll
+   container and break the position:sticky the scroll-video background depends
+   on; overflow-x:clip simply refuses to scroll sideways. This is the backstop
+   for stray sub-pixel overflow (the sr-only h1 carries white-space:nowrap, so
+   at 200% text its unrendered line still counts toward scroll width in some
+   engines) — the actual causes are fixed above, not papered over here. */
+html { overflow-x: clip; }
+
+/* ── Text scaling (WCAG 1.4.4) ─────────────────────────────────────────────
+   shadcn's Button ships `whitespace-nowrap`. At the 200% text size this
+   site's own accessibility widget offers, "לקביעת ייעוץ התאמה חינם" measures
+   549px and cannot wrap, so it pushed a 375px viewport out to 629px and put
+   the page into horizontal scrolling — for precisely the visitors who turned
+   the text size up. Buttons wrap instead, and are held inside the viewport. */
+#main-content button,
+#main-content a,
+.sticky-cta a {
+  white-space: normal;
+  max-width: 100%;
+}
+
+/* Tailwind's animate-ping scales to 2x. On the fixed WhatsApp bubble that
+   halo reaches 48px past the button at 200% text against a 32px margin, and a
+   fixed element overflowing the viewport still produces a scrollbar. 1.5x
+   keeps the same effect inside the margin it has to live in. */
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  75%, 100% { transform: scale(1.5); opacity: 0; }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-ring { animation: none; opacity: 0; }
+}
+
+/* ── Keyboard focus ────────────────────────────────────────────────────────
+   WCAG 2.4.7 / IS 5568 both require a clearly visible focus indicator, and
+   until now most links relied on whatever the browser happened to draw. That
+   is not something to leave to chance on a page that has to demonstrate
+   compliance, and a single-colour ring cannot work across surfaces that run
+   from white through cream to the olive CTA band.
+
+   Two rings solve it: a dark inner outline plus a white outer shadow. On
+   light grounds the dark ring carries it; on the olive band the white one
+   does. Only :focus-visible, so pointer users never see it. */
+/* The doubled :focus-visible is deliberate. shadcn's buttons ship
+   `focus-visible:outline-none focus-visible:ring-1`, which is specificity
+   (0,2,0) and would otherwise beat a plain rule here and leave a 1px ring as
+   the only indicator. Repeating the pseudo-class raises this to (0,3,0)
+   without needing !important. */
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible:focus-visible {
+  outline: 3px solid var(--text-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.9);
+}
+
+/* On the brand band the emphasis inverts. */
+[class*="brand-surface"] :is(a, button):focus-visible:focus-visible,
+.sticky-cta :is(a, button):focus-visible:focus-visible {
+  outline-color: #ffffff;
+  box-shadow: 0 0 0 6px rgba(31, 41, 55, 0.65);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(a, button):focus-visible { transition: none; }
+}
+
+/* ── Mobile sticky CTA ─────────────────────────────────────────────────────
+   Height is published by the component as --sticky-cta-h (0px when hidden),
+   so the floating controls and the page's bottom padding both follow it
+   rather than each hard-coding an offset that drifts out of sync. */
+:root { --sticky-cta-h: 0px; }
+
+.sticky-cta {
+  z-index: var(--z-sticky);
+  transform: translateY(100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease-out, visibility 260ms;
+}
+.sticky-cta.is-shown {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticky-cta { transition: opacity 120ms linear, visibility 120ms; transform: none; }
+}
+
+/* Keep the last of the page clear of the bar. */
+@media (max-width: 1023px) {
+  body { padding-bottom: var(--sticky-cta-h); }
 }
 
 /* ── Story-phase body text (PhaseApp / PhaseSupport) ────────────────────────

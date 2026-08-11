@@ -11,7 +11,9 @@ const WhatsAppIcon = ({ className }) => (
 
 export default function CTASection() {
   return (
-    <section className="py-20 md:py-28 bg-[#8B7F4B] relative overflow-hidden">
+    /* data-closing-cta: StickyCTA hides itself once this is on screen, so the
+       visitor never sees the same button twice at once. */
+    <section data-closing-cta className="section-lg bg-[var(--brand-surface)] relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
@@ -21,29 +23,32 @@ export default function CTASection() {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-white mb-6">
             מוכנה להתחיל לנהל את התזונה שלך?
           </h2>
-          <p className="text-xl text-white/80 mb-4">
+          {/* De-emphasis here comes from size and weight, not opacity.
+              White at 70–80% over the brand olive measures 2.8–3.2:1, well
+              under AA; full white on --brand-surface measures 4.63:1. */}
+          <p className="text-xl text-white mb-4">
             "זה לא דיאטה, זו דרך חיים נעימה ובריאה"
           </p>
-          <p className="text-white/70 mb-10">
+          <p className="text-base font-light text-white mb-10">
             צרי קשר עכשיו ונתחיל יחד
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center mb-12">
             <a href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
+              onClick={() => trackCTA('whatsapp_consult', 'closing_cta')} target="_blank" rel="noopener noreferrer">
               <Button 
                 size="lg" 
-                className="bg-white text-[#8B7F4B] px-8 py-6 text-lg rounded-full shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] hover:bg-gray-50 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.15)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
+                className="bg-white text-[var(--brand-ink)] px-8 py-6 text-lg rounded-full shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] hover:bg-gray-50 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.15)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
               >
                 <WhatsAppIcon className="w-6 h-6 ml-2" />
                 לקביעת ייעוץ התאמה חינם
               </Button>
             </a>
             <a href="https://wa.link/r2etxn"
-              onClick={() => trackCTA('whatsapp_support')} target="_blank" rel="noopener noreferrer">
+              onClick={() => trackCTA('whatsapp_support', 'closing_cta')} target="_blank" rel="noopener noreferrer">
               <Button 
                 size="lg" 
-                className="bg-transparent border-2 border-white text-white px-8 py-6 text-lg rounded-full shadow-none hover:bg-white hover:text-[#8B7F4B] hover:shadow-[0_10px_15px_-3px_rgba(255,255,255,0.2)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
+                className="bg-transparent border-2 border-white text-white px-8 py-6 text-lg rounded-full shadow-none hover:bg-white hover:text-[var(--brand-ink)] hover:shadow-[0_10px_15px_-3px_rgba(255,255,255,0.2)] hover:-translate-y-[2px] active:translate-y-[1px] active:shadow-none transition-all duration-200"
               >
                 <WhatsAppIcon className="w-6 h-6 ml-2" />
                 שירות לקוחות
@@ -52,7 +57,7 @@ export default function CTASection() {
           </div>
 
           {/* Contact Info */}
-          <div className="flex flex-wrap gap-8 justify-center text-white/80">
+          <div className="flex flex-wrap gap-8 justify-center text-white">
             <a 
               href="https://www.instagram.com/kimgafson/"
               target="_blank"

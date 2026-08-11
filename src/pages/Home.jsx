@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, MotionConfig } from 'framer-motion';
+import { initScrollTracking } from '@/lib/analytics';
 
 import SEOHead from '@/components/SEOHead';
 import ScrollStorySection from '@/components/landing/ScrollStorySection';
@@ -17,6 +18,7 @@ import Footer from '@/components/landing/Footer';
 import ScrollToTop from '@/components/landing/ScrollToTop';
 import AccessibilityWidget from '@/components/landing/AccessibilityWidget';
 import FloatingCTA from '@/components/landing/FloatingCTA';
+import StickyCTA from '@/components/landing/StickyCTA';
 import ScrollProgressBar from '@/components/landing/ScrollProgressBar';
 
 const sectionVariants = {
@@ -48,17 +50,8 @@ const AnimatedSection = ({ children }) => (
 );
 
 export default function Home() {
-  useEffect(() => {
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href'))?.scrollIntoView({
-          behavior: 'smooth'
-        });
-      });
-    });
-  }, []);
+  /* Runs after mount so [data-track-section] elements exist to observe. */
+  useEffect(() => initScrollTracking(), []);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -98,9 +91,10 @@ export default function Home() {
         description="קים גפסון -  בוגרת תואר בתזונה באוניברסיטה העברית עם 12 שנות ניסיון. ליווי תזונתי אישי לנשים עם גישת 80:20,סטודנטית לרפואה באוניברסיטה העברית במסלול 4 שנתי עתידה להתמחות ברפואת נשים, אפליקציית Liveat ותמיכה יומית בווצאפ."
       />
       <style>{`
-        html {
-          scroll-behavior: smooth;
-        }
+        /* No global scroll-behavior: smooth. On an 18,000px page it animates
+           every programmatic scroll, which is what made scrolling feel like it
+           had been taken away from the user. Controls that genuinely want an
+           animated scroll (ScrollToTop) opt in per call instead. */
 
         /* Smooth page transitions */
         .page-transition {
@@ -125,42 +119,42 @@ export default function Home() {
       `}</style>
       
       <main id="main-content">
-      <ScrollStorySection />
+      <div data-track-section="hero_story"><ScrollStorySection /></div>
 
       {/* Skip-link destination: first real content after the hero story */}
       <div id="content-start" tabIndex={-1} className="outline-none" />
 
-      <TrustBar />
+      <div data-track-section="trust_bar"><TrustBar /></div>
 
       {/* Stethoscope scrub spans ProblemSolution + About — the animation
           completes only at the bottom of About (Kim's full portrait) */}
       <ScrollVideoBackground>
-        <ProblemSolutionSection />
-        <AboutSection />
+        <div data-track-section="problem_solution"><ProblemSolutionSection /></div>
+        <div data-track-section="about_kim"><AboutSection /></div>
       </ScrollVideoBackground>
 
       <AnimatedSection>
-        <TestimonialsSection />
+        <div data-track-section="testimonials"><TestimonialsSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
-        <ProcessSection />
+        <div data-track-section="process"><ProcessSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
-        <AppSection />
+        <div data-track-section="liveat_app"><AppSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
-        <PricingSection />
+        <div data-track-section="pricing"><PricingSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
-        <FAQSection />
+        <div data-track-section="faq"><FAQSection /></div>
       </AnimatedSection>
       
       <AnimatedSection>
-        <CTASection />
+        <div data-track-section="closing_cta"><CTASection /></div>
       </AnimatedSection>
       
       </main>
@@ -172,6 +166,7 @@ export default function Home() {
       <ScrollToTop />
       <AccessibilityWidget />
       <FloatingCTA />
+      <StickyCTA />
     </div>
     </MotionConfig>
   );

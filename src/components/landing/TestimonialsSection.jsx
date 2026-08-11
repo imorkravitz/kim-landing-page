@@ -349,7 +349,7 @@ function useIsDesktop() {
 export default function TestimonialsSection() {
   const isDesktop = useIsDesktop();
   return (
-    <section id="results" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F5F3ED]/50 to-white backdrop-blur-sm relative">
+    <section id="results" className="section-lg px-4 sm:px-6 lg:px-8 bg-[var(--bg-secondary)] relative">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -361,7 +361,7 @@ export default function TestimonialsSection() {
           <div className="flex justify-center mb-4">
           </div>
           <h2 className="text-4xl md:text-5xl font-heading text-gray-900 mb-6">
-            כשהמסגרת חכמה והליווי עקבי - <span className="text-[#8B7F4B]">השינוי מגיע</span>
+            כשהמסגרת חכמה והליווי עקבי - <span className="text-[var(--brand-ink)]">השינוי מגיע</span>
           </h2>
           <p className="text-xl text-slate-700 max-w-3xl mx-auto">
             התוצאות מדברות בעד עצמן.<br></br> צילומי מסך ושיתופים של לקוחות מרוצות שהצליחו לשנות את אורח החיים שלהןד
@@ -396,14 +396,14 @@ export default function TestimonialsSection() {
 
         <div className="text-center mt-12 flex flex-wrap gap-4 justify-center">
           <a href="https://wa.link/ntdrz1"
-              onClick={() => trackCTA('whatsapp_consult')} target="_blank" rel="noopener noreferrer">
+              onClick={() => trackCTA('whatsapp_consult', 'testimonials')} target="_blank" rel="noopener noreferrer">
             <
 // @ts-ignore
             Button
               size="lg"
- className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
+ className="inline-flex items-center justify-center gap-2 text-white px-8 py-4 min-h-[48px] rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
               style={{
-                background: '#25D366',
+                background: 'var(--wa-green-ink)',
                 boxShadow: '0 4px 16px rgba(37,211,102,0.30)',
               }}            >
               <WhatsAppIcon className="w-5 h-5 ml-2" />
