@@ -92,7 +92,7 @@ export default function ProcessSection() {
             <button
               className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-full text-base font-bold cursor-pointer transition-all duration-200 hover:scale-105"
               style={{
-                background: 'var(--wa-green)',
+                background: 'var(--wa-green-ink)',
                 boxShadow: '0 4px 16px rgba(37,211,102,0.30)',
               }}
             >

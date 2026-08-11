@@ -622,14 +622,28 @@ function ScrollVideoPlayer({ plateProgress }) {
       const vh = video.videoHeight;
       if (!vw || !vh)           { pendingRef.current = false; return; }
 
-      const cw = canvas.offsetWidth  || 640;
-      const ch = canvas.offsetHeight || 360;
+      /* Measure the container, not the canvas: writing canvas.width/height
+         changes the element's own intrinsic size, so reading its offsetWidth
+         here fed back into the value being written. */
+      const box = (canvas.parentElement || canvas).getBoundingClientRect();
+      const cw = Math.round(box.width)  || 640;
+      const ch = Math.round(box.height) || 360;
 
-      // Sync logical px to CSS px (no blurry canvas)
-      if (canvas.width !== cw || canvas.height !== ch) {
-        canvas.width  = cw;
-        canvas.height = ch;
+      /* The backing store must be CSS pixels TIMES devicePixelRatio. The
+         previous code set it equal to CSS pixels — the comment claimed this
+         avoided a blurry canvas, but it is what caused one: on a dpr-2 phone
+         or retina display every frame was rasterised at half resolution and
+         then scaled up by the browser. Capped at 2 because past that the
+         extra pixels cost real time on a canvas repainted every scroll frame
+         and buy nothing visible. */
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const physW = Math.round(cw * dpr);
+      const physH = Math.round(ch * dpr);
+      if (canvas.width !== physW || canvas.height !== physH) {
+        canvas.width  = physW;
+        canvas.height = physH;
       }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // object-contain: scale to fit, centred
       const scale = Math.min(cw / vw, ch / vh);

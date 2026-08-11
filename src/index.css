@@ -206,12 +206,14 @@ button:focus-visible {
                                  legible as a highlight rather than a smudge  */
 
   /* ── WhatsApp ──
-     The brand green #25D366 carries white text at 1.98:1 — not close to legal.
-     This is that green taken to the point where white passes AA (4.58:1); it
-     also reads calmer next to the olive, which is what the brand wanted from
-     it anyway. #25D366 survives only as a logo glyph on dark grounds. */
-  --wa-green:      #188741;
-  --wa-green-dark: #12692F;
+     #25D366 is WhatsApp's actual brand green and is used as-is: it is a
+     recognised mark, and recolouring it costs more in recognition than it
+     buys in contrast. It carries white text at only 1.98:1, so anywhere
+     white sits ON the green we use --wa-green-ink instead, which is the same
+     hue taken to 4.58:1. Small glyphs on the brand green stay branded. */
+  --wa-green:      #25D366;
+  --wa-green-ink:  #188741;
+  --wa-green-dark: #1DBF5C;
 
   /* ── Brand ──
      -primary is the identity colour: correct for fills, icons, borders and

@@ -86,7 +86,7 @@ export default function StickyCTA() {
           onClick={() => trackCTA('whatsapp_consult', 'sticky')}
           tabIndex={show ? 0 : -1}
           className="flex items-center justify-center gap-2.5 w-full min-h-[52px] rounded-full
-                     text-white font-bold text-[17px] bg-[var(--wa-green)]
+                     text-white font-bold text-[17px] bg-[var(--wa-green-ink)]
                      active:bg-[var(--wa-green-dark)] transition-colors"
         >
           <WhatsAppIcon className="w-5 h-5" />

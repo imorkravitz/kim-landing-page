@@ -73,10 +73,24 @@ export default function ScrollVideoBackground({ children }) {
       const vh = video.videoHeight;
       if (!vw || !vh) { pendingRef.current = false; return; }
 
-      // DPR-aware canvas sizing — sharp on retina / HiDPI
-      const dpr  = window.devicePixelRatio || 1;
-      const cssW = canvas.offsetWidth  || window.innerWidth;
-      const cssH = canvas.offsetHeight || window.innerHeight;
+      /* Size from the CONTAINER, never from the canvas itself.
+         Reading canvas.offsetWidth/Height here and then writing canvas.width/
+         height is a feedback loop: those attributes are the element's intrinsic
+         size, so writing them can change its own layout box, which re-triggers
+         the ResizeObserver below, which paints again. In practice it settled
+         with a 375x357 backing store on a devicePixelRatio-2 screen — i.e. the
+         video was being drawn at half resolution and then upscaled by the
+         browser, which is what made this look soft on phones and retina
+         displays. Measuring the parent breaks the loop. */
+      const box  = (canvas.parentElement || canvas).getBoundingClientRect();
+      const cssW = Math.round(box.width)  || window.innerWidth;
+      const cssH = Math.round(box.height) || window.innerHeight;
+
+      /* Capped at 2. Beyond that the extra pixels are invisible on a
+         full-bleed background video but the per-frame fill+draw cost keeps
+         rising, and this repaints on every scroll frame. */
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
       const physW = Math.round(cssW * dpr);
       const physH = Math.round(cssH * dpr);
       if (canvas.width !== physW || canvas.height !== physH) {
@@ -111,9 +125,10 @@ export default function ScrollVideoBackground({ children }) {
     video.addEventListener('canplaythrough', paint);
     video.load(); // explicit — some browsers defer buffering of display:none videos
 
-    // Repaint on resize / orientation change (mobile chrome bar)
+    // Observe the container, not the canvas — see the note in paint() about
+    // why watching the canvas while resizing it feeds back on itself.
     const ro = new ResizeObserver(() => paint());
-    ro.observe(canvas);
+    if (canvas.parentElement) ro.observe(canvas.parentElement);
 
     // ── RAF scrub loop ───────────────────────────────────────────────────────
     // pendingSince: watchdog — if a seek never fires `seeked` (unbuffered
