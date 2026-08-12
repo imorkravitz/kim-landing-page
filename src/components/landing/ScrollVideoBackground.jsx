@@ -116,22 +116,26 @@ export default function ScrollVideoBackground({ children }) {
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      /* The source is 960x540. Full-bleed on a desktop that is 1425 device
-         pixels wide means a 1.5x upscale (worse on a retina laptop), and no
-         re-encode can invent those pixels — a higher-resolution export of the
-         original is the only real fix. High-quality smoothing is what is
-         available meanwhile; it costs nothing and visibly softens the
-         stair-stepping the default bilinear filter leaves behind. */
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
 
-      // Fit by WIDTH always — guarantees the full horizontal extent of the
-      // video (where the stethoscope sits) is visible on every device,
-      // mobile included. Object-cover (fit by height) on a narrow/tall
-      // mobile viewport forced a severe horizontal crop, hiding most of
-      // the stethoscope; a fixed posX guess couldn't reliably compensate.
-      // Cropping only vertically (top/bottom) is safe since the subject
-      // is vertically centered in the source video.
+      /* ── Framing: fit by WIDTH, on every device ───────────────────────────
+         This is the original rule and it is restored deliberately. The
+         stethoscope is not parked in the middle of the frame — measured on the
+         master, it occupies x 75-95% at the start, sweeps the full width around
+         the two-thirds mark, and ends at x 0-31%. Fitting the width is the only
+         framing that keeps the WHOLE animation on screen; anything that fills
+         the height has to crop horizontally, and then the subject leaves frame
+         for part of its own journey.
+
+         I briefly replaced this on mobile with a height-fill that panned to
+         follow the subject. It made the stethoscope bigger and it tracked
+         correctly, but bigger was never the requirement — seeing all of it was.
+         Reverted.
+
+         What stays from that work is the part that mattered: the source is now
+         1920x1080 with a 1280 variant for phones, so this fit no longer has to
+         upscale a 960px file (1.48x on desktop) to fill the canvas. */
       const scale = cssW / vw;
       const dw = Math.round(vw * scale);
       const dh = Math.round(vh * scale);
