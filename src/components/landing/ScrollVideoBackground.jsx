@@ -119,51 +119,28 @@ export default function ScrollVideoBackground({ children }) {
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
 
-      /* ── Framing ──────────────────────────────────────────────────────────
-         Desktop fits by WIDTH. That is the right call there and it is why the
-         original code did it: the stethoscope is not parked in the middle of
-         the frame, it TRAVELS across it — measured on the master, the subject
-         occupies x 75-95% at the start, sweeps the full width around the
-         two-thirds mark, and ends at x 0-31%. Any fixed horizontal crop loses
-         it for part of the animation.
+      /* ── Framing: fit by WIDTH, on every device ───────────────────────────
+         This is the original rule and it is restored deliberately. The
+         stethoscope is not parked in the middle of the frame — measured on the
+         master, it occupies x 75-95% at the start, sweeps the full width around
+         the two-thirds mark, and ends at x 0-31%. Fitting the width is the only
+         framing that keeps the WHOLE animation on screen; anything that fills
+         the height has to crop horizontally, and then the subject leaves frame
+         for part of its own journey.
 
-         On a phone that same rule is what made it disappear. A 16:9 video
-         fitted to a 375px width draws just 211px tall inside an 812px canvas —
-         a thin band of mostly-white frame with a small subject in it.
+         I briefly replaced this on mobile with a height-fill that panned to
+         follow the subject. It made the stethoscope bigger and it tracked
+         correctly, but bigger was never the requirement — seeing all of it was.
+         Reverted.
 
-         So mobile fills the HEIGHT instead and pans the window horizontally in
-         step with the scrub, tracking the subject from its start position on
-         the right to its end position on the left. The stethoscope stays large
-         and in frame for the whole section, which is what the width-fit was
-         protecting but at a size worth looking at. The pan is derived from the
-         same smoothed progress value that drives the video, so it moves with
-         the animation rather than alongside it. */
-      const isNarrow = cssW < 768;
-
-      let scale, dw, dh, dx, dy;
-      if (isNarrow) {
-        scale = cssH / vh;                        // fill the viewport height
-        dw = Math.round(vw * scale);
-        dh = Math.round(vh * scale);
-        dy = 0;
-
-        // Where the subject sits, as a fraction of the source width, at the
-        // start and end of the animation. Measured, not guessed.
-        const SUBJECT_START = 0.85;
-        const SUBJECT_END   = 0.16;
-        const p = Math.max(0, Math.min(1, smoothRef.current));
-        const focus = SUBJECT_START + (SUBJECT_END - SUBJECT_START) * p;
-
-        // Centre that point in the viewport, without exposing either edge.
-        const ideal = cssW / 2 - focus * dw;
-        dx = Math.round(Math.max(Math.min(ideal, 0), cssW - dw));
-      } else {
-        scale = cssW / vw;
-        dw = Math.round(vw * scale);
-        dh = Math.round(vh * scale);
-        dx = 0;
-        dy = Math.round((cssH - dh) / 2);
-      }
+         What stays from that work is the part that mattered: the source is now
+         1920x1080 with a 1280 variant for phones, so this fit no longer has to
+         upscale a 960px file (1.48x on desktop) to fill the canvas. */
+      const scale = cssW / vw;
+      const dw = Math.round(vw * scale);
+      const dh = Math.round(vh * scale);
+      const dx = 0;
+      const dy = Math.round((cssH - dh) / 2);
 
       // White fill — video's white areas are seamlessly invisible on white BG
       ctx.fillStyle = '#ffffff';
