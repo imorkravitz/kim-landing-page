@@ -173,7 +173,7 @@ export default function ProblemSolutionSection() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 text-lg lg:text-base mb-1">{title}</h3>
-                  <p className="text-gray-600 text-base lg:text-sm leading-relaxed">{desc}</p>
+                  <p className="text-gray-600 text-base lg:text-lg leading-relaxed">{desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -207,7 +207,7 @@ export default function ProblemSolutionSection() {
             </div>
             <div>
               <h3 className="font-bold text-gray-900 text-lg lg:text-base mb-1">תפריט מותאם אישית</h3>
-              <p className="text-gray-600 text-base lg:text-sm leading-relaxed">
+              <p className="text-gray-600 text-base lg:text-lg leading-relaxed">
                 מותאם לאורח החיים, ליכולות, למטרות ולאופי שלך.
               </p>
             </div>
