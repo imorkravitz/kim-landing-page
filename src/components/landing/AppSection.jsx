@@ -203,7 +203,7 @@ export default function AppSection() {
                     </div>
                     <div className="flex-1">
                       <h4 className="text-lg font-semibold text-gray-900 mb-1">{feature.title}</h4>
-                      <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{feature.description}</p>
+                      <p className="text-[var(--text-secondary)] text-md leading-relaxed">{feature.description}</p>
                     </div>
                   </div>
                 </motion.div>

@@ -74,7 +74,15 @@ export default function AboutSection() {
 
           {/* TEXT COLUMN — leads the section */}
           <motion.div
-            className="text-right"
+            /* Panel, not bare text. The stethoscope scrubs behind this whole
+               section, and copy sitting straight on the cream had the tubing
+               running through it — legible in a screenshot, not while it
+               moves. Same idea as the process cards: a light, slightly
+               translucent surface that keeps the video visible around the
+               text while the text itself always sits on something solid. */
+            className="text-right rounded-3xl bg-white/85 backdrop-blur-[2px]
+                       border border-[var(--border-subtle)] shadow-[var(--elev-2)]
+                       p-6 md:p-8 lg:p-9"
             variants={staggerV}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -86,7 +94,6 @@ export default function AboutSection() {
               style={{
                 color: BRAND_INK,
                 textWrap: 'balance',
-                textShadow: '0 2px 20px rgba(255,255,255,0.95), 0 1px 4px rgba(255,255,255,0.95)',
               }}
             >
               מי עומדת מאחורי הכל?
@@ -95,7 +102,7 @@ export default function AboutSection() {
             {/* Intro — slightly larger for hierarchy */}
             <motion.p
               variants={itemV}
-              className="text-base text-[var(--text-secondary)] leading-relaxed mb-5 prose-measure"
+              className="text-base text-xl text-[var(--text-secondary)] leading-relaxed mb-5 prose-measure"
               style={{ textWrap: 'pretty' }}
             >
               היי, אני <strong>קים גפסון קרביץ</strong> בוגרת תואר בתזונה באוניברסיטה
@@ -105,7 +112,7 @@ export default function AboutSection() {
             {/* Story paragraph 1 */}
             <motion.p
               variants={itemV}
-              className="text-[var(--text-secondary)] leading-relaxed mb-5 prose-measure"
+              className="text-base text-xl text-[var(--text-secondary)] leading-relaxed mb-5 prose-measure"
               style={{ textWrap: 'pretty' }}
             >
               בגיל 23 חוויתי מהפך בחיים כשחליתי בסרטן מסוג הודג'קין לימפומה.
@@ -116,7 +123,7 @@ export default function AboutSection() {
             {/* Story paragraph 2 */}
             <motion.p
               variants={itemV}
-              className="text-[var(--text-secondary)] leading-relaxed mb-8 prose-measure"
+              className="text-base text-xl text-[var(--text-secondary)] leading-relaxed mb-8 prose-measure"
               style={{ textWrap: 'pretty' }}
             >
               בדרך למדתי שאיזון אמיתי לא נמצא בקיצוניות, אלא בהקשבה, בגמישות,
@@ -137,7 +144,6 @@ export default function AboutSection() {
                   className="font-gveret text-xl md:text-2xl leading-relaxed italic"
                   style={{
                     color: BRAND_INK,
-                    textShadow: '0 2px 20px rgba(255,255,255,0.95), 0 1px 4px rgba(255,255,255,0.95), 0 0 2px rgba(255,255,255,0.9)',
                   }}
                 >
                   "את לא צריכה לבחור בין בריאות לבין הנאה.<br />אפשר גם וגם."
@@ -239,11 +245,11 @@ export default function AboutSection() {
                 >
                   <Icon className="w-6 h-6" style={{ color: BRAND }} />
                 </div>
-                <p className="font-semibold text-gray-900 text-base leading-tight mb-0.5">
+                <p className="font-semibold text-gray-900 text-base text-lg leading-tight mb-0.5">
                   {title}
                 </p>
                 {sub && (
-                  <p className="text-[var(--text-muted)] text-xs leading-snug">{sub}</p>
+                  <p className="text-[var(--text-muted)] text-md leading-snug">{sub}</p>
                 )}
               </motion.div>
             ))}

@@ -14,8 +14,44 @@ const WhatsAppIcon = ({ className }) => (
   </svg>
 );
 
+
+/**
+ * Makes the three description blocks share a height.
+ *
+ * The plans have descriptions of different lengths, so "מה מקבלים?" started at
+ * a different y in each card and the three feature lists never lined up.
+ * Flex could not solve it: growing the description fills each card's own
+ * leftover space, which differs per card, so it made the mismatch worse.
+ *
+ * This measures the natural height of each description and applies the tallest
+ * to all three, which is the one thing CSS cannot express here without
+ * subgrid. Re-measured on resize and when fonts finish loading, since both
+ * change the wrap. Below md the cards stack and each is free again.
+ */
+function useEqualHeights(count) {
+  const refs = React.useRef([]);
+  React.useEffect(() => {
+    const apply = () => {
+      const els = refs.current.filter(Boolean);
+      if (!els.length) return;
+      els.forEach((el) => { el.style.minHeight = ''; });
+      if (window.innerWidth < 768) return;          // stacked: let them be
+      const tallest = Math.max(...els.map((el) => el.offsetHeight));
+      els.forEach((el) => { el.style.minHeight = `${tallest}px`; });
+    };
+    apply();
+    const ro = new ResizeObserver(apply);
+    refs.current.filter(Boolean).forEach((el) => ro.observe(el));
+    window.addEventListener('resize', apply);
+    if (document.fonts?.ready) document.fonts.ready.then(apply);
+    return () => { ro.disconnect(); window.removeEventListener('resize', apply); };
+  }, [count]);
+  return refs;
+}
+
 export default function PricingSection() {
   const [isVisible, setIsVisible] = useState(false);
+  const descRefs = useEqualHeights(3);
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -229,7 +265,7 @@ export default function PricingSection() {
                 <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-4"></div>
 
                 {/* Description */}
-                <div className="mb-5 flex-grow">
+                <div className="mb-5" ref={(el) => { descRefs.current[index] = el; }}>
                   <p className="text-right text-gray-700 leading-relaxed font-medium text-base md:text-lg">
                     {plan.description}
                   </p>
@@ -253,7 +289,7 @@ export default function PricingSection() {
                   </ul>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-6 pt-2 mt-auto">
                   <a
                     href={plan.paymentLink}
                     target="_blank"
