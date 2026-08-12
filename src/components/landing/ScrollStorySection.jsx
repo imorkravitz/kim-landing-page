@@ -774,6 +774,31 @@ function ScrollVideoPlayer({ plateProgress }) {
 
     video.addEventListener('seeked',         paint);
 
+    /* iOS decoder priming.
+       Safari on iOS will not produce a decodable frame for a video that has
+       never played: drawImage of a paused, never-played element yields
+       nothing, so the canvas stays blank on iPhone while every desktop
+       browser is fine. Playing muted+playsInline is allowed without a user
+       gesture, so a play() immediately followed by pause() gets the first
+       frame decoded and everything after that scrubs normally.
+       The touch fallback covers the case where the autoplay attempt is
+       rejected — the first tap anywhere primes it instead. */
+    let primed = false;
+    const prime = () => {
+      if (primed) return;
+      const p = video.play();
+      if (p && typeof p.then === 'function') {
+        p.then(() => { primed = true; video.pause(); video.currentTime = 0; paint(); })
+         .catch(() => { /* blocked — the touch handler below will retry */ });
+      } else {
+        primed = true; try { video.pause(); } catch {}
+      }
+    };
+    video.addEventListener('loadedmetadata', prime);
+    if (video.readyState >= 1) prime();
+    const primeOnTouch = () => { prime(); };
+    window.addEventListener('touchstart', primeOnTouch, { once: true, passive: true });
+
     /* Mobile needs an explicit kick, desktop does not.
        These <video> elements are 1px and effectively invisible, and iOS and
        Android Chrome routinely decline to buffer those from preload="auto"
@@ -824,6 +849,8 @@ function ScrollVideoPlayer({ plateProgress }) {
 
     return () => {
       clearTimeout(kick);
+      video.removeEventListener('loadedmetadata', prime);
+      window.removeEventListener('touchstart', primeOnTouch);
       cancelAnimationFrame(rafRef.current);
       video.removeEventListener('seeked',         paint);
       video.removeEventListener('loadeddata',     paint);
@@ -850,8 +877,9 @@ function ScrollVideoPlayer({ plateProgress }) {
         src={videoSrc || undefined}
         muted
         playsInline
+        autoPlay
         preload="auto"
-        style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', overflow: 'hidden' }}
+        style={{ position: 'absolute', top: 0, left: 0, width: '1px', height: '1px', pointerEvents: 'none', overflow: 'hidden' }}
       />
       {/* Canvas — always shows last good frame; zero black-flash between frames */}
       <canvas
