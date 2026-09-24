@@ -54,7 +54,7 @@ export const TestimonialsColumn = ({
         @media (min-width: 768px) {
           .animate-scroll-vertical { animation-duration: var(--marquee-desktop); }
         }
-        /* WCAG 2.3.3 / 2.2.2 — no autoplaying motion when the OS asks for less */
+        /* WCAG 2.3.3 / 2.2.2: no autoplaying motion when the OS asks for less */
         @media (prefers-reduced-motion: reduce) {
           .animate-scroll-vertical { animation: none; }
         }

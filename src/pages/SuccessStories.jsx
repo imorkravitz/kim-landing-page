@@ -66,7 +66,7 @@ export default function SuccessStories() {
   return (
     <div dir="rtl" className="min-h-screen bg-gradient-to-b from-[#F5F3ED] to-white">
       <SEOHead 
-        title="סיפורי הצלחה | קים גפסון - תזונה מאפשרת"
+        title="סיפורי הצלחה | קים גפסון, תזונה מאפשרת"
         description="קראי סיפורי הצלחה מעוררי השראה."
       />
 
@@ -87,7 +87,7 @@ export default function SuccessStories() {
               סיפורי הצלחה אמיתיים
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              הן <span className="text-[#8B7F4B]">הצליחו</span> – ואת יכולה גם
+              הן <span className="text-[#8B7F4B]">הצליחו</span>, ואת יכולה גם
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10">
               מאות נשים כבר שינו את אורח החיים שלהן עם הליווי של קים.

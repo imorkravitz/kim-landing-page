@@ -128,7 +128,7 @@ export default function AboutSection() {
             >
               בדרך למדתי שאיזון אמיתי לא נמצא בקיצוניות, אלא בהקשבה, בגמישות,
               ובהתאמה אישית. כך נולדה שיטת{' '}
-              <strong className="text-gray-800">"תזונה מאפשרת"</strong> – גישה מקצועית
+              <strong className="text-gray-800">"תזונה מאפשרת"</strong>, גישה מקצועית
               שמתבססת על עקרון האיזון בגישת 80:20.
             </motion.p>
 

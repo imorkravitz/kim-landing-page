@@ -23,13 +23,13 @@ export default function StoryCard({ story }) {
             {activeImage === 'before' && story.before_image ? (
               <LazyImage
                 src={story.before_image}
-                alt={`${story.name} - לפני`}
+                alt={`${story.name}, לפני`}
                 className="w-full h-full"
               />
             ) : story.after_image ? (
               <LazyImage
                 src={story.after_image}
-                alt={`${story.name} - אחרי`}
+                alt={`${story.name}, אחרי`}
                 className="w-full h-full"
               />
             ) : null}
