@@ -18,7 +18,13 @@ import {
 } from 'lucide-react';
 
 // @ts-ignore
-import kimHero from '../../assets/images/kim-hero.webp';
+/* Studio portrait, matted to transparency so Kim sits on the cream section
+   rather than inside a rectangle. 1586x992, so the intrinsic aspect is 1.599
+   and NOT the 1.778 of the photo it replaced: the width/height attributes on
+   both <ResponsiveImage> uses below carry the new numbers, because they are
+   what reserves the box before the image decodes. Leaving the old 16:9 pair
+   there would reserve the wrong height and shift the hero on load. */
+import kimHero from '../../assets/images/kim-hero-v1.webp';
 // @ts-ignore
 import kimLogo from '../../assets/icons/KIM - LOGO 2.png';
 // @ts-ignore
@@ -334,7 +340,7 @@ const waChatsLeft = [
     avatar: '★',
     messages: [
       { from: 'user', text: 'בוקר טוב נשקלתי ושקלתי 58.7! רזיתי השבוע 900 גר', time: '11:35' },
-      { from: 'user', text: 'וסה״כ בכמעט 3 חודשים — 4.7 קג 🏆🏆🏆', time: '11:35' },
+      { from: 'user', text: 'וסה״כ בכמעט 3 חודשים, 4.7 קג 🏆🏆🏆', time: '11:35' },
     ],
   },
   {
@@ -368,7 +374,7 @@ const waChatsRight = [
 
 // Compact mobile testimonials (single bubble strip)
 const mobileTestimonials = [
-  { text: 'ירדתי 15 קילו בחצי שנה — כלים לחיים, לא לדיאטה זמנית ❤️', time: '20:54' },
+  { text: 'ירדתי 15 קילו בחצי שנה, כלים לחיים, לא לדיאטה זמנית ❤️', time: '20:54' },
   { text: '15 וחצי קילו ב-4 חודשים!!! תודה שגרמת לי לאהוב את עצמי 🙏', time: '14:20' },
   { text: 'אוכלת קינדר בואנו ועדיין יורדת 😍 מ-85 ל-61.5!', time: '19:03' },
 ];
@@ -957,11 +963,11 @@ function PhaseExploded() {
           <PhaseHeading>מה יש<br/><Accent>בצלחת מאוזנת?</Accent></PhaseHeading>
           {/* Desktop paragraph */}
           <motion.p variants={item} className="hidden lg:block text-lg text-gray-600 leading-relaxed mb-4">
-            כל רכיב יש לו תפקיד. אנחנו לא מורידות — אנחנו מאזנות.
+            כל רכיב יש לו תפקיד. אנחנו לא מורידות, אנחנו מאזנות.
           </motion.p>
           {/* Mobile paragraph — compact */}
           <motion.p variants={item} className="lg:hidden text-base text-gray-600 leading-relaxed mb-3">
-            כל רכיב יש לו תפקיד. אנחנו לא מורידות — אנחנו מאזנות.
+            כל רכיב יש לו תפקיד. אנחנו לא מורידות, אנחנו מאזנות.
           </motion.p>
           <motion.div variants={item} className="flex flex-col gap-2 lg:gap-3">
             {foodComponents.map(({ label, sublabel, color, Icon }) => (
@@ -1176,14 +1182,14 @@ function PhaseRing() {
             <div className="bg-white/65 backdrop-blur-sm rounded-xl p-3.5 lg:rounded-2xl lg:p-4 border border-white/60" dir="rtl">
               <p className="font-bold mb-1" style={{ color: '#333', fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>ה-80% שלך</p>
               <p style={{ color: '#666', lineHeight: 1.55, fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
-                אוכל שמזין את הגוף שלך — ירקות, חלבונים,<br></br>פחמימות טובות, שומנים בריאים ומים.<br></br>
+                אוכל שמזין את הגוף שלך: ירקות, חלבונים,<br></br>פחמימות טובות, שומנים בריאים ומים.<br></br>
                  זה הבסיס שמאפשר לך ליהנות מהשאר.
               </p>
             </div>
             <div className="rounded-xl p-3.5 lg:rounded-2xl lg:p-4" style={{ background: '#C49A7A18', border: '1px solid #C49A7A40' }} dir="rtl">
               <p className="font-bold mb-1" style={{ color: '#A0745A', fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>ה-20% שלך</p>
               <p style={{ color: '#666', lineHeight: 1.55, fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
-                אוכל שמזין את הנשמה שלך — הפיצה של שישי, הגלידה בחופשה. <br></br>
+                אוכל שמזין את הנשמה שלך: הפיצה של שישי, הגלידה בחופשה. <br></br>
                  זה חלק מהשיטה, ובגלל זה היא עובדת לאורך זמן.
               </p>
             </div>
@@ -1371,7 +1377,7 @@ function AppPhoneMockup({ compact = false }) {
           {/* Screen 2 — fades in at crossfadeStart */}
           <motion.img
             src={eatDiary2}
-            alt="יומן אכילה - מקרואים"
+            alt="יומן אכילה, מקרואים"
             style={{
               position: 'absolute', inset: 0,
               width: '100%', height: '100%',
@@ -1808,7 +1814,7 @@ function PhaseSupport() {
             <strong style={{ color: BRAND_INK }}>שהתהליך מסתיים</strong>.
           </motion.p>
           <motion.div variants={item} className="flex flex-col gap-2.5 lg:gap-2.5 mb-4 lg:mb-7">
-            {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה (בתוכנית נבחרת)', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות עם תזונאית קלינית'].map((f) => (
+            {['ליווי יומיומי בווצאפ', 'קהילת תמיכה סגורה (בתוכנית נבחרת)', 'גיוון וגמישות מלאה בתפריט', 'פגישות מעקב אישיות חודשיות עם דיאטנית קלינית מהצוות'].map((f) => (
               <div key={f} className="flex items-center gap-2.5 lg:gap-3" dir="rtl">
                 <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: BRAND }} />
                 <span className="phase-bullet leading-snug lg:leading-relaxed font-semibold text-[#333]">{f}</span>
@@ -1936,12 +1942,12 @@ export default function ScrollStorySection() {
               only two images on the page that get either. */}
           <ResponsiveImage
             src={kimHero}
-            stem="/src/assets/images/kim-hero"
+            stem="/src/assets/images/kim-hero-v1"
             sizes="80vw"
             alt="קים גפסון"
             className="w-full h-full object-contain object-bottom"
-            width="1920"
-            height="1080"
+            width="1586"
+            height="992"
             loading="eager"
             fetchPriority="high"
           />
@@ -1959,19 +1965,22 @@ export default function ScrollStorySection() {
         >
           {/* Hidden in phases 4-5 (App/Support): on mobile the phone mockups own
               the top strip, and Kim behind them muddied the heading legibility */}
-          {/* Mobile LCP. sizes is generous because the box is height-driven
-              (36svh, capped 320px) and the width follows the aspect ratio —
-              a 320px-tall 16:9 crop is ~570px wide on a dpr-2 phone, so the
-              800w variant is the right pick and the 1600w one never loads. */}
+          {/* Mobile LCP. The box is height-driven (36svh, capped 320px) and
+              the width follows the aspect ratio, so `sizes` has to describe
+              the WIDTH that height implies. At 1.599 a 292px-tall box (36svh
+              on an 812px phone) is ~467css wide, which is ~934 device px at
+              dpr 2. The old 400px was written for the previous 16:9 asset and
+              now under-states it enough to pick the 800w file and upscale;
+              480px lands on 1200w, which is the honest one. */}
           <ResponsiveImage
             src={kimHero}
-            stem="/src/assets/images/kim-hero"
-            sizes="400px"
+            stem="/src/assets/images/kim-hero-v1"
+            sizes="480px"
             alt="קים גפסון"
             className="object-contain object-bottom w-auto"
             style={{ height: '36svh', maxHeight: '320px' }}
-            width="1920"
-            height="1080"
+            width="1586"
+            height="992"
             loading="eager"
             fetchPriority="high"
           />
@@ -2073,7 +2082,7 @@ export default function ScrollStorySection() {
         {/* ── Bottom banner ── */}
         <div className="hidden md:block absolute bottom-0 left-0 right-0 z-40" style={{ background: `${BRAND}ee` }}>
           <p className="text-white text-center text-sm md:text-base font-medium py-3 px-6">
-           תוכנית תזונה מדויקת וממוקדת, ליווי תזונתי אישי עם דיאטנית קלינית, אפליקציה תומכת וקהילה סגורה
+           תוכנית תזונה מדויקת וממוקדת, ליווי אישי עם דיאטנית קלינית מהצוות שלנו, אפליקציה תומכת וקהילה סגורה
           </p>
         </div>
       </div>

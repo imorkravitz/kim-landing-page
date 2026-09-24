@@ -31,3 +31,20 @@ dist-ssr
 !.env.example
 .vercel
 .env*
+
+# Source masters: the original, full-quality files that the shipped assets are
+# derived FROM. They are not imported by any code and never reach a visitor.
+#
+# They are kept out of git on purpose. A 6MB video committed once stays in the
+# history forever, on every clone, even after it is deleted — and the thing
+# that actually matters, the derived files under src/assets/, is committed.
+#
+# The trade is that these live only on the machine that made them, so BACK
+# THEM UP somewhere real (Drive, the photographer's original delivery). Losing
+# a master means the encodes can never be regenerated at a different size or
+# quality, only re-compressed from an already-lossy copy.
+#
+# Regenerate from a master with:
+#   node scripts/make-image-variants.mjs <image master> --stem <name> --widths ...
+#   (video encoding commands are documented in scripts/README.md)
+masters/
