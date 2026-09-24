@@ -2,26 +2,84 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <!-- Favicons must live in /public — /src paths don't exist in the build,
-         and the SPA rewrite turns them into index.html instead of an image -->
+    <!-- Favicons must live in /public, because /src paths don't exist in the
+         build, and the SPA rewrite turns them into index.html, not an image -->
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>קים גפסון | תזונה מאפשרת</title>
-    <meta name="description" content="ליווי תזונתי אישי לנשים עם גישת 80:20 — תפריט מותאם, תמיכה יומית בווצאפ, אפליקציה תומכת וצוות דיאטניות קליניות. הצטרפי ל-5,000+ מטופלות." />
+    <title>קים גפסון | תזונה מאפשרת, קליניקה לליווי תזונתי לנשים</title>
+    <meta name="description" content="ליווי תזונתי אישי לנשים בגישת 80:20, עם צוות דיאטניות קליניות מוסמכות. תפריט מותאם, תמיכה יומית בווצאפ ואפליקציה תומכת. הקליניקה של קים גפסון, מייסדת תזונה מאפשרת." />
 
     <link rel="canonical" href="https://kimgafson.co.il/" />
 
     <!-- Open Graph: static tags so WhatsApp/Instagram/Facebook crawlers (no JS) render a rich preview -->
-    <meta property="og:title" content="קים גפסון | תזונה מאפשרת" />
-    <meta property="og:description" content="ליווי תזונתי אישי לנשים עם גישת 80:20 — תפריט מותאם, תמיכה יומית בווצאפ, אפליקציה תומכת וצוות דיאטניות קליניות." />
+    <meta property="og:title" content="קים גפסון | תזונה מאפשרת, קליניקה לליווי תזונתי לנשים" />
+    <meta property="og:description" content="ליווי תזונתי אישי לנשים בגישת 80:20, עם צוות דיאטניות קליניות מוסמכות. תפריט מותאם, תמיכה יומית בווצאפ ואפליקציה תומכת." />
     <meta property="og:image" content="https://kimgafson.co.il/kim-og-2.png" />
     <meta property="og:url" content="https://kimgafson.co.il/" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="he_IL" />
     <meta property="og:site_name" content="תזונה מאפשרת - קים גפסון" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!--
+      Structured data, duplicated statically from src/data/clinic.js.
+
+      SEOHead injects the same graph at runtime, but this is a client-rendered
+      SPA: the Meta, WhatsApp and Bing crawlers never execute JS, and almost
+      all of this site's traffic arrives through links shared on exactly those
+      platforms. Without a static copy they scrape nothing.
+
+      The clinic is the primary entity, not Kim. "דיאטנית קלינית" is a title
+      protected by חוק הדיאטנים and Kim is not on the Ministry of Health
+      register, so the term attaches to the business and to its registered
+      employees, never to her name. Her node says "מייסדת".
+
+      If you edit this, edit src/data/clinic.js to match.
+    -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "MedicalBusiness",
+          "@id": "https://kimgafson.co.il/#clinic",
+          "name": "תזונה מאפשרת",
+          "legalName": "KIM - Your Health My Mission",
+          "description": "קליניקה לליווי תזונתי אישי לנשים בגישת 80:20, עם צוות דיאטניות קליניות מוסמכות.",
+          "url": "https://kimgafson.co.il",
+          "image": "https://kimgafson.co.il/kim-og-2.png",
+          "email": "imkimgafson@gmail.com",
+          "medicalSpecialty": "Dietetics",
+          "priceRange": "₪₪",
+          "areaServed": { "@type": "Country", "name": "IL" },
+          "sameAs": [
+            "https://www.instagram.com/kimgafson/",
+            "https://www.tiktok.com/@kimgafson"
+          ],
+          "founder": { "@id": "https://kimgafson.co.il/#kim" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://kimgafson.co.il/#kim",
+          "name": "קים גפסון קרביץ",
+          "alternateName": ["קים גפסון", "Kim Gafson", "Kim Gafson Kravitz"],
+          "jobTitle": "מייסדת תזונה מאפשרת",
+          "description": "קים גפסון קרביץ היא מייסדת \"תזונה מאפשרת\", בוגרת תואר ראשון במדעי התזונה באוניברסיטה העברית וסטודנטית לרפואה באוניברסיטת תל אביב. היא פיתחה את גישת 80:20 ומובילה צוות של דיאטניות קליניות מוסמכות שמעניקות את הליווי התזונתי האישי למטופלות.",
+          "url": "https://kimgafson.co.il",
+          "alumniOf": [
+            { "@type": "CollegeOrUniversity", "name": "האוניברסיטה העברית בירושלים" }
+          ],
+          "worksFor": { "@id": "https://kimgafson.co.il/#clinic" },
+          "sameAs": [
+            "https://www.instagram.com/kimgafson/",
+            "https://www.tiktok.com/@kimgafson"
+          ]
+        }
+      ]
+    }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
