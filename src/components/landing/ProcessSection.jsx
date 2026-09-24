@@ -81,7 +81,7 @@ export default function ProcessSection() {
             className="text-2xl md:text-3xl font-heading text-gray-900 mb-3 leading-snug"
             style={{ textWrap: 'balance' }}
           >
-            תזונה שמרגישה כמו חיים —{' '}
+            תזונה שמרגישה כמו חיים,{' '}
             <span style={{ color: '#8B7F4B' }}>כמו החיים האמיתיים</span>
           </h3>
           <p className="text-gray-600 text-base leading-relaxed mb-8 max-w-md mx-auto">

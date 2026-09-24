@@ -1,5 +1,5 @@
 /**
- * Analytics bootstrap — Google Analytics 4 + Meta (Facebook) Pixel.
+ * Analytics bootstrap: Google Analytics 4 and the Meta (Facebook) Pixel.
  *
  * Loads only when the matching ID exists in the environment, so local dev
  * stays clean and no tracking runs until real IDs are configured.
@@ -7,12 +7,33 @@
  * Setup: create a `.env` file in the project root with:
  *   VITE_GA4_ID=G-XXXXXXXXXX
  *   VITE_META_PIXEL_ID=XXXXXXXXXXXXXXX
+ *
+ * ── Consent ───────────────────────────────────────────────────────────
+ *
+ * Nothing here runs until the visitor has actively agreed. This used to be
+ * called unconditionally from main.jsx, which meant the Meta Pixel wrote an
+ * identifier and reported her browsing to a third party before she had been
+ * asked anything. See src/lib/consent.js for why that is not defensible
+ * under תיקון 13.
+ *
+ * initAnalytics() is now idempotent and is called by the consent banner on
+ * grant, and on later page loads once a stored grant is found.
  */
+import { getConsent } from './consent';
 
 const GA4_ID = import.meta.env.VITE_GA4_ID;
 const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID;
 
+let started = false;
+
 export function initAnalytics() {
+  /* Guard, not decoration: the banner calls this, and so does the page-load
+     path when a previous grant is found. Loading gtag twice double-counts
+     every pageview. */
+  if (started) return;
+  if (getConsent() !== 'granted') return;
+  started = true;
+
   if (GA4_ID) {
     const s = document.createElement('script');
     s.async = true;
@@ -45,7 +66,7 @@ export function initAnalytics() {
  * `placement` is WHERE they asked from (hero, pricing, faq, sticky, footer).
  *
  * The two are separate because the primary CTA deliberately repeats the same
- * wording and destination down the whole page — so without a placement, five
+ * wording and destination down the whole page, so without a placement, five
  * different buttons collapse into one indistinguishable number and there is no
  * way to learn which position actually earns the click. Reported as its own
  * parameter rather than baked into the label, so totals per intent still add up.
@@ -100,7 +121,7 @@ export function initScrollTracking() {
 
      "Enough" cannot be a fixed ratio of the element. The hero story is 3,410px
      and pricing is 2,713px, so on an 812px phone neither can ever put 50% of
-     itself in view — with a 0.5 threshold those two sections, the two most
+     itself in view. With a 0.5 threshold those two sections, the two most
      important on the page, silently never reported at all. The bar is instead
      the smaller of half the element and half the viewport, which behaves
      sensibly for a short trust bar and a five-screen story alike. */

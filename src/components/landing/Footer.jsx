@@ -21,13 +21,13 @@ export default function Footer() {
               src={Logo}
               stem="/src/assets/icons/kim-logo"
               sizes="240px"
-              alt="קים גפסון — תזונה מאפשרת"
+              alt="קים גפסון, תזונה מאפשרת"
               width="640"
               height="640"
               className="h-40 md:h-48 w-auto mb-5 object-contain object-right"
             />
             <p className="leading-relaxed">
-              תזונה מאפשרת – הקליניקה של קים גפסון.<br></br>
+              תזונה מאפשרת, הקליניקה של קים גפסון.<br></br>
               ליווי מקצועי ואישי לאורח חיים בריא ומאוזן.
             </p>
           </div>
@@ -74,7 +74,7 @@ export default function Footer() {
                   className="flex items-center gap-2 hover:text-[var(--brand-ink)] transition-colors"
                 >
                   <MessageCircle className="w-5 h-5" />
-                  צ'אט חכם בווצאפ — זמין 24/7
+                  צ'אט חכם בווצאפ, זמין 24/7
                 </a>
               </li>
               <li>
@@ -86,7 +86,7 @@ export default function Footer() {
                   className="flex items-center gap-2 hover:text-[var(--brand-ink)] transition-colors"
                 >
                   <Phone className="w-5 h-5" />
-                  שירות לקוחות — מענה אנושי
+                  שירות לקוחות, מענה אנושי
                 </a>
               </li>
             </ul>
@@ -104,6 +104,10 @@ export default function Footer() {
             <span aria-hidden="true">·</span>
             <a href="/Privacy" className="inline-block py-2 underline underline-offset-4 hover:text-[var(--brand-ink)] transition-colors">
               מדיניות פרטיות
+            </a>
+            <span aria-hidden="true">·</span>
+            <a href="/Terms" className="inline-block py-2 underline underline-offset-4 hover:text-[var(--brand-ink)] transition-colors">
+              תנאי שימוש ותקנון
             </a>
           </p>
           <p className="mt-3">© {new Date().getFullYear()} KIM - Your Health My Mission. כל הזכויות שמורות.</p>

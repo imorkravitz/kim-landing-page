@@ -5,6 +5,14 @@ import SEOHead from '@/components/SEOHead';
 
 const BRAND = '#8B7F4B';
 
+/* Link and label colour.
+   #8B7F4B is the brand hue, but it measures 4.01:1 on white: under the WCAG
+   4.5:1 bar for body text. --brand-ink is the same hue darkened to 6.01:1
+   and is the role the design system already defines for text. The lighter
+   value stays available for fills, where it is never read as text. */
+const INK = '#6D6339';
+
+
 /**
  * הצהרת נגישות — נדרשת לפי תקנות שוויון זכויות לאנשים עם מוגבלות
  * (התאמות נגישות לשירות), תשע"ג-2013.
@@ -13,14 +21,14 @@ export default function Accessibility() {
   return (
     <div dir="rtl" className="min-h-screen bg-white font-sans">
       <SEOHead
-        title="הצהרת נגישות | תזונה מאפשרת - קים גפסון"
+        title="הצהרת נגישות | תזונה מאפשרת, קים גפסון"
         description="הצהרת הנגישות של אתר תזונה מאפשרת"
       />
       <div className="container mx-auto px-6 py-16 max-w-3xl">
         <Link
           to="/"
           className="inline-flex items-center gap-2 mb-8 text-sm font-medium underline-offset-4 hover:underline"
-          style={{ color: BRAND }}
+          style={{ color: INK }}
         >
           <ArrowRight className="w-4 h-4" />
           חזרה לדף הבית
@@ -66,13 +74,13 @@ export default function Accessibility() {
           <p>
             אחראית הנגישות באתר: <strong>קים גפסון קרביץ</strong>.
             <br />
-            לפניות בנושא נגישות — כולל דיווח על תקלת נגישות או בקשה לקבלת מידע
+            לפניות בנושא נגישות, כולל דיווח על תקלת נגישות או בקשה לקבלת מידע
             בדרך חלופית:
           </p>
           <ul className="list-disc pr-6 space-y-2">
             <li>
               <strong>דוא"ל:</strong>{' '}
-              <a href="mailto:imkimgafson@gmail.com" className="underline underline-offset-4" style={{ color: BRAND }}>
+              <a href="mailto:imkimgafson@gmail.com" className="underline underline-offset-4" style={{ color: INK }}>
                 imkimgafson@gmail.com
               </a>
             </li>
@@ -83,7 +91,7 @@ export default function Accessibility() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline underline-offset-4"
-                style={{ color: BRAND }}
+                style={{ color: INK }}
               >
                 שירות הלקוחות שלנו
               </a>

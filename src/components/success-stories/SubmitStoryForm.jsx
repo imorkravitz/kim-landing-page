@@ -195,7 +195,7 @@ export default function SubmitStoryForm({ onSuccess }) {
         <Label htmlFor="journey">סיכום התהליך</Label>
         <Textarea
           id="journey"
-          placeholder="תארי את המסע שלך - איך התחלת, מה עשית, ואיך הגעת לתוצאות..."
+          placeholder="תארי את המסע שלך: איך התחלת, מה עשית, ואיך הגעת לתוצאות..."
           value={formData.journey_summary}
           onChange={(e) => setFormData({ ...formData, journey_summary: e.target.value })}
           className="mt-1 h-20"
