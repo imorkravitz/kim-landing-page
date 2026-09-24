@@ -149,6 +149,38 @@ export default function Terms() {
             בוגרת תואר ראשון במדעי התזונה מהאוניברסיטה העברית וסטודנטית
             לרפואה באוניברסיטת תל אביב.
           </p>
+          {/* Stated explicitly because the team is not listed by name on the
+              site. An option the visitor cannot see does not exist for her,
+              and "our certified dietitians" with no way to check reads as a
+              bare assertion. This turns it into a verifiable one. */}
+          <p>
+            פרטי הדיאטנית שתלווה אותך, לרבות שמה ותעודת ההסמכה שלה, יימסרו
+            לך לפי בקשה. ניתן לפנות אלינו{' '}
+            {BUSINESS.phone ? (
+              <>
+                בטלפון{' '}
+                <a href={`tel:${BUSINESS.phone.replace(/-/g, '')}`} className="underline underline-offset-4" style={{ color: INK }}>
+                  {BUSINESS.phone}
+                </a>
+                {' '}או{' '}
+              </>
+            ) : null}
+            <a
+              href={BUSINESS.whatsappSupport}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4"
+              style={{ color: INK }}
+            >
+              בווצאפ
+            </a>
+            .
+          </p>
+          <p>
+            אם יש לך כיסוי ביטוחי לייעוץ תזונתי, נספק את כל המסמכים הדרושים
+            להגשת בקשה להחזר מחברת הביטוח, לרבות אישורים על הסמכת הדיאטנית
+            וקבלות על התשלום.
+          </p>
 
           {/* ── רפואי ── */}
           <H2>הבהרה רפואית</H2>
