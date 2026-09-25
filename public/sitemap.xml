@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hand-maintained. Five URLs, changed a few times a year, so a generator
+  would be more machinery than the problem deserves.
+
+  ⚠️ lastmod must be updated whenever a page's visible content changes.
+  A stale lastmod is worse than no lastmod at all: it tells Google the page
+  is unchanged and discourages the recrawl you were asking for.
+
+  /ThankYou is deliberately absent. It is noindex, and a purchase
+  confirmation has no business turning up in search results.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kimgafson.co.il/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://kimgafson.co.il/SuccessStories</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://kimgafson.co.il/Terms</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://kimgafson.co.il/Privacy</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://kimgafson.co.il/Accessibility</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://kimgafson.co.il/Terms</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
