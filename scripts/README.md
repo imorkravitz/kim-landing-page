@@ -24,6 +24,20 @@ If you change any command here, change the note next to it too.
 
 ---
 
+## Sitemap
+
+`public/sitemap.xml` is hand-maintained. When a page's visible content
+changes, bump its `<lastmod>` to that date. A stale `lastmod` tells Google
+the page has not changed and suppresses the recrawl, which is worse than
+omitting the field.
+
+After a deploy that changes indexed content, also ask for a recrawl:
+Search Console → URL Inspection → paste the URL → **Request Indexing**.
+Without it, a page of this size can take days to a few weeks to be picked up,
+and search results keep showing the previous version until then.
+
+---
+
 ## Images
 
 ```bash
