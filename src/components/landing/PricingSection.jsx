@@ -1,315 +1,410 @@
-import React, { useEffect, useRef, useState } from 'react';
-import img_4dfadad4e_KIM_LOGO from '../../assets/remote/4dfadad4e_KIM-LOGO.webp';
+import React, { useEffect, useRef, useState, useId } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Check, Plus, ChevronDown, ShieldCheck } from 'lucide-react';
 import img_6a474e22f_Untitleddesign7 from '../../assets/remote/6a474e22f_Untitleddesign7.avif';
 import img_8fa64f760_1 from '../../assets/remote/8fa64f760_1.avif';
 import img_df0c9358a_2 from '../../assets/remote/df0c9358a_2.avif';
-import { Check, Star, Sparkles } from 'lucide-react';
-import { Button } from "@/components/ui/button";
 import { trackCTA } from '@/lib/analytics';
-import { Badge } from "@/components/ui/badge";
+import { activePlans, CANCELLATION } from '@/data/plans';
+import { BUSINESS } from '@/data/clinic';
 
 const WhatsAppIcon = ({ className }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true" focusable="false">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
   </svg>
 );
 
+const shekel = (n) => n.toLocaleString('he-IL');
+
+/* The project's standing ease-out. Already used in ScrollStorySection and
+   TestimonialsSection, so reusing it keeps one rhythm across the page rather
+   than introducing a fourth curve. Ease-out only: content arriving should
+   decelerate into place, never accelerate away from the reader. */
+const EASE_OUT = [0.22, 1, 0.36, 1];
 
 /**
- * Makes the three description blocks share a height.
+ * תוכניות הליווי.
  *
- * The plans have descriptions of different lengths, so "מה מקבלים?" started at
- * a different y in each card and the three feature lists never lined up.
- * Flex could not solve it: growing the description fills each card's own
- * leftover space, which differs per card, so it made the mismatch worse.
+ * ── What this section had to solve ────────────────────────────────────
  *
- * This measures the natural height of each description and applies the tallest
- * to all three, which is the one thing CSS cannot express here without
- * subgrid. Re-measured on resize and when fonts finish loading, since both
- * change the wrap. Below md the cards stack and each is free again.
+ * The previous version showed three cards, each with its own near-identical
+ * feature list, and prices of 439 / 399 / 409 per month. Three problems
+ * followed from that, and they compounded:
+ *
+ * 1. The cards were visually interchangeable, so the eye had nothing to
+ *    compare. There was no ladder, only three boxes.
+ * 2. The twelve-month plan costs MORE per month than the six-month one.
+ *    That is deliberate, because it is the only plan that includes a
+ *    personal session with Kim and the closed group, but the page never
+ *    said so. A reader who notices the inversion and finds no explanation
+ *    concludes the pricing is arbitrary, which is a trust problem rather
+ *    than a price problem.
+ * 3. Only the monthly figure appeared. Signing a twelve-month standing
+ *    order without seeing ₪4,908 anywhere reads as something being kept
+ *    from you, and for a continuing-service transaction the total belongs
+ *    in front of the customer before she commits.
+ *
+ * ── The structure that fixes it ───────────────────────────────────────
+ *
+ * Each card states only what it ADDS to the one before. The shared base
+ * collapses into a single expandable row. The increments on the twelve
+ * month plan are set larger than the rest, so the extra cost and the extra
+ * value land in the same glance. See src/data/plans.js.
+ *
+ * ── Two paths, not one ────────────────────────────────────────────────
+ *
+ * The owner's instinct was to remove prices entirely, the way a competitor
+ * does, and push everyone into a WhatsApp conversation. The risk there is
+ * the visitor who had already decided: a woman tapping a payment link at
+ * 23:40 did not want a conversation, and removing her path does not turn
+ * her into a lead, it turns her into a closed tab.
+ *
+ * So both paths exist, and the free consultation is the louder of the two.
+ * Nobody is forced to talk to a human, and nobody is forced not to.
+ *
+ * ── The guarantee ─────────────────────────────────────────────────────
+ *
+ * "הוראת קבע ל-12 חודשים" reads like a gym contract. The sentence that
+ * dissolves that fear already existed on the page, inside the FAQ, one
+ * section BELOW this one, which is to say after the moment of doubt. It is
+ * now stated on every card.
  */
-function useEqualHeights(count) {
-  const refs = React.useRef([]);
-  React.useEffect(() => {
-    const apply = () => {
-      const els = refs.current.filter(Boolean);
-      if (!els.length) return;
-      els.forEach((el) => { el.style.minHeight = ''; });
-      if (window.innerWidth < 768) return;          // stacked: let them be
-      const tallest = Math.max(...els.map((el) => el.offsetHeight));
-      els.forEach((el) => { el.style.minHeight = `${tallest}px`; });
-    };
-    apply();
-    const ro = new ResizeObserver(apply);
-    refs.current.filter(Boolean).forEach((el) => ro.observe(el));
-    window.addEventListener('resize', apply);
-    if (document.fonts?.ready) document.fonts.ready.then(apply);
-    return () => { ro.disconnect(); window.removeEventListener('resize', apply); };
-  }, [count]);
-  return refs;
-}
-
 export default function PricingSection() {
-  const [isVisible, setIsVisible] = useState(false);
-  const descRefs = useEqualHeights(3);
   const sectionRef = useRef(null);
+  const [seen, setSeen] = useState(false);
+  const reduce = useReducedMotion();
 
+  /* Fires once when the section is genuinely on screen.
+     Until now the funnel could only report which plan was CLICKED, never how
+     many people reached the plans and left. Without this denominator the
+     question "is the price the blocker" cannot be answered: a low click rate
+     on a section nobody scrolls to means something entirely different from a
+     low click rate on a section everybody reads. */
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          setSeen(true);
+          trackCTA('pricing_view', 'pricing');
+          io.disconnect();
         }
       },
-      { threshold: 0.2 }
+      /* Half the viewport rather than half the element: the section is taller
+         than a phone screen, so a 50% element threshold could never fire. */
+      { rootMargin: '0px 0px -40% 0px' }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
-  const plans = [
-    {
-      name: 'בייסיק',
-      ctaText: 'תרשמי אותי!',
-      price: '439',
-      duration: 'לחודש',
-      commitment: 'הוראת קבע ל-3 חודשים',
-      subtitle: '(ללא תפיסת מסגרת)',
-      description: 'תוכנית קצרה וממוקדת, החל מהיום הראשון. נציב מטרות יחד, נבנה תפריט מותאם, גמיש ומאפשר ונצא לדרך לשלושה חודשי איזון תזונתי ותוצאות!',
-      featuresTitle: 'מה מקבלים?',
-      features: [
-        'פגישה אישית עם תזונאית אונליין בכל חודש (3 פגישות)',
-        'מעקב וליווי אישי יומיומי וצמוד בווצאפ',
-        '2 ערכות קיט לבחירתך במתנה',
-        'הרצאות תזונה בזום עם קים לכל הקהילה'
-      ],
-      months: '3',
-      slug: 'basic',
-      bgColor: 'bg-[var(--surface-card)]',
-      headerColor: 'text-[var(--brand-ink)]',
-      isPopular: false,
-      paymentLink: 'https://meshulam.co.il/quick_payment?b=0650455637b3d3165c4edf567b80d7f7'
-    },
-    {
-      name: 'גולד',
-      ctaText: 'צרפי אותי!',
-      price: '399',
-      duration: 'לחודש',
-      commitment: 'הוראת קבע ל-6 חודשים',
-      subtitle: '(ללא תפיסת מסגרת)',
-      description: 'תוכנית תהליכית ואיכותית. מתאימה למי שמחפשת ללמוד לנהל את התזונה שלה בכל זמן ובכל סיטואציה. מפגישה לפגישה נדייק את החליפה התזונתית עבורך, נציב יעדים על ציר הזמן ונצעד יד ביד לתוצאות!',
-      featuresTitle: 'מה מקבלים?',
-      features: [
-        'פגישה אישית עם תזונאית אונליין בכל חודש (6 פגישות)',
-        'מעקב וליווי אישי יומיומי וצמוד בווצאפ',
-        '2 ערכות קיט לבחירתך במתנה',
-        'הרצאות תזונה בזום עם קים לכל הקהילה'
-      ],
-      months: '6',
-      slug: 'gold',
-      bgColor: 'bg-[var(--surface-sunken)]',
-      headerColor: 'text-[var(--brand-ink)]',
-      isPopular: true,
-      popularText: 'Most Popular',
-      paymentLink: 'https://meshulam.co.il/quick_payment?b=a4a8f69b137c30dbf763eb9b8576236a'
-    },
-    {
-      name: 'נבחרת',
-      ctaText: 'רוצה לנבחרת!',
-      price: '409',
-      duration: 'לחודש',
-      commitment: 'הוראת קבע ל-12 חודשים',
-      subtitle: '(ללא תפיסת מסגרת)',
-      description: 'תוכנית אישית וקהילתית. מתאים למי שאנרגיית הקבוצה עושה לה טוב. בנוסף לפגישות והליווי האישי עם התזונאית, תקבלי פגישת מיקוד תזונתית ואישית עם קים. התוכנית משלבת קבוצה ייעודית סגורה, למוטיבציה יומיומית, השראה, רעיונות ואתגרים שבועיים שיתנו לך פוש לתהליך!',
-      featuresTitle: 'מה מקבלים?',
-      features: [
-        'פגישה אישית עם תזונאית אונליין בכל חודש (11 פגישות)',
-        'מעקב וליווי אישי יומיומי וצמוד בווצאפ',
-        'קבוצת ווצאפ סגורה לקהילה עם התזונאית',
-        '2 ערכות קיט לבחירתך במתנה',
-        'פגישה אישית עם קים: ייעוץ על נושאים תזונתיים ואישיים לבחירתך',
-        'הרצאות תזונה בזום עם קים לכל הקהילה'
-      ],
-      months: '12',
-      slug: 'nivheret',
-      bgColor: 'bg-[var(--surface-highlight)]',
-      headerColor: 'text-[var(--brand-ink)]',
-      isPopular: false,
-      paymentLink: 'https://meshulam.co.il/quick_payment?b=db202b67221edf8de0a441989beb51ce'
-    }
-  ];
-
   return (
-    <section 
+    <section
       ref={sectionRef}
+      dir="rtl"
+      aria-labelledby="pricing-heading"
       className="section-lg relative overflow-hidden bg-[var(--bg-tertiary)]"
     >
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
-          .font-handwriting {
-            font-family: 'Amatic SC', cursive;
-          }
-        `}
-      </style>
-      
-      {/* Background Texture/Image */}
-      <div className="absolute inset-0 pointer-events-none bg-cover bg-center"
-           style={{ backgroundImage: isVisible ? `url(${img_6a474e22f_Untitleddesign7})` : 'none' }}>
-      </div>
-
-      {/* Bottom Left Decoration - Beet */}
-      <div className="absolute bottom-0 left-0 w-[36rem] h-[48rem] md:w-[54rem] md:h-[72rem] pointer-events-none z-0 opacity-90"
+      {/* Decorative produce illustrations, kept from the previous design.
+          aria-hidden and pointer-events-none: they are atmosphere, not content. */}
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none bg-cover bg-center opacity-70"
+           style={{ backgroundImage: seen ? `url(${img_6a474e22f_Untitleddesign7})` : 'none' }} />
+      <div aria-hidden="true"
+           className="absolute bottom-0 left-0 w-[30rem] h-[40rem] md:w-[44rem] md:h-[58rem] pointer-events-none opacity-80"
            style={{
-             backgroundImage: isVisible ? `url(${img_8fa64f760_1})` : 'none',
-             backgroundRepeat: 'no-repeat',
-             backgroundPosition: 'bottom left',
-             backgroundSize: 'contain'
-           }}>
-      </div>
-
-      {/* Top Right Decoration - Flower */}
-      <div className="absolute top-0 right-0 w-[18rem] h-[24rem] md:w-[27rem] md:h-[36rem] pointer-events-none z-0 opacity-90"
+             backgroundImage: seen ? `url(${img_8fa64f760_1})` : 'none',
+             backgroundRepeat: 'no-repeat', backgroundPosition: 'bottom left', backgroundSize: 'contain',
+           }} />
+      <div aria-hidden="true"
+           className="absolute top-0 right-0 w-[15rem] h-[20rem] md:w-[22rem] md:h-[30rem] pointer-events-none opacity-80"
            style={{
-             backgroundImage: isVisible ? `url(${img_df0c9358a_2})` : 'none',
-             backgroundRepeat: 'no-repeat',
-             backgroundPosition: 'top right',
-             backgroundSize: 'contain'
-           }}>
-      </div>
+             backgroundImage: seen ? `url(${img_df0c9358a_2})` : 'none',
+             backgroundRepeat: 'no-repeat', backgroundPosition: 'top right', backgroundSize: 'contain',
+           }} />
 
-      <div className="container mx-auto px-6 relative z-10">
-        {/* This section had no <h2> at all: a 320px-tall logo stood where the
-            heading belonged, so the document went from the page H1 straight to
-            the plan names as H3, and screen-reader and search-engine users had
-            no way to know what the section was. The logo is decorative, so it
-            keeps its place as a brand mark at a sane size and hands the
-            heading role to real text. Saves ~230px of mobile scroll. */}
-        <div className="text-center mb-10 md:mb-14">
-          <img
-            src={img_4dfadad4e_KIM_LOGO}
-            alt=""
-            aria-hidden="true"
-            width="240"
-            height="240"
-            className="h-100 md:h-100 w-auto mx-auto mb-5"
-          />
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-[var(--text-primary)] mb-4"
-              style={{ textWrap: 'balance' }}>
-            התוכניות שלנו
+      <div className="container mx-auto px-5 sm:px-6 relative z-10">
+
+        <header className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
+          <h2
+            id="pricing-heading"
+            className="font-heading text-[clamp(1.9rem,6vw,3rem)] leading-[1.15] text-[var(--text-primary)] mb-4"
+            style={{ textWrap: 'balance' }}
+          >
+            כמה זמן את רוצה שנהיה לידך?
           </h2>
-          <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
-            כל התוכניות כוללות ליווי אישי יומיומי ההבדל הוא באורך התהליך ובמה שנכלל בו
+          <p className="text-lg md:text-xl text-[var(--text-secondary)] leading-relaxed" style={{ textWrap: 'pretty' }}>
+            בכל התוכניות את מקבלת את אותו ליווי אישי. ההבדל הוא כמה זמן הוא נמשך,
+            וכמה עמוק נספיק להיכנס.
+          </p>
+        </header>
+
+        {/* auto-fit rather than a fixed 3-column grid: if a plan is switched
+            off in plans.js the remaining two still fill the row properly. */}
+        <ul
+          className="grid gap-5 lg:gap-6 max-w-6xl mx-auto list-none items-stretch"
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 19rem), 1fr))' }}
+        >
+          {activePlans.map((plan, i) => (
+            <PlanCard key={plan.id} plan={plan} index={i} reduce={reduce} />
+          ))}
+        </ul>
+
+        <ClosingHelp />
+      </div>
+    </section>
+  );
+}
+
+/* ── One plan ──────────────────────────────────────────────────────── */
+
+function PlanCard({ plan, index, reduce }) {
+  const [openBase, setOpenBase] = useState(false);
+  const baseId = useId();
+  const featured = Boolean(plan.popular);
+
+  return (
+    <motion.li
+      /* whileInView, not a class toggled by an observer: a class-gated reveal
+         leaves the card at opacity 0 if the transition never runs, which is
+         exactly what happens in a headless render or a background tab.
+         `once` so the cards never re-animate when scrolling back up. */
+      initial={reduce ? false : { opacity: 0, y: 24 }}
+      whileInView={reduce ? {} : { opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, ease: EASE_OUT, delay: reduce ? 0 : index * 0.08 }}
+      className={`relative flex flex-col rounded-3xl bg-[var(--surface-card)] overflow-hidden
+                  ${featured
+                    ? 'ring-2 ring-[var(--brand-surface)] shadow-[var(--elev-3)]'
+                    : 'ring-1 ring-[var(--border-default)] shadow-[var(--elev-1)]'}`}
+    >
+      {featured && (
+        <p className="bg-[var(--brand-surface)] text-white text-center text-sm font-bold py-2 px-3">
+          {plan.popularLabel}
+        </p>
+      )}
+
+      <div className="flex flex-col flex-1 p-6 md:p-7">
+
+        {/* ── Identity ── */}
+        <h3 className="font-heading text-3xl text-[var(--brand-ink)] mb-1">{plan.name}</h3>
+        <p className="text-[15px] font-semibold text-[var(--brand-ink)] mb-3">
+          {plan.months} חודשים
+        </p>
+        <p className="text-[var(--text-secondary)] leading-relaxed mb-6" style={{ textWrap: 'pretty' }}>
+          {plan.fit}
+        </p>
+
+        {/* ── What this plan adds ──
+            The first plan has nothing to add, so it shows its base openly
+            instead. Every later plan leads with its increment, which is the
+            only thing the reader is actually choosing between. */}
+        {plan.adds.length > 0 ? (
+          <div className="mb-5">
+            <p className="text-sm font-bold text-[var(--text-primary)] mb-3">
+              כל מה שב{plan.inheritsFrom}, ובנוסף:
+            </p>
+            <ul className="space-y-2.5 list-none">
+              {plan.adds.map((add) => (
+                <li key={add.text} className="flex items-start gap-2.5">
+                  <Plus
+                    className={`shrink-0 mt-0.5 ${add.emphasis ? 'w-5 h-5' : 'w-4 h-4 mt-1'} text-[var(--brand-surface)]`}
+                    aria-hidden="true"
+                  />
+                  <span className={add.emphasis
+                    ? 'text-[17px] font-bold text-[var(--text-primary)] leading-snug'
+                    : 'text-[15px] text-[var(--text-secondary)] leading-snug'}>
+                    {add.text}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            {/* The shared base, folded away. It is identical in every plan, so
+                repeating it at full size three times is what made the cards
+                indistinguishable in the first place. */}
+            <button
+              type="button"
+              onClick={() => setOpenBase((v) => !v)}
+              aria-expanded={openBase}
+              aria-controls={baseId}
+              className="mt-4 w-full flex items-center justify-between gap-2 min-h-[44px] text-right
+                         text-sm font-medium text-[var(--brand-ink)] rounded-lg px-1
+                         hover:bg-[var(--brand-tint)] transition-colors"
+            >
+              <span>וגם כל הבסיס שבכל התוכניות</span>
+              <ChevronDown
+                className={`w-4 h-4 shrink-0 transition-transform duration-200 ${openBase ? 'rotate-180' : ''}`}
+                aria-hidden="true"
+              />
+            </button>
+            <BaseList id={baseId} items={plan.base} open={openBase} reduce={reduce} />
+          </div>
+        ) : (
+          <div className="mb-5">
+            <p className="text-sm font-bold text-[var(--text-primary)] mb-3">מה כלול:</p>
+            <ul className="space-y-2.5 list-none">
+              {plan.base.map((b) => (
+                <li key={b} className="flex items-start gap-2.5">
+                  <Check className="w-4 h-4 mt-1 shrink-0 text-[var(--brand-surface)]" aria-hidden="true" />
+                  <span className="text-[15px] text-[var(--text-secondary)] leading-snug">{b}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* ── Price ──
+            mt-auto pins this block to the bottom of every card regardless of
+            how much content sits above it, so the three prices line up across
+            the row without needing the height-matching hook the old version
+            carried. */}
+        <div className="mt-auto pt-5 border-t border-[var(--border-subtle)]">
+          <p className="flex items-baseline gap-1.5 text-[var(--text-primary)]">
+            <span className="text-4xl font-bold">{shekel(plan.pricePerMonth)}</span>
+            <span className="text-2xl font-bold">₪</span>
+            <span className="text-base text-[var(--text-secondary)]">לחודש</span>
+          </p>
+          <p className="text-[15px] text-[var(--text-secondary)] mt-1">
+            סה"כ {shekel(plan.total)} ₪ על פני {plan.months} חודשים
+          </p>
+
+          {/* The slot is reserved on every card from md up, where the three
+              cards sit side by side, even though only one plan carries a note.
+              Without it that card's price block is taller, and because the
+              block is bottom-anchored the extra height pushes its ₪ figure
+              ~26px above the other two. Measured: price blocks at 698 / 698 /
+              672. In a section whose entire job is comparing three numbers at
+              a glance, having them off a common baseline is the kind of
+              misalignment the eye registers as sloppiness without naming it.
+              Below md the cards stack and nothing needs reserving. */}
+          <div className="mt-2 md:min-h-[2.4rem]">
+            {plan.priceNote && (
+              <p className="text-[13px] text-[var(--text-muted)] leading-snug">
+                {plan.priceNote}
+              </p>
+            )}
+          </div>
+
+          <p className="flex items-start gap-2 mt-3 text-[13px] text-[var(--text-secondary)] leading-snug">
+            <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-[var(--brand-surface)]" aria-hidden="true" />
+            <span>{CANCELLATION}</span>
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-7xl mx-auto lg:px-20">
-          {plans.map((plan, index) => (
-            <div
-              key={plan.name}
-              /* The missing space before ${} concatenated the two classes into
-                 "hover:shadow-2xlz-10", so the featured card silently lost both
-                 its hover shadow and its stacking order. */
-              className={`relative rounded-[2rem] overflow-hidden shadow-xl transition-all duration-700 flex flex-col hover:shadow-2xl ${
-                plan.isPopular ? 'z-10 shadow-2xl ring-2 ring-[var(--border-brand)]' : ''
-              } ${
-                isVisible 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: `${index * 150}ms` }}
-            >
-              {/* Card Content */}
-              <div className={`p-6 md:p-7 h-full flex flex-col ${plan.bgColor} text-gray-800 relative`}>
-                
-                {/* Header */}
-                <div className="text-center mb-4 relative">
-                  {/* Was text-6xl/7xl — 60px, twice the size of the section's
-                      own h2. A plan name should lead its card, not outrank the
-                      heading the card sits under. */}
-                  <h3 className={`text-4xl md:text-5xl font-bold mb-1 font-heading ${plan.headerColor} relative inline-block`}>
-                    {plan.name}
-                    {plan.name === 'גולד' && <span className="absolute -top-2 -left-6 text-4xl">*</span>}
-                  </h3>
-                  
-                  <div className="flex flex-col items-center justify-center mt-4">
-                    <div className="flex items-baseline gap-1 text-[var(--brand-dark)]">
-                      <span className="text-4xl font-bold">{plan.price}</span>
-                      <span className="text-3xl font-bold">₪</span>
-                      <span className="text-2xl font-bold">{plan.duration}</span>
-                    </div>
-                    {/* Commitment length is the single fact people most need in
-                        order to compare these plans, so it is promoted to primary
-                        ink rather than the gray-600 it used to whisper in (4.28:1
-                        on the featured card — under AA as well as under-weighted). */}
-                    {/* Programme length is what the three plans actually differ
-                        by, so it is set as the headline fact rather than buried
-                        mid-sentence in the standing-order line. */}
-                    <div className="mt-3 text-[var(--text-primary)]">
-                      <span className="text-base">תוכנית של </span>
-                      <span className="text-xl md:text-[24px] font-extrabold underline decoration-2 underline-offset-4 decoration-[var(--brand-primary)]">
-                        {plan.months} חודשים
-                      </span>
-                    </div>
-                    <div className="text-[13px] text-[var(--text-primary)] mt-1.5">
-                      {plan.commitment} <span className="opacity-80">{plan.subtitle}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Separator */}
-                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-4"></div>
-
-                {/* Description */}
-                <div className="mb-5" ref={(el) => { descRefs.current[index] = el; }}>
-                  <p className="text-right text-gray-700 leading-relaxed font-medium text-base md:text-lg">
-                    {plan.description}
-                  </p>
-                </div>
-
-                {/* Separator */}
-                <div className="w-full h-px bg-[var(--brand-surface)]/20 mb-4"></div>
-
-                {/* Features */}
-                <div>
-                  <h4 className={`text-xl font-heading ${plan.headerColor} mb-3 text-right font-bold`}>
-                    {plan.featuresTitle}
-                  </h4>
-                  <ul className="space-y-2 text-right">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2 text-lg text-gray-700">
-                        <span className="text-[var(--brand-ink)] mt-1.5">•</span>
-                        <span className="flex-1">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="mt-6 pt-2 mt-auto">
-                  <a
-                    href={plan.paymentLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => trackCTA(`program_select_${plan.slug}`, 'pricing')}
-                    className="block"
-                  >
-                    <Button 
-                      className="w-full py-6 rounded-full text-lg font-bold bg-[var(--brand-surface)] hover:bg-[var(--brand-dark)] text-white shadow-lg transition-all hover:scale-[1.02]"
-                    >
-                      <Sparkles className="w-5 h-5 ml-2" />
-                      {plan.ctaText}
-                    </Button>
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* ── Two ways forward ──
+            The consultation is the primary action and the payment link is the
+            secondary one, but the secondary is a real button rather than a
+            buried link: the visitor who has already decided should not have to
+            hunt for the way to pay. */}
+        <div className="mt-5 space-y-2.5">
+          <a
+            href={BUSINESS.whatsappConsult}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackCTA(`consult_${plan.id}`, 'pricing')}
+            className="flex items-center justify-center gap-2.5 w-full min-h-[52px] rounded-full
+                       text-white font-bold text-[16px] bg-[var(--wa-green-ink)]
+                       hover:opacity-95 active:opacity-90 transition-opacity"
+          >
+            <WhatsAppIcon className="w-5 h-5" />
+            לבדוק אם זו התוכנית שלי
+          </a>
+          <a
+            href={plan.paymentLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackCTA(`program_select_${plan.id}`, 'pricing')}
+            className="flex items-center justify-center w-full min-h-[48px] rounded-full
+                       font-bold text-[15px] text-[var(--brand-ink)] bg-[var(--surface-sunken)]
+                       border border-[var(--border-brand)] hover:bg-[var(--bg-tertiary)] transition-colors"
+          >
+            יודעת מה אני רוצה, להרשמה
+          </a>
         </div>
       </div>
-    </section>
+    </motion.li>
+  );
+}
+
+/* ── The shared base, expandable ───────────────────────────────────── */
+
+function BaseList({ id, items, open, reduce }) {
+  /* Height, animated by Framer Motion rather than by CSS.
+   *
+   * The obvious CSS-only version of this is the grid-rows 0fr-to-1fr trick,
+   * and it was tried here first. It silently collapses: the inner element
+   * needs overflow:hidden so the list clips while closing, and an element
+   * with overflow other than visible is a scroll container, whose automatic
+   * minimum size in a grid track is zero. `1fr` then has no free space to
+   * distribute and the row computes to 0px however tall the content is.
+   * Measured in the browser: inline style grid-template-rows:1fr, content
+   * 145px, computed row 0px.
+   *
+   * Motion measures the content instead, so `auto` is a real target. It also
+   * makes the panel interruptible: tapping twice quickly reverses from the
+   * current height rather than snapping. */
+  return (
+    <motion.div
+      id={id}
+      initial={false}
+      animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+      transition={reduce ? { duration: 0 } : { duration: 0.26, ease: EASE_OUT }}
+      style={{ overflow: 'hidden' }}
+    >
+      <ul className="space-y-2.5 list-none pt-3">
+        {items.map((b) => (
+          <li key={b} className="flex items-start gap-2.5">
+            <Check className="w-4 h-4 mt-1 shrink-0 text-[var(--brand-surface)]" aria-hidden="true" />
+            <span className="text-[15px] text-[var(--text-secondary)] leading-snug">{b}</span>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+}
+
+/* ── For anyone still undecided ────────────────────────────────────── */
+
+function ClosingHelp() {
+  return (
+    <div className="max-w-2xl mx-auto mt-10 md:mt-14 text-center">
+      <p className="text-lg md:text-xl text-[var(--text-primary)] font-semibold mb-2" style={{ textWrap: 'balance' }}>
+        לא בטוחה איזו מתאימה לך?
+      </p>
+      <p className="text-[var(--text-secondary)] leading-relaxed mb-5" style={{ textWrap: 'pretty' }}>
+        זה בדיוק מה שייעוץ ההתאמה נועד לו. נשאל כמה שאלות על השגרה והמטרות שלך,
+        ונגיד לך בכנות מה מתאים, גם אם זו התוכנית הקצרה. בלי התחייבות ובלי עלות.
+      </p>
+      <a
+        href={BUSINESS.whatsappConsult}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => trackCTA('whatsapp_consult', 'pricing_footer')}
+        className="inline-flex items-center justify-center gap-2.5 min-h-[56px] px-8 rounded-full
+                   text-white font-bold text-[17px] bg-[var(--wa-green-ink)]
+                   hover:opacity-95 active:opacity-90 transition-opacity"
+      >
+        <WhatsAppIcon className="w-5 h-5" />
+        לייעוץ התאמה חינם
+      </a>
+      {BUSINESS.phone && (
+        <p className="text-sm text-[var(--text-secondary)] mt-4">
+          מעדיפה לדבר?{' '}
+          <a
+            href={`tel:${BUSINESS.phone.replace(/-/g, '')}`}
+            onClick={() => trackCTA('phone_call', 'pricing_footer')}
+            /* inline-block + vertical padding so the tap target clears 44px.
+               WCAG exempts links inline in a sentence, but this is a tel: link
+               on a page where 90% of visitors are holding a phone, and the
+               exemption is about what is legal, not about what is tappable. */
+            className="inline-block py-3 font-semibold text-[var(--brand-ink)] underline underline-offset-4"
+          >
+            {BUSINESS.phone}
+          </a>
+        </p>
+      )}
+    </div>
   );
 }
