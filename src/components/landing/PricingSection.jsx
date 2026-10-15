@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useId } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Check, Plus, ChevronDown, ShieldCheck } from 'lucide-react';
+import { Check, Plus, ChevronDown, ShieldCheck, Target, Route, Users } from 'lucide-react';
 import img_6a474e22f_Untitleddesign7 from '../../assets/remote/6a474e22f_Untitleddesign7.avif';
 import img_8fa64f760_1 from '../../assets/remote/8fa64f760_1.avif';
 import img_df0c9358a_2 from '../../assets/remote/df0c9358a_2.avif';
@@ -14,7 +14,8 @@ const WhatsAppIcon = ({ className }) => (
   </svg>
 );
 
-const shekel = (n) => n.toLocaleString('he-IL');
+/* Named so a plan in plans.js can pick one without importing React. */
+const ICONS = { Target, Route, Users };
 
 /* The project's standing ease-out. Already used in ScrollStorySection and
    TestimonialsSection, so reusing it keeps one rhythm across the page rather
@@ -25,49 +26,42 @@ const EASE_OUT = [0.22, 1, 0.36, 1];
 /**
  * תוכניות הליווי.
  *
- * ── What this section had to solve ────────────────────────────────────
+ * ── No prices, on purpose ─────────────────────────────────────────────
  *
- * The previous version showed three cards, each with its own near-identical
- * feature list, and prices of 439 / 399 / 409 per month. Three problems
- * followed from that, and they compounded:
+ * This section shows no price, no total and no payment link. That is the
+ * owner's decision and it is a marketing one, not an oversight: every cost
+ * question is routed to customer service, which the site already points at
+ * from almost every CTA, and which answers 24/7.
  *
- * 1. The cards were visually interchangeable, so the eye had nothing to
- *    compare. There was no ladder, only three boxes.
- * 2. The twelve-month plan costs MORE per month than the six-month one.
- *    That is deliberate, because it is the only plan that includes a
- *    personal session with Kim and the closed group, but the page never
- *    said so. A reader who notices the inversion and finds no explanation
- *    concludes the pricing is arbitrary, which is a trust problem rather
- *    than a price problem.
- * 3. Only the monthly figure appeared. Signing a twelve-month standing
- *    order without seeing ₪4,908 anywhere reads as something being kept
- *    from you, and for a continuing-service transaction the total belongs
- *    in front of the customer before she commits.
+ * The reasoning is that a number shown before the visitor knows which plan
+ * fits her is the price of something she is not yet sure she needs, and she
+ * leaves rather than asks. Once the conversation starts with matching, the
+ * number arrives with context around it. A version of this section that
+ * showed monthly prices AND computed totals was built first and rejected:
+ * "4,908" in front of someone still deciding is pressure, not transparency.
  *
- * ── The structure that fixes it ───────────────────────────────────────
+ * Prices still live in src/data/plans.js for internal use and are not
+ * rendered. Nothing here needs editing to change them.
  *
- * Each card states only what it ADDS to the one before. The shared base
- * collapses into a single expandable row. The increments on the twelve
- * month plan are set larger than the rest, so the extra cost and the extra
- * value land in the same glance. See src/data/plans.js.
+ * ── What replaces the price ───────────────────────────────────────────
  *
- * ── Two paths, not one ────────────────────────────────────────────────
+ * If the cards carry no number they must still be tellable apart, or the
+ * visitor cannot choose and will not enquire either. So each card states
+ * only what it ADDS to the one before, with the shared base folded into an
+ * expandable row. The two additions unique to the twelve-month plan are set
+ * larger than the rest, because they are the reason it is the longest.
  *
- * The owner's instinct was to remove prices entirely, the way a competitor
- * does, and push everyone into a WhatsApp conversation. The risk there is
- * the visitor who had already decided: a woman tapping a payment link at
- * 23:40 did not want a conversation, and removing her path does not turn
- * her into a lead, it turns her into a closed tab.
+ * An icon and a rule sit above each name, which is the one borrowed move
+ * from the reference site the owner supplied: at a glance the three cards
+ * read as three different things rather than three lengths of the same one.
  *
- * So both paths exist, and the free consultation is the louder of the two.
- * Nobody is forced to talk to a human, and nobody is forced not to.
+ * ── The guarantee stays ───────────────────────────────────────────────
  *
- * ── The guarantee ─────────────────────────────────────────────────────
- *
- * "הוראת קבע ל-12 חודשים" reads like a gym contract. The sentence that
- * dissolves that fear already existed on the page, inside the FAQ, one
- * section BELOW this one, which is to say after the moment of doubt. It is
- * now stated on every card.
+ * "12 חודשים" with nothing beside it reads like a contract you cannot leave,
+ * and that fear exists with or without a price attached. The sentence that
+ * dissolves it already existed on the page, inside the FAQ, one section
+ * BELOW this one, which is to say after the moment of doubt. It is now on
+ * every card.
  */
 export default function PricingSection() {
   const sectionRef = useRef(null);
@@ -163,6 +157,7 @@ function PlanCard({ plan, index, reduce }) {
   const [openBase, setOpenBase] = useState(false);
   const baseId = useId();
   const featured = Boolean(plan.popular);
+  const Icon = ICONS[plan.icon];
 
   return (
     <motion.li
@@ -187,7 +182,16 @@ function PlanCard({ plan, index, reduce }) {
 
       <div className="flex flex-col flex-1 p-6 md:p-7">
 
-        {/* ── Identity ── */}
+        {/* ── Identity ──
+            Icon then rule then name, the one structural borrowing from the
+            reference site. With no price to differentiate them, the cards
+            need something the eye separates before it starts reading. */}
+        {Icon && (
+          <>
+            <Icon className="w-9 h-9 text-[var(--brand-surface)] mb-3" aria-hidden="true" strokeWidth={1.4} />
+            <span aria-hidden="true" className="block w-10 h-px bg-[var(--border-brand)] mb-4" />
+          </>
+        )}
         <h3 className="font-heading text-3xl text-[var(--brand-ink)] mb-1">{plan.name}</h3>
         <p className="text-[15px] font-semibold text-[var(--brand-ink)] mb-3">
           {plan.months} חודשים
@@ -255,72 +259,44 @@ function PlanCard({ plan, index, reduce }) {
           </div>
         )}
 
-        {/* ── Price ──
-            mt-auto pins this block to the bottom of every card regardless of
-            how much content sits above it, so the three prices line up across
-            the row without needing the height-matching hook the old version
-            carried. */}
+        {/* ── Reassurance ──
+            No price appears anywhere in this section. That is a deliberate
+            business decision, not an omission: every cost question goes to
+            customer service, where a plan can be matched to the person before
+            a number enters the conversation. A figure shown before she knows
+            what fits reads as the price of something she is not yet sure she
+            needs.
+
+            What stays is the one fact that removes the fear a long programme
+            creates. "12 חודשים" with nothing beside it reads like a contract
+            you cannot leave, and that worry does not need a price to exist.
+            The sentence lived in the FAQ, one section BELOW this one, which
+            is to say after the moment of doubt it answers. */}
         <div className="mt-auto pt-5 border-t border-[var(--border-subtle)]">
-          <p className="flex items-baseline gap-1.5 text-[var(--text-primary)]">
-            <span className="text-4xl font-bold">{shekel(plan.pricePerMonth)}</span>
-            <span className="text-2xl font-bold">₪</span>
-            <span className="text-base text-[var(--text-secondary)]">לחודש</span>
-          </p>
-          <p className="text-[15px] text-[var(--text-secondary)] mt-1">
-            סה"כ {shekel(plan.total)} ₪ על פני {plan.months} חודשים
-          </p>
-
-          {/* The slot is reserved on every card from md up, where the three
-              cards sit side by side, even though only one plan carries a note.
-              Without it that card's price block is taller, and because the
-              block is bottom-anchored the extra height pushes its ₪ figure
-              ~26px above the other two. Measured: price blocks at 698 / 698 /
-              672. In a section whose entire job is comparing three numbers at
-              a glance, having them off a common baseline is the kind of
-              misalignment the eye registers as sloppiness without naming it.
-              Below md the cards stack and nothing needs reserving. */}
-          <div className="mt-2 md:min-h-[2.4rem]">
-            {plan.priceNote && (
-              <p className="text-[13px] text-[var(--text-muted)] leading-snug">
-                {plan.priceNote}
-              </p>
-            )}
-          </div>
-
-          <p className="flex items-start gap-2 mt-3 text-[13px] text-[var(--text-secondary)] leading-snug">
+          <p className="flex items-start gap-2 text-[13px] text-[var(--text-secondary)] leading-snug">
             <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-[var(--brand-surface)]" aria-hidden="true" />
             <span>{CANCELLATION}</span>
           </p>
         </div>
 
-        {/* ── Two ways forward ──
-            The consultation is the primary action and the payment link is the
-            secondary one, but the secondary is a real button rather than a
-            buried link: the visitor who has already decided should not have to
-            hunt for the way to pay. */}
-        <div className="mt-5 space-y-2.5">
+        {/* ── One way forward ──
+            A single destination, so there is no decision to make about how to
+            get in touch. The label per plan is carried into the analytics
+            event rather than into the button text, so the funnel still shows
+            which plan drives enquiries without the visitor reading three
+            different-sounding buttons. */}
+        <div className="mt-5">
           <a
             href={BUSINESS.whatsappConsult}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => trackCTA(`consult_${plan.id}`, 'pricing')}
+            onClick={() => trackCTA(`plan_enquiry_${plan.id}`, 'pricing')}
             className="flex items-center justify-center gap-2.5 w-full min-h-[52px] rounded-full
                        text-white font-bold text-[16px] bg-[var(--wa-green-ink)]
                        hover:opacity-95 active:opacity-90 transition-opacity"
           >
             <WhatsAppIcon className="w-5 h-5" />
-            לבדוק אם זו התוכנית שלי
-          </a>
-          <a
-            href={plan.paymentLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackCTA(`program_select_${plan.id}`, 'pricing')}
-            className="flex items-center justify-center w-full min-h-[48px] rounded-full
-                       font-bold text-[15px] text-[var(--brand-ink)] bg-[var(--surface-sunken)]
-                       border border-[var(--border-brand)] hover:bg-[var(--bg-tertiary)] transition-colors"
-          >
-            יודעת מה אני רוצה, להרשמה
+            לפרטים ולהתאמה אישית
           </a>
         </div>
       </div>
