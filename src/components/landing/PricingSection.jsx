@@ -3,10 +3,23 @@ import img_4dfadad4e_KIM_LOGO from '../../assets/remote/4dfadad4e_KIM-LOGO.webp'
 import img_6a474e22f_Untitleddesign7 from '../../assets/remote/6a474e22f_Untitleddesign7.avif';
 import img_8fa64f760_1 from '../../assets/remote/8fa64f760_1.avif';
 import img_df0c9358a_2 from '../../assets/remote/df0c9358a_2.avif';
-import { Check, Star, Sparkles } from 'lucide-react';
+import { Check, Star, Sparkles, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { trackCTA } from '@/lib/analytics';
 import { Badge } from "@/components/ui/badge";
+
+
+const WHATSAPP_NUMBER = "972549655597"; // Replace with business number
+
+const getWhatsAppLink = (plan) => {
+  const message =
+    `היי, הגעתי מהאתר של קים ואני מתעניינת ` +
+    `בתוכנית ${plan.name} ל-${plan.months} חודשים. ` +
+    `אשמח לשמוע פרטים על הליווי והמחיר.`;
+
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+};
+
 
 const WhatsAppIcon = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -74,9 +87,9 @@ export default function PricingSection() {
   const plans = [
     {
       name: 'בייסיק',
-      ctaText: 'תרשמי אותי!',
+      ctaText: 'בואי נדבר על המסלול',
       price: '439',
-      duration: 'לחודש',
+      duration: 'התחלה ממוקדת',
       commitment: 'הוראת קבע ל-3 חודשים',
       subtitle: '(ללא תפיסת מסגרת)',
       description: 'תוכנית קצרה וממוקדת, החל מהיום הראשון. נציב מטרות יחד, נבנה תפריט מותאם, גמיש ומאפשר ונצא לדרך לשלושה חודשי איזון תזונתי ותוצאות!',
@@ -96,9 +109,9 @@ export default function PricingSection() {
     },
     {
       name: 'גולד',
-      ctaText: 'צרפי אותי!',
+      ctaText: 'בואי נדבר על המסלול',
       price: '399',
-      duration: 'לחודש',
+      duration: 'שינוי לאורך זמן',
       commitment: 'הוראת קבע ל-6 חודשים',
       subtitle: '(ללא תפיסת מסגרת)',
       description: 'תוכנית תהליכית ואיכותית. מתאימה למי שמחפשת ללמוד לנהל את התזונה שלה בכל זמן ובכל סיטואציה. מפגישה לפגישה נדייק את החליפה התזונתית עבורך, נציב יעדים על ציר הזמן ונצעד יד ביד לתוצאות!',
@@ -119,9 +132,9 @@ export default function PricingSection() {
     },
     {
       name: 'נבחרת',
-      ctaText: 'רוצה לנבחרת!',
+      ctaText: 'בואי נדבר על המסלול',
       price: '409',
-      duration: 'לחודש',
+      duration: 'ליווי וקהילה',
       commitment: 'הוראת קבע ל-12 חודשים',
       subtitle: '(ללא תפיסת מסגרת)',
       description: 'תוכנית אישית וקהילתית. מתאים למי שאנרגיית הקבוצה עושה לה טוב. בנוסף לפגישות והליווי האישי עם התזונאית, תקבלי פגישת מיקוד תזונתית ואישית עם קים. התוכנית משלבת קבוצה ייעודית סגורה, למוטיבציה יומיומית, השראה, רעיונות ואתגרים שבועיים שיתנו לך פוש לתהליך!',
@@ -189,58 +202,91 @@ export default function PricingSection() {
             no way to know what the section was. The logo is decorative, so it
             keeps its place as a brand mark at a sane size and hands the
             heading role to real text. Saves ~230px of mobile scroll. */}
-        <div className="text-center mb-10 md:mb-14">
-          <img
-            src={img_4dfadad4e_KIM_LOGO}
-            alt=""
-            aria-hidden="true"
-            width="240"
-            height="240"
-            className="h-100 md:h-100 w-auto mx-auto mb-5"
-          />
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-[var(--text-primary)] mb-4"
-              style={{ textWrap: 'balance' }}>
-            התוכניות שלנו
-          </h2>
-          <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
-            כל התוכניות כוללות ליווי אישי יומיומי ההבדל הוא באורך התהליך ובמה שנכלל בו
-          </p>
-        </div>
+          <div className="text-center mb-12 md:mb-16" dir="rtl">
 
-        <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-7xl mx-auto lg:px-20">
+            {/* Eyebrow - Small heading */}
+            <p className="text-xs md:text-sm font-bold tracking-[0.18em] text-[#817547] mb-4">
+              הליווי שלך, בדרך שלך
+            </p>
+
+            {/* Main heading */}
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#202937] mb-5 leading-tight">
+              בואי נמצא את הליווי שמתאים לך
+            </h2>
+
+            {/* Subtitle */}
+            <p className="text-base md:text-lg text-[#202937] max-w-3xl mx-auto leading-relaxed">
+              לכל אחת יש מטרה, שגרה וקצב משלה. בואי למצוא את התהליך שיתאים לך,
+              עם ליווי אישי,<br></br> כלים פרקטיים ומעטפת מקצועית לאורך הדרך.
+            </p>
+
+          </div>
+        <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-7xl mx-auto lg:px-20 mt-6">
           {plans.map((plan, index) => (
             <div
               key={plan.name}
               /* The missing space before ${} concatenated the two classes into
                  "hover:shadow-2xlz-10", so the featured card silently lost both
                  its hover shadow and its stacking order. */
-              className={`relative rounded-[2rem] overflow-hidden shadow-xl transition-all duration-700 flex flex-col hover:shadow-2xl ${
-                plan.isPopular ? 'z-10 shadow-2xl ring-2 ring-[var(--border-brand)]' : ''
-              } ${
-                isVisible 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: `${index * 150}ms` }}
+              className={`relative rounded-[2rem] overflow-visible
+                shadow-xl flex flex-col
+                transition-[transform,box-shadow,opacity]
+                duration-300 ease-out
+                md:hover:-translate-y-[6px]
+                md:hover:shadow-[0_22px_42px_rgba(45,43,23,0.16)]
+                motion-reduce:transition-none
+                ${
+                  plan.isPopular
+                    ? 'z-10 ring-2 ring-[var(--border-brand)]'
+                    : ''
+                }
+                ${
+                  isVisible
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-10'
+                }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
+                {plan.isPopular && (
+                <div
+                className="absolute top-0 left-1/2 -translate-x-1/2
+                -translate-y-1/2 z-30 flex items-center
+                justify-center whitespace-nowrap"
+                >
+                {/* Right line */}
+                <span className="w-8 md:w-12 h-px bg-[#817547]" />
+
+                {/* Badge */}
+                <span
+                  className="bg-[#817547] text-white
+                  text-xs md:text-sm font-bold
+                  px-5 py-2 rounded-full shadow-md"
+                >
+                  מסלול מומלץ
+                </span>
+
+                {/* Left line */}
+                <span className="w-8 md:w-12 h-px bg-[#817547]" />
+                </div>
+                )}
               {/* Card Content */}
-              <div className={`p-6 md:p-7 h-full flex flex-col ${plan.bgColor} text-gray-800 relative`}>
+              <div className={`p-6 md:p-7 h-full flex flex-col rounded-[2rem] ${plan.bgColor} text-gray-800 relative`}>
                 
                 {/* Header */}
                 <div className="text-center mb-4 relative">
                   {/* Was text-6xl/7xl — 60px, twice the size of the section's
                       own h2. A plan name should lead its card, not outrank the
                       heading the card sits under. */}
-                  <h3 className={`text-4xl md:text-5xl font-bold mb-1 font-heading ${plan.headerColor} relative inline-block`}>
+                  <h3 className={`text-4xl md:text-6xl font-bold mb-1 font-heading ${plan.headerColor} relative inline-block`}>
                     {plan.name}
-                    {plan.name === 'גולד' && <span className="absolute -top-2 -left-6 text-4xl">*</span>}
+                    {/* {plan.name === 'גולד' && <span className="absolute -top-2 -left-6 text-4xl">*</span>} */}
                   </h3>
                   
                   <div className="flex flex-col items-center justify-center mt-4">
                     <div className="flex items-baseline gap-1 text-[var(--brand-dark)]">
-                      <span className="text-4xl font-bold">{plan.price}</span>
+                      {/* <span className="text-4xl font-bold">{plan.price}</span>
                       <span className="text-3xl font-bold">₪</span>
-                      <span className="text-2xl font-bold">{plan.duration}</span>
+                      <span className="text-2xl font-bold">{plan.duration}</span> */}
                     </div>
                     {/* Commitment length is the single fact people most need in
                         order to compare these plans, so it is promoted to primary
@@ -250,14 +296,16 @@ export default function PricingSection() {
                         by, so it is set as the headline fact rather than buried
                         mid-sentence in the standing-order line. */}
                     <div className="mt-3 text-[var(--text-primary)]">
-                      <span className="text-base">תוכנית של </span>
-                      <span className="text-xl md:text-[24px] font-extrabold underline decoration-2 underline-offset-4 decoration-[var(--brand-primary)]">
+                      <span className="text-xl md:text-[24px] font-bold decoration-2 underline-offset-4 decoration-[var(--brand-primary)]">
                         {plan.months} חודשים
                       </span>
+                      <span className="text-xl md:text-[24px] font-bold"> &middot; </span>
+                      <span className="text-base text-xl md:text-[24px] font-bold"> {plan.duration} </span>
+                      {/* <span className="text-base"> תוכנית של </span> */}
                     </div>
-                    <div className="text-[13px] text-[var(--text-primary)] mt-1.5">
+                    {/* <div className="text-[13px] text-[var(--text-primary)] mt-1.5">
                       {plan.commitment} <span className="opacity-80">{plan.subtitle}</span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
@@ -282,29 +330,43 @@ export default function PricingSection() {
                   <ul className="space-y-2 text-right">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-2 text-lg text-gray-700">
-                        <span className="text-[var(--brand-ink)] mt-1.5">•</span>
+                        <Check
+                          size={18}
+                          strokeWidth={4}
+                          className="benefit-check"
+                          aria-hidden="true"
+                        />
                         <span className="flex-1">{feature}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-
-                <div className="mt-6 pt-2 mt-auto">
-                  <a
-                    href={plan.paymentLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => trackCTA(`program_select_${plan.slug}`, 'pricing')}
-                    className="block"
+              <div className="mt-6 pt-2 mt-auto">
+                <a
+                  href={getWhatsAppLink(plan)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackCTA(`program_whatsapp_${plan.slug}`, "pricing")
+                  }
+                  className="group w-full inline-flex items-center justify-center gap-2
+                  py-3 px-5 rounded-full text-lg font-bold
+                  bg-[var(--brand-surface)]
+                  hover:bg-[var(--brand-dark)]
+                  text-white shadow-lg
+                  transition-all duration-200
+                  hover:shadow-xl hover:scale-[1.02]"
+                  aria-label={`שיחה בוואטסאפ על תוכנית ${plan.name}`}
                   >
-                    <Button 
-                      className="w-full py-6 rounded-full text-lg font-bold bg-[var(--brand-surface)] hover:bg-[var(--brand-dark)] text-white shadow-lg transition-all hover:scale-[1.02]"
-                    >
-                      <Sparkles className="w-5 h-5 ml-2" />
-                      {plan.ctaText}
-                    </Button>
-                  </a>
-                </div>
+                  <span>{plan.ctaText}</span>
+                  <ArrowLeft
+                    size={20}
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                    className="transition-transform duration-200 group-hover:-translate-x-2"
+                  />
+                </a>
+              </div>
               </div>
             </div>
           ))}

@@ -21,8 +21,8 @@ import stethoscope1280 from '../../assets/videos/stethoscope-1280.mp4';
  *   • No mix-blend-mode — not needed on white BG (multiply(white,white)=white anyway)
  *   • Sticky canvas z-index:-1 stays pinned while content scrolls above it
  *   • offset ['start end','end start'] — animation starts the moment section enters viewport
- *
- * Stacking (inside isolation:'isolate' wrapper):
+*
+* Stacking (inside isolation:'isolate' wrapper):
  *   canvas z-index:-1  →  behind everything
  *   content z-index:auto → above canvas
  */
