@@ -3,7 +3,8 @@ import { motion, MotionConfig } from 'framer-motion';
 import { initScrollTracking } from '@/lib/analytics';
 
 import SEOHead from '@/components/SEOHead';
-import ScrollStorySection from '@/components/landing/ScrollStorySection';
+import ScrollStorySection, { STORY_SECTIONS } from '@/components/landing/ScrollStorySection';
+import SectionNav from '@/components/landing/SectionNav';
 import ProblemSolutionSection from '@/components/landing/ProblemSolutionSection';
 import ScrollVideoBackground from '@/components/landing/ScrollVideoBackground';
 import PricingSection from '@/components/landing/PricingSection';
@@ -38,6 +39,18 @@ const staggerContainer = {
   }
 };
 
+/* Navbar destinations: the story chapters, then the page's main sections. */
+const NAV_SECTIONS = [
+  ...STORY_SECTIONS,
+  { id: 'method', label: 'השיטה' },
+  { id: 'about', label: 'על קים' },
+  { id: 'results', label: 'סיפורי הצלחה' },
+  { id: 'start', label: 'יוצאות לדרך' },
+  { id: 'app', label: 'האפליקציה' },
+  { id: 'pricing', label: 'תוכניות' },
+  { id: 'faq', label: 'שאלות' },
+];
+
 const AnimatedSection = ({ children }) => (
   <motion.div
     initial="hidden"
@@ -56,30 +69,6 @@ export default function Home() {
   return (
     <MotionConfig reducedMotion="user">
     <div dir="rtl" className="min-h-screen bg-white font-sans page-transition">
-      {/* First focusable element on the page — WCAG 2.4.1 Bypass Blocks.
-          Must live here, not in the portalled a11y widget: there it was the
-          LAST tab stop, which defeats the purpose. */}
-      <a
-        href="#content-start"
-        className="skip-to-content"
-        onClick={(e) => {
-          // Handled here rather than by the generic anchor handler below,
-          // because a skip link must MOVE FOCUS, not just scroll — otherwise
-          // the keyboard user's tab position never actually advances.
-          e.preventDefault();
-          const target = document.getElementById('content-start');
-          if (!target) return;
-          // Instant, positional scroll — deliberately not smooth: a skip link
-          // exists to get a keyboard user past the hero immediately, and
-          // animating ~4700px works against that. The positional form is also
-          // the one UAs never suppress.
-          const top = target.getBoundingClientRect().top + window.scrollY;
-          window.scrollTo(0, top);
-          target.focus({ preventScroll: true });
-        }}
-      >
-        דילוג לתוכן הראשי
-      </a>
       {/* Stable page H1 for SEO/screen readers — visually hidden, zero layout impact.
           The hero's visual headline lives inside the animated story phases and
           unmounts on scroll, so it can't serve as the document H1. */}
@@ -121,7 +110,7 @@ export default function Home() {
       <main id="main-content">
       <div data-track-section="hero_story"><ScrollStorySection /></div>
 
-      {/* Skip-link destination: first real content after the hero story */}
+      {/* First real content after the hero story (StickyCTA measures from here) */}
       <div id="content-start" tabIndex={-1} className="outline-none" />
 
       <div data-track-section="trust_bar"><TrustBar /></div>
@@ -129,8 +118,8 @@ export default function Home() {
       {/* Stethoscope scrub spans ProblemSolution + About — the animation
           completes only at the bottom of About (Kim's full portrait) */}
       <ScrollVideoBackground>
-        <div data-track-section="problem_solution"><ProblemSolutionSection /></div>
-        <div data-track-section="about_kim"><AboutSection /></div>
+        <div id="method" data-track-section="problem_solution"><ProblemSolutionSection /></div>
+        <div id="about" data-track-section="about_kim"><AboutSection /></div>
       </ScrollVideoBackground>
 
       <AnimatedSection>
@@ -138,7 +127,7 @@ export default function Home() {
       </AnimatedSection>
 
       <AnimatedSection>
-        <div data-track-section="process"><ProcessSection /></div>
+        <div id="start" data-track-section="process"><ProcessSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
@@ -146,11 +135,11 @@ export default function Home() {
       </AnimatedSection>
 
       <AnimatedSection>
-        <div data-track-section="pricing"><PricingSection /></div>
+        <div id="pricing" data-track-section="pricing"><PricingSection /></div>
       </AnimatedSection>
 
       <AnimatedSection>
-        <div data-track-section="faq"><FAQSection /></div>
+        <div id="faq" data-track-section="faq"><FAQSection /></div>
       </AnimatedSection>
       
       <AnimatedSection>
@@ -162,6 +151,7 @@ export default function Home() {
       <Footer />
       
       {/* Fixed Elements */}
+      <SectionNav sections={NAV_SECTIONS} />
       <ScrollProgressBar />
       <ScrollToTop />
       <AccessibilityWidget />

@@ -1,20 +1,24 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext, createContext } from 'react';
 import ResponsiveImage from '@/components/ui/responsive-image';
 import img_4a45529a3_app_icon from '../../assets/remote/4a45529a3_app-icon.webp';
 import {
   motion,
   useScroll,
   useTransform,
-  useSpring,
-  useMotionValueEvent,
   AnimatePresence,
+  useReducedMotion,
+  useSpring,
+  useInView,
+  useMotionValueEvent,
+  motionValue,
 } from 'framer-motion';
+import useScrubVideo from '@/hooks/useScrubVideo';
 import { Button } from '@/components/ui/button';
 import { trackCTA } from '@/lib/analytics';
 import {
   Star, GraduationCap, Stethoscope,
   Leaf, Droplets, Flame, Apple,
-  CheckCircle2, TrendingUp, ChevronDown,
+  CheckCircle2, ChevronDown,
 } from 'lucide-react';
 
 // @ts-ignore
@@ -29,8 +33,12 @@ import kimHero from '../../assets/images/kim-hero-v1.webp';
 import kimLogo from '../../assets/icons/KIM - LOGO 2.png';
 // @ts-ignore
 import kimIcon from '../../assets/images/kim-icon-whatsapp.webp';
+/* Plate burst, cropped square around the action from the 4K master and
+   encoded twice (GOP 6, no B-frames, so a seek decodes at most six frames). */
 // @ts-ignore
-import animatedVideo from '../../assets/videos/animated.mp4';
+import plateVideo1440 from '../../assets/videos/plate-1440.mp4';
+// @ts-ignore
+import plateVideo820 from '../../assets/videos/plate-820.mp4';
 
 // Phase 5 — real food photos + goals screen (Liveat diary)
 // @ts-ignore
@@ -39,8 +47,6 @@ import meal1    from '../../assets/app/meal-2.webp';   // breakfast photo
 import meal2    from '../../assets/app/meal-1.webp';   // morning-snack photo
 // @ts-ignore
 import meal3    from '../../assets/app/meal-3.webp';   // lunch photo
-// @ts-ignore
-import appGoals from '../../assets/app/app-6.webp';    // daily-goals screen — water bottles at bottom
 // @ts-ignore
 import eatDiary1 from '../../assets/app/eat_diary_1.webp'; // actual app diary screen 1
 // @ts-ignore
@@ -125,16 +131,26 @@ function useIsWide() {
   return wide;
 }
 
-const PHASE_STARTS = [0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6];
 const ease = [0.25, 0.1, 0.25, 1];
 
-// Phase wrapper: subtle y-lift + crossfade — cinematic without jarring jumps.
-// Exit is faster (0.20s) so the incoming phase doesn't wait long.
-const pageVariants = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0,  transition: { duration: 0.60, ease } },
-  exit:    { opacity: 0, y: -8, transition: { duration: 0.20, ease: 'easeIn' } },
-};
+/* Each scene publishes its position (-1 entering, 0 centred, 1 leaving) so
+   ContentPanel can move the copy at its own rate. */
+const PhaseMotionContext = createContext(null);
+const STILL = motionValue(0);
+
+/* Entrances play once, the first time a block is a quarter on screen. With
+   the story now in normal page flow every scene is mounted from the start,
+   so mount-time animations would finish before anyone saw them. */
+const VIEW_ONCE = { once: true, amount: 0.25 };
+
+/* The phone mockups run a scripted timeline (screens, typing, replies) from
+   the moment they mount. They mount on first sight instead, into a box of
+   their own size so nothing moves when they arrive. */
+function MountInView({ width, height, children }) {
+  const ref = useRef(null);
+  const seen = useInView(ref, { once: true, amount: 0.3 });
+  return <div ref={ref} style={{ width, minHeight: height }}>{seen ? children : null}</div>;
+}
 // Stagger gives the text-children a gentle rise-in without fighting the exit
 const stagger = {
   initial: {},
@@ -170,16 +186,24 @@ const item = {
  */
 function ContentPanel({ children, mobilePt = 'pt-[24svh]', mobileAlign = 'items-start', mobilePb = 'pb-16' }) {
   // the offsets are authored as Tailwind arbitrary values; read the length back
-  const reserve = (mobilePt.match(/\[([^\]]+)\]/) || [, null])[1]
+  const reserve = ((mobilePt.match(/\[([^\]]+)\]/) || [, null])[1] || '').replace(/_/g, ' ')
     || { 'pt-2': '0.5rem', 'pt-3': '0.75rem' }[mobilePt]
     || '0px';
 
+  /* The scene's artwork lags the scroll (Scene); the copy is pulled back
+     towards natural speed, so text reads steadily while the art sits deeper. */
+  const local = useContext(PhaseMotionContext);
+  const reduce = useReducedMotion();
+  const copyY = useTransform(local || STILL, [-1, 0, 1], reduce ? [0, 0, 0] : [50, 0, -50]);
+
   return (
-    <div className="h-full flex flex-col lg:block">
+    <motion.div className="flex-1 flex flex-col lg:block lg:h-full" style={{ y: copyY }}>
       {/* Space the artwork occupies above the copy */}
       <div className="shrink-0 lg:hidden" style={{ height: reserve }} aria-hidden="true" />
 
-      <div className={`flex-1 min-h-0 flex ${mobileAlign === 'items-center' ? 'items-center' : 'items-center'} lg:h-full lg:items-center`}>
+      {/* safe center: when the copy is taller than the space left (360x640 phones) it
+          overflows downward instead of climbing into the artwork above */}
+      <div className="flex-1 min-h-0 flex items-center [align-items:safe_center] lg:h-full lg:items-center">
         <div className={`w-full ${mobilePb} px-5 lg:pt-0 lg:pb-0 lg:px-0 lg:pl-[50%] lg:pr-12`}>
           {/* dir="rtl" is re-applied here so text inside is always RTL */}
           <div dir="rtl" className="text-right">
@@ -187,7 +211,7 @@ function ContentPanel({ children, mobilePt = 'pt-[24svh]', mobileAlign = 'items-
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -387,7 +411,7 @@ function PhaseHero() {
   const successCount = useCountUp(5000, { duration: 1.3, delay: 0.6 });
 
   return (
-    <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+    <motion.div className="relative flex-1 flex flex-col">
 
       {/* Mobile: logo pinned top-right, above Kim + the WhatsApp bubbles */}
       <motion.div
@@ -554,9 +578,32 @@ const mobileLifestylePositions = [
   { right: '4%', top: '36%' },
 ];
 
+/* Weightless drift for the busy-life objects. Two motions stacked: a slow
+   idle bob, each object on its own period and phase so they never move in
+   unison, and a scroll parallax at a different depth per object, so as the
+   section moves they separate like things suspended at different distances. */
+const FLOAT_DEPTHS = [46, 22, 58, 30, 40, 18];
+function Floating({ index, amp = 10, children }) {
+  const local = useContext(PhaseMotionContext) || STILL;
+  const reduce = useReducedMotion();
+  const depth = FLOAT_DEPTHS[index % FLOAT_DEPTHS.length];
+  const drift = useTransform(local, [-1, 0, 1], reduce ? [0, 0, 0] : [depth, 0, -depth]);
+  return (
+    <motion.div className="flex flex-col items-center" style={{ y: drift }}>
+      <motion.div
+        className="flex flex-col items-center gap-1.5"
+        animate={reduce ? undefined : { y: [0, -amp, 0], rotate: [-2.5, 2.5, -2.5] }}
+        transition={{ duration: 4.4 + (index % 3) * 0.9, repeat: Infinity, ease: 'easeInOut', delay: index * 0.4 }}
+      >
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+}
+
 function PhaseBusyLife() {
   return (
-    <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+    <motion.div className="relative flex-1 flex flex-col">
 
       {/* Desktop: lifestyle items floating around Kim */}
       {lifestyleItems.map(({ src, label, style, delay }, i) => (
@@ -565,25 +612,27 @@ function PhaseBusyLife() {
           className="absolute hidden lg:flex flex-col items-center gap-1.5 z-10"
           style={style}
           initial={{ opacity: 0, scale: 0.55, y: 24 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={VIEW_ONCE} whileInView={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 0.25 + delay, duration: 0.5, ease }}
         >
-          <img
-            src={src}
-            alt={label}
-            width="128"
-            height="128"
-            loading="lazy"
-            decoding="async"
-            className="w-32 h-32 object-contain"
-            style={{ filter: 'drop-shadow(0 6px 18px rgba(0,0,0,0.20))' }}
-          />
-          <span
-            className="text-sm font-semibold bg-white/75 px-3 py-1 rounded-full backdrop-blur-sm shadow-sm"
-            style={{ color: TEXT }}
-          >
-            {label}
-          </span>
+          <Floating index={i} amp={12}>
+            <img
+              src={src}
+              alt={label}
+              width="128"
+              height="128"
+              loading="lazy"
+              decoding="async"
+              className="w-32 h-32 object-contain"
+              style={{ filter: 'drop-shadow(0 10px 14px rgba(60,50,20,0.16))' }}
+            />
+            <span
+              className="text-sm font-semibold bg-white/75 px-3 py-1 rounded-full backdrop-blur-sm shadow-sm"
+              style={{ color: TEXT }}
+            >
+              {label}
+            </span>
+          </Floating>
         </motion.div>
       ))}
 
@@ -594,27 +643,30 @@ function PhaseBusyLife() {
           className="absolute flex flex-col items-center gap-0.5 lg:hidden"
           style={{ ...mobileLifestylePositions[i], zIndex: 5 }}
           initial={{ opacity: 0, scale: 0.6, y: 14 }}
-          animate={{ opacity: 0.9, scale: 1, y: 0 }}
+          viewport={VIEW_ONCE} whileInView={{ opacity: 0.9, scale: 1, y: 0 }}
           transition={{ delay: 0.2 + delay, duration: 0.45, ease }}
         >
-          <img
-            src={src}
-            alt={label}
-            width="80"
-            height="80"
-            loading="lazy"
-            decoding="async"
-            className="w-20 h-20 object-contain"
-            style={{ filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.18))' }}
-          />
-          <span className="text-xs font-semibold bg-white/80 px-2 py-1 rounded-full text-gray-700 leading-none">
-            {label}
-          </span>
+          <Floating index={i} amp={7}>
+            <img
+              src={src}
+              alt={label}
+              width="80"
+              height="80"
+              loading="lazy"
+              decoding="async"
+              className="object-contain"
+              // 80px on a normal phone, smaller on short screens so the icons clear the heading
+              style={{ width: 'min(80px, 10svh)', height: 'min(80px, 10svh)', filter: 'drop-shadow(0 6px 8px rgba(60,50,20,0.15))' }}
+            />
+            <span className="text-xs font-semibold bg-white/80 px-2 py-1 rounded-full text-gray-700 leading-none">
+              {label}
+            </span>
+          </Floating>
         </motion.div>
       ))}
 
       <ContentPanel mobilePt="pt-[53svh]">
-        <motion.div variants={stagger} initial="initial" animate="animate">
+        <motion.div variants={stagger} initial="initial" whileInView="animate" viewport={VIEW_ONCE}>
 
           {/* Mobile heading */}
           <motion.h2
@@ -669,235 +721,68 @@ function PhaseBusyLife() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Canvas-based scroll scrubber — the smoothest approach possible in-browser.
+ * The plate burst, scrubbed by scroll (see useScrubVideo for the mechanics).
  *
- * Why canvas instead of <video>?
- *   When you set video.currentTime the browser must decode the target frame.
- *   During that decode window the <video> element goes blank/black — visible
- *   stutter. A <canvas> holds the LAST successfully painted frame on screen
- *   while the next one is being decoded, so there is never an empty flash.
- *
- * Smoothness rules:
- *   1. pendingRef  — only one seek at a time; new seek starts only after
- *                    'seeked' fires, preventing decoder overload.
- *   2. Lerp 8 %    — closes ~90 % of gap in ~250 ms; gives decoder time to
- *                    keep up even on low-keyframe-density videos.
- *   3. 1/30 s gate — skips seeks smaller than one frame (~33 ms of video).
- *
- * Background removal:
- *   Canvas is filled with white before each drawImage. The canvas element
- *   uses mix-blend-mode:multiply, so white × cream-BG = cream → invisible. ✓
+ * The frame is white and the canvas multiplies onto the cream section, so the
+ * backdrop disappears and only the food remains. The wrapper's radial mask
+ * feathers the crop edge, so a bean or a crumb that flies out of frame fades
+ * instead of being sliced off by a hard line.
  */
 function ScrollVideoPlayer({ plateProgress }) {
-  const videoRef   = useRef(null);
-  const canvasRef  = useRef(null);
-  const targetRef  = useRef(0);
-  const smoothRef  = useRef(0);
-  const pendingRef = useRef(false); // true while browser decodes a seek
-  const rafRef     = useRef(null);
+  /* Picked once for the size the plate will actually paint at: half the
+     viewport on desktop, the full width (capped by the strip height) on a
+     phone. A dpr-2 phone needs ~780px, which the 820 encode covers at well
+     under half the bytes of the desktop file. */
+  const [file] = useState(() => {
+    if (typeof window === 'undefined') return plateVideo820;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const wide = window.innerWidth >= 1024;
+    const css = wide
+      ? Math.min(window.innerWidth * 0.52, window.innerHeight)
+      : Math.min(window.innerWidth, window.innerHeight * 0.48);
+    return css * dpr > 900 ? plateVideo1440 : plateVideo820;
+  });
 
-  /* preload="auto" buffers the file once, which is what makes scrubbing cheap:
-     with preload="none" every seek became its own range request and a single
-     2.9MB video was fetched 51 times over one pass down the page. But buffering
-     it during first paint puts 2.9MB in front of the hero for a video this
-     phase does not even show yet. So the src is attached one idle tick after
-     mount — first paint stays light, and the buffer is ready well before the
-     visitor scrolls far enough to need a frame. */
-  const [videoSrc, setVideoSrc] = useState(null);
+  /* Attached one idle tick after mount: first paint stays light for the hero
+     image, and the buffer is long ready before anyone scrolls two phases. */
+  const [src, setSrc] = useState(null);
   useEffect(() => {
-    const start = () => setVideoSrc(animatedVideo);
+    const start = () => setSrc(file);
     const id = 'requestIdleCallback' in window
       ? requestIdleCallback(start, { timeout: 1500 })
       : setTimeout(start, 600);
     return () => ('cancelIdleCallback' in window ? cancelIdleCallback(id) : clearTimeout(id));
-  }, []);
+  }, [file]);
 
-  useEffect(() => {
-
-    const video  = videoRef.current;
-    const canvas = canvasRef.current;
-    if (!video || !canvas) return;
-
-    // alpha:false = opaque canvas, slightly faster compositing
-    const ctx = canvas.getContext('2d', { alpha: false });
-
-    video.pause();
-    video.currentTime = 0;
-
-    // Paint the current video frame onto the canvas (object-contain scaling)
-    const paint = () => {
-      if (video.readyState < 2) { pendingRef.current = false; return; }
-      const vw = video.videoWidth;
-      const vh = video.videoHeight;
-      if (!vw || !vh)           { pendingRef.current = false; return; }
-
-      /* Measure the container, not the canvas: writing canvas.width/height
-         changes the element's own intrinsic size, so reading its offsetWidth
-         here fed back into the value being written. */
-      const box = (canvas.parentElement || canvas).getBoundingClientRect();
-      const cw = Math.round(box.width)  || 640;
-      const ch = Math.round(box.height) || 360;
-
-      /* The backing store must be CSS pixels TIMES devicePixelRatio. The
-         previous code set it equal to CSS pixels — the comment claimed this
-         avoided a blurry canvas, but it is what caused one: on a dpr-2 phone
-         or retina display every frame was rasterised at half resolution and
-         then scaled up by the browser. Capped at 2 because past that the
-         extra pixels cost real time on a canvas repainted every scroll frame
-         and buy nothing visible. */
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const physW = Math.round(cw * dpr);
-      const physH = Math.round(ch * dpr);
-      if (canvas.width !== physW || canvas.height !== physH) {
-        canvas.width  = physW;
-        canvas.height = physH;
-      }
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      /* The source is 960x540. Full-bleed on a desktop that is 1425 device
-         pixels wide means a 1.5x upscale (worse on a retina laptop), and no
-         re-encode can invent those pixels — a higher-resolution export of the
-         original is the only real fix. High-quality smoothing is what is
-         available meanwhile; it costs nothing and visibly softens the
-         stair-stepping the default bilinear filter leaves behind. */
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-
-      // object-contain: scale to fit, centred
-      const scale = Math.min(cw / vw, ch / vh);
-      const dw = Math.round(vw * scale);
-      const dh = Math.round(vh * scale);
-      const dx = Math.round((cw - dw) / 2);
-      const dy = Math.round((ch - dh) / 2);
-
-      // White fill → mix-blend-mode:multiply makes this transparent over cream BG
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, cw, ch);
-      ctx.drawImage(video, dx, dy, dw, dh);
-
-      pendingRef.current = false; // ready for the next seek
-    };
-
-    video.addEventListener('seeked',         paint);
-
-    /* iOS decoder priming.
-       Safari on iOS will not produce a decodable frame for a video that has
-       never played: drawImage of a paused, never-played element yields
-       nothing, so the canvas stays blank on iPhone while every desktop
-       browser is fine. Playing muted+playsInline is allowed without a user
-       gesture, so a play() immediately followed by pause() gets the first
-       frame decoded and everything after that scrubs normally.
-       The touch fallback covers the case where the autoplay attempt is
-       rejected — the first tap anywhere primes it instead. */
-    let primed = false;
-    const prime = () => {
-      if (primed) return;
-      const p = video.play();
-      if (p && typeof p.then === 'function') {
-        p.then(() => { primed = true; video.pause(); video.currentTime = 0; paint(); })
-         .catch(() => { /* blocked — the touch handler below will retry */ });
-      } else {
-        primed = true; try { video.pause(); } catch {}
-      }
-    };
-    video.addEventListener('loadedmetadata', prime);
-    if (video.readyState >= 1) prime();
-    const primeOnTouch = () => { prime(); };
-    window.addEventListener('touchstart', primeOnTouch, { once: true, passive: true });
-
-    /* Mobile needs an explicit kick, desktop does not.
-       These <video> elements are 1px and effectively invisible, and iOS and
-       Android Chrome routinely decline to buffer those from preload="auto"
-       alone — which is why removing video.load() made the canvas render blank
-       on phones while desktop kept working. Calling load() unconditionally is
-       what caused the file to be fetched twice, so it is called only if the
-       element has genuinely not started after a beat. */
-    const kick = setTimeout(() => {
-      if (video.readyState === 0) video.load();
-    }, 800);
-    video.addEventListener('loadeddata',     paint); // paint frame 0 when ready
-    video.addEventListener('canplaythrough', paint);
-
-    // ── RAF scrub loop ────────────────────────────────────────────────────────
-    // pendingSince: watchdog — if a seek never fires `seeked` (unbuffered
-    // region, mobile browser quirk), the pending flag would freeze the scrub
-    // forever. This is what caused the janky/stuck feel at the start of the
-    // Hero scroll on mobile.
-    let pendingSince = 0;
-    const tick = () => {
-      if (pendingRef.current && performance.now() - pendingSince > 250) {
-        pendingRef.current = false; // seek lost — recover instead of freezing
-      }
-      if (!pendingRef.current) {               // wait for previous seek to finish
-        const target  = targetRef.current;
-        const current = smoothRef.current;
-        const diff    = target - current;
-
-        if (Math.abs(diff) > 0.0004) {
-          const next = current + diff * 0.08;  // gentle lerp — decoder keeps up
-          smoothRef.current = next;
-
-          const v = Math.max(0, Math.min(1, next));
-          if (isFinite(video.duration) && video.duration > 0) {
-            const t = v * video.duration;
-            if (Math.abs(video.currentTime - t) > 1 / 30) { // ≥1 frame gap
-              pendingRef.current = true;
-              pendingSince = performance.now();
-              video.currentTime  = t;
-            }
-          }
-        }
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-
-    return () => {
-      clearTimeout(kick);
-      video.removeEventListener('loadedmetadata', prime);
-      window.removeEventListener('touchstart', primeOnTouch);
-      cancelAnimationFrame(rafRef.current);
-      video.removeEventListener('seeked',         paint);
-      video.removeEventListener('loadeddata',     paint);
-      video.removeEventListener('canplaythrough', paint);
-    };
-  }, []);
-
-  // Only update the target — the RAF loop does all the work
-  useMotionValueEvent(plateProgress, 'change', (rawV) => {
-    targetRef.current = Math.max(0, Math.min(1, rawV));
-  });
+  const { videoRef, canvasRef } = useScrubVideo({ src, progress: plateProgress, fit: 'contain', tau: 0.08 });
 
   return (
-    <div style={{
+    <motion.div style={{
       position: 'relative',
       width: '100%',
       height: '100%',
-      background: BG,
+      backgroundColor: BG,
       isolation: 'isolate',
+      WebkitMaskImage: 'radial-gradient(closest-side, #000 80%, transparent 100%)',
+      maskImage: 'radial-gradient(closest-side, #000 80%, transparent 100%)',
     }}>
-      {/* Hidden video — decode source only, never rendered directly */}
+      {/* Decode source only, never rendered directly */}
       <video
         ref={videoRef}
-        src={videoSrc || undefined}
+        src={src || undefined}
         muted
         playsInline
         autoPlay
         preload="auto"
+        aria-hidden="true"
         style={{ position: 'absolute', top: 0, left: 0, width: '1px', height: '1px', pointerEvents: 'none', overflow: 'hidden' }}
       />
-      {/* Canvas — always shows last good frame; zero black-flash between frames */}
       <canvas
         ref={canvasRef}
-        style={{
-          display: 'block',
-          width: '100%',
-          height: '100%',
-          mixBlendMode: 'multiply',
-        }}
+        aria-hidden="true"
+        style={{ display: 'block', width: '100%', height: '100%', mixBlendMode: 'multiply' }}
       />
-    </div>
+    </motion.div>
   );
 }
 
@@ -906,9 +791,9 @@ function ScrollVideoPlayer({ plateProgress }) {
 // ─────────────────────────────────────────────────────────────────────────────
 function PhasePlate() {
   return (
-    <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-      <ContentPanel mobilePt="pt-[40svh]">
-        <motion.div variants={stagger} initial="initial" animate="animate">
+    <motion.div className="relative flex-1 flex flex-col">
+      <ContentPanel mobilePt="pt-[calc(56px_+_44svh)]">
+        <motion.div variants={stagger} initial="initial" whileInView="animate" viewport={VIEW_ONCE}>
           {/* One responsive heading: inline on mobile, stacked on desktop */}
           <PhaseHeading>הכל<br className="hidden lg:block" />{' '}<Accent>מתחיל בצלחת.</Accent></PhaseHeading>
           <motion.p
@@ -955,9 +840,9 @@ const foodComponents = [
 function PhaseExploded() {
   return (
     // Left visual = video player (rendered from root, covers phases 2-3 continuously)
-    <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+    <motion.div className="relative flex-1 flex flex-col">
       <ContentPanel>
-        <motion.div variants={stagger} initial="initial" animate="animate">
+        <motion.div variants={stagger} initial="initial" whileInView="animate" viewport={VIEW_ONCE}>
           {/* Section label — desktop only (saves ~32px on mobile) */}
           <div className="hidden lg:block"><SectionLabel>השיטה שלנו</SectionLabel></div>
           <PhaseHeading>מה יש<br/><Accent>בצלחת מאוזנת?</Accent></PhaseHeading>
@@ -1000,7 +885,7 @@ function FoodSticker({ src, style, delay = 0, rotate = 0, size = 72, floatAmp = 
       className="absolute pointer-events-none"
       style={{ ...style, zIndex: 15 }}
       initial={{ scale: 0, opacity: 0, rotate: rotate - 15 }}
-      animate={{ scale: 1, opacity: 1, rotate }}
+      viewport={VIEW_ONCE} whileInView={{ scale: 1, opacity: 1, rotate }}
       transition={{ type: 'spring', stiffness: 280, damping: 22, delay }}
     >
       <motion.img
@@ -1025,7 +910,7 @@ const RING_SIZE = 480;
 
 function PhaseRing() {
   return (
-    <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+    <motion.div className="relative flex-1 flex flex-col">
 
       {/* ── Desktop: ring — left visual column, scaled 1.6× for prominence ── */}
       <motion.div
@@ -1036,7 +921,7 @@ function PhaseRing() {
           translateY: '-50%',
         }}
         initial={{ opacity: 0, scale: 0.72 }}
-        animate={{ opacity: 1, scale: 1 }}
+        viewport={VIEW_ONCE} whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.1, ease: [0.34, 1.1, 0.64, 1] }}
       >
         {/* SVG scales to RING_SIZE; viewBox stays 200×200 → all radii / text scale */}
@@ -1049,7 +934,7 @@ function PhaseRing() {
             strokeWidth="14" strokeLinecap="round"
             strokeDasharray={CIRC}
             initial={{ strokeDashoffset: CIRC }}
-            animate={{ strokeDashoffset: CIRC * 0.2 }}
+            viewport={VIEW_ONCE} whileInView={{ strokeDashoffset: CIRC * 0.2 }}
             transition={{ duration: 1.4, delay: 0.3, ease }}
             transform="rotate(-90 100 100)"
           />
@@ -1059,7 +944,7 @@ function PhaseRing() {
             strokeWidth="14" strokeLinecap="round"
             strokeDasharray={`${CIRC * 0.2} ${CIRC * 0.8}`}
             strokeDashoffset={`${-CIRC * 0.8}`}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            initial={{ opacity: 0 }} viewport={VIEW_ONCE} whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 1.1 }}
             transform="rotate(-90 100 100)"
           />
@@ -1071,14 +956,14 @@ function PhaseRing() {
         {/* Legend below the ring — no absolute overflow */}
         <div className="flex flex-col gap-2 mt-1">
           <motion.div className="flex items-center gap-2 justify-center"
-            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 6 }} viewport={VIEW_ONCE} whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0, duration: 0.35 }}
           >
             <div className="w-3 h-3 rounded-full shrink-0" style={{ background: BRAND }} />
             <span className="text-2xl font-semibold" style={{ color: TEXT }}>80% עקביות</span>
           </motion.div>
           <motion.div className="flex items-center gap-2 justify-center"
-            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 6 }} viewport={VIEW_ONCE} whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.25, duration: 0.35 }}
           >
             <div className="w-3 h-3 rounded-full shrink-0" style={{ background: '#C49A7A' }} />
@@ -1101,7 +986,7 @@ function PhaseRing() {
       </motion.div>
 
       <ContentPanel mobilePt="pt-2" mobileAlign="items-center">
-        <motion.div variants={stagger} initial="initial" animate="animate">
+        <motion.div variants={stagger} initial="initial" whileInView="animate" viewport={VIEW_ONCE}>
 
           {/* Mobile-only: full-size ring with 8 stickers orbiting the ring edge */}
           <motion.div variants={item} className="lg:hidden flex flex-col items-center mb-2">
@@ -1123,13 +1008,13 @@ function PhaseRing() {
                 <circle cx="100" cy="100" r="72" fill="none" stroke="#ddd6bc" strokeWidth="14" />
                 <motion.circle cx="100" cy="100" r="72" fill="none" stroke={BRAND}
                   strokeWidth="14" strokeLinecap="round" strokeDasharray={CIRC}
-                  initial={{ strokeDashoffset: CIRC }} animate={{ strokeDashoffset: CIRC * 0.2 }}
+                  initial={{ strokeDashoffset: CIRC }} viewport={VIEW_ONCE} whileInView={{ strokeDashoffset: CIRC * 0.2 }}
                   transition={{ duration: 1.2, delay: 0.2, ease }} transform="rotate(-90 100 100)"
                 />
                 <motion.circle cx="100" cy="100" r="72" fill="none" stroke="#C49A7A"
                   strokeWidth="14" strokeLinecap="round"
                   strokeDasharray={`${CIRC * 0.2} ${CIRC * 0.8}`} strokeDashoffset={`${-CIRC * 0.8}`}
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}
+                  initial={{ opacity: 0 }} viewport={VIEW_ONCE} whileInView={{ opacity: 1 }} transition={{ delay: 1.0 }}
                   transform="rotate(-90 100 100)"
                 />
                 <text x="100" y="88" textAnchor="middle" fill={BRAND} fontSize="36" fontWeight="900" fontFamily="Heebo, sans-serif">80:20</text>
@@ -1305,9 +1190,10 @@ function AppPhoneMockup({ compact = false }) {
         borderRadius: R,
         background: 'linear-gradient(160deg, #2e2e2e 0%, #181818 100%)',
         padding: `${compact ? 10 : 13}px ${compact ? 6 : 8}px`,
+        /* Tight and light: the old 100px-blur shadow pooled into a dark
+           rectangle under the phone. This just lifts it off the page. */
         boxShadow: [
-          '0 48px 100px rgba(0,0,0,0.48)',
-          '0 16px 32px rgba(0,0,0,0.22)',
+          '0 14px 28px -10px rgba(60,50,20,0.30)',
           '0 0 0 1.5px rgba(255,255,255,0.09)',
           'inset 0 1px 0 rgba(255,255,255,0.09)',
         ].join(','),
@@ -1479,28 +1365,28 @@ function AppPhoneMockup({ compact = false }) {
 
 function PhaseApp() {
   return (
-    <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+    <motion.div className="relative flex-1 flex flex-col">
 
       {/* Desktop: phone mockup floats left */}
       <motion.div
         className="absolute hidden lg:flex items-center justify-center pointer-events-none z-10"
-        style={{ left: '6%', top: '30%', transform: 'translateY(-50%)' , height: '60vh', width: '25vw' }}
+        style={{ left: '15%', top: '30%', transform: 'translateY(-50%)' , height: '60vh', width: '25vw' }}
         initial={{ opacity: 0, y: 40, scale: 1.86 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={VIEW_ONCE} whileInView={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.65, delay: 0.1, ease: [0.34, 1.2, 0.64, 1] }}
       >
-        <AppPhoneMockup />
+        <MountInView width={258} height={510}><AppPhoneMockup /></MountInView>
       </motion.div>
 
       <ContentPanel mobilePt="pt-3" mobilePb="pb-4">
-        <motion.div variants={stagger} initial="initial" animate="animate">
+        <motion.div variants={stagger} initial="initial" whileInView="animate" viewport={VIEW_ONCE}>
 
           {/* Mobile: compact phone mockup — scaled 0.62, wrapper clips leftover
               layout height so the phone never overlaps the heading below */}
           <motion.div variants={item} className="lg:hidden mb-2 flex justify-center"
             style={{ height: 'min(215px, 26svh)', overflow: 'hidden', paddingTop: '8px' }}>
             <div style={{ transform: 'scale(0.52)', transformOrigin: 'top center', flexShrink: 0 }}>
-              <AppPhoneMockup compact />
+              <MountInView width={200} height={390}><AppPhoneMockup compact /></MountInView>
             </div>
           </motion.div>
 
@@ -1607,9 +1493,10 @@ function WaPhoneMockup({ compact = false }) {
         borderRadius: R,
         background: 'linear-gradient(160deg, #2e2e2e 0%, #181818 100%)',
         padding: `${compact ? 10 : 13}px ${compact ? 6 : 8}px`,
+        /* Tight and light: the old 100px-blur shadow pooled into a dark
+           rectangle under the phone. This just lifts it off the page. */
         boxShadow: [
-          '0 48px 100px rgba(0,0,0,0.48)',
-          '0 16px 32px rgba(0,0,0,0.22)',
+          '0 14px 28px -10px rgba(60,50,20,0.30)',
           '0 0 0 1.5px rgba(255,255,255,0.09)',
           'inset 0 1px 0 rgba(255,255,255,0.09)',
         ].join(','),
@@ -1778,28 +1665,28 @@ function WaPhoneMockup({ compact = false }) {
 
 function PhaseSupport() {
   return (
-    <motion.div className="absolute inset-0" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+    <motion.div className="relative flex-1 flex flex-col">
 
       {/* ── Desktop: iPhone WA mockup in left column ── */}
       <motion.div
         className="absolute hidden lg:flex items-center justify-center pointer-events-none z-10"
-        style={{ left: '8%', top: '30%', transform: 'translateY(-50%)' }}
+        style={{ left: '17%', top: '30%', transform: 'translateY(-50%)' }}
         initial={{ opacity: 0, y: 36, scale: 0.88 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={VIEW_ONCE} whileInView={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.65, delay: 0.08, ease: [0.34, 1.2, 0.64, 1] }}
       >
-        <WaPhoneMockup />
+        <MountInView width={258} height={510}><WaPhoneMockup /></MountInView>
       </motion.div>
 
       <ContentPanel mobilePt="pt-3" mobilePb="pb-4">
-        <motion.div variants={stagger} initial="initial" animate="animate">
+        <motion.div variants={stagger} initial="initial" whileInView="animate" viewport={VIEW_ONCE}>
 
           {/* Mobile: compact WA mockup — scaled 0.62, wrapper clips leftover
               layout height so the phone never overlaps the heading below */}
           <motion.div variants={item} className="lg:hidden flex justify-center mb-2"
             style={{ height: 'min(215px, 26svh)', overflow: 'hidden', paddingTop: '8px' }}>
             <div style={{ transform: 'scale(0.52)', transformOrigin: 'top center', flexShrink: 0 }}>
-              <WaPhoneMockup compact />
+              <MountInView width={200} height={390}><WaPhoneMockup compact /></MountInView>
             </div>
           </motion.div>
 
@@ -1851,95 +1738,343 @@ function PhaseSupport() {
 // ─────────────────────────────────────────────────────────────────────────────
 // Root component
 // ─────────────────────────────────────────────────────────────────────────────
-export default function ScrollStorySection() {
-  const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
+/* Each scene publishes where it is in the viewport: -1 entering at the
+   bottom, 0 centred, 1 leaving at the top. */
+function useSceneProgress(ref) {
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  return useTransform(scrollYProgress, [0, 0.5, 1], [-1, 0, 1]);
+}
+
+/** Kim behind a scene: desktop on the left, phone in the top strip. */
+function KimBackdrop({ local, desktop, mobile, eager = false }) {
+  const isWide = useIsWide();
+  const reduce = useReducedMotion();
+  // Kim lags the scroll more than anything else in the scene: the furthest layer.
+  const y = useTransform(local, [-1, 0, 1], reduce ? [0, 0, 0] : [-60, 0, 70]);
+  const scale = useTransform(local, [-1, 0, 1], reduce ? [1, 1, 1] : [0.96, 1, 0.92]);
+  // Kim lives in the hero only; she fades out well before the seam so the
+  // photo is never cut by the edge of the section.
+  const fade = useTransform(local, [-1, -0.4, 0.12, 0.7], [0, 1, 1, 0]);
+  const opacity = useTransform(fade, (f) => f * (isWide ? desktop : mobile));
+  const priority = eager ? { loading: 'eager', fetchPriority: 'high' } : { loading: 'lazy' };
+
+  if (isWide ? !desktop : !mobile) return null;
+  return isWide ? (
+    <motion.div
+      className="absolute inset-y-0 left-0 flex items-end justify-center pointer-events-none z-10"
+      style={{ width: '80%', opacity, y, scale, transformOrigin: '50% 100%' }}
+    >
+      <ResponsiveImage
+        src={kimHero}
+        stem="/src/assets/images/kim-hero-v1"
+        sizes="80vw"
+        alt={eager ? 'קים גפסון' : ''}
+        className="w-full h-full object-contain object-bottom"
+        width="1586"
+        height="992"
+        {...priority}
+      />
+    </motion.div>
+  ) : (
+    <motion.div
+      className="absolute top-0 left-0 right-0 flex justify-center pt-3 z-10 pointer-events-none"
+      style={{ opacity, y }}
+    >
+      {/* Height-driven box (36svh, capped 320px); at the 1.599 aspect that is
+          ~467css wide on an 812px phone, so 480px picks the 1200w file. */}
+      <ResponsiveImage
+        src={kimHero}
+        stem="/src/assets/images/kim-hero-v1"
+        sizes="480px"
+        alt={eager ? 'קים גפסון' : ''}
+        className="object-contain object-bottom w-auto"
+        style={{ height: '36svh', maxHeight: '320px' }}
+        width="1586"
+        height="992"
+        {...priority}
+      />
+    </motion.div>
+  );
+}
+
+/**
+ * One chapter of the story, in normal page flow.
+ *
+ * The hero used to be a single 460svh pinned stage that swapped its content
+ * in place, so on a phone the finger moved and the page did not: it read as
+ * slides changing, not as scrolling. Each chapter is now its own section. The
+ * content travels with the finger; the artwork lags it and Kim lags it most,
+ * which is where the depth comes from. Only the plate pins, because its burst
+ * genuinely needs scroll distance to play (PlateScene).
+ */
+function Scene({ id, label, kim = 0, kimMobile = 0, eager = false, padTop = true, children, extras = null }) {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const local = useSceneProgress(ref);
+  const artY = useTransform(local, [-1, 0, 1], reduce ? [0, 0, 0] : [-70, 0, 70]);
+  const opacity = useTransform(local, [-1, -0.55, 0.55, 1], [0.55, 1, 1, 0.55]);
+
+  return (
+    <section
+      ref={ref}
+      id={id}
+      aria-label={label}
+      tabIndex={-1}
+      className={`relative overflow-hidden outline-none flex flex-col min-h-[100svh] ${padTop ? 'pt-14' : ''}`}
+      style={{ background: BG }}
+    >
+      <KimBackdrop local={local} desktop={kim} mobile={kimMobile} eager={eager} />
+      {extras}
+      <motion.div className="relative z-20 flex-1 flex flex-col" style={{ y: artY, opacity }}>
+        <PhaseMotionContext.Provider value={local}>
+          {children}
+        </PhaseMotionContext.Provider>
+      </motion.div>
+    </section>
+  );
+}
+
+/**
+ * The plate burst: the one pinned chapter. The plate drops in turned and
+ * small, settles, then bursts frame by frame while the section is held.
+ */
+function PlateScene() {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress: enter } = useScroll({ target: ref, offset: ['start end', 'start start'] });
+  const { scrollYProgress: pin }   = useScroll({ target: ref, offset: ['start start', 'end end'] });
+  const { scrollYProgress: leave } = useScroll({ target: ref, offset: ['end end', 'end start'] });
+
+  // Burst plays across the pin, finishing a little early so the last frame holds.
+  const scrub   = useTransform(pin, [0.04, 0.88], [0, 1]);
+  const opacity = useTransform(enter, [0.15, 0.65], [0, 1]);
+  const inScale = useTransform(enter, [0, 1], reduce ? [1, 1] : [0.8, 1]);
+  const rotate  = useTransform(enter, [0, 1], reduce ? [0, 0] : [-10, 0]);
+  const outScale = useTransform(leave, [0, 1], reduce ? [1, 1] : [1, 1.08]);
+  const outY     = useTransform(leave, [0, 1], reduce ? [0, 0] : [0, -40]);
+  // Copy rides in with the entrance and out with the exit.
+  const local = useTransform([enter, leave], ([a, b]) => (a < 1 ? a - 1 : b));
+
+  return (
+    <section
+      ref={ref}
+      id="story-plate"
+      aria-label="הכל מתחיל בצלחת"
+      tabIndex={-1}
+      className="relative outline-none h-[230svh]"
+      style={{ background: BG }}
+    >
+      <div className="sticky top-0 h-[100svh] overflow-hidden">
+        {/* Mobile: square under the nav bar. Desktop: the left column. */}
+        <motion.div
+          className="absolute pointer-events-none z-[11]
+                     top-[56px] left-0 right-0 h-[44svh]
+                     lg:top-16 lg:bottom-0 lg:right-auto lg:h-auto lg:w-[52%]"
+          style={{ opacity, scale: outScale, y: outY }}
+        >
+          <motion.div className="w-full h-full" style={{ scale: inScale, rotate }}>
+            <ScrollVideoPlayer plateProgress={scrub} />
+          </motion.div>
+        </motion.div>
+        <div className="relative z-20 h-full flex flex-col lg:pt-16">
+          <PhaseMotionContext.Provider value={local}>
+            <PhasePlate />
+          </PhaseMotionContext.Provider>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HeroExtras({ banner = true }) {
+  const reduce = useReducedMotion();
+  const { scrollY } = useScroll();
+  // The testimonial chips and the hint leave as soon as the visitor moves.
+  const opacity = useTransform(scrollY, [0, 260], [1, 0]);
+  const y = useTransform(scrollY, [0, 400], reduce ? [0, 0] : [0, -60]);
+  const hint = useTransform(scrollY, [0, 120], [1, 0]);
+
+  return (
+    <>
+      <motion.div className="absolute inset-0 pointer-events-none" style={{ opacity, y, zIndex: 9 }} aria-hidden="true">
+        {[
+          { chat: waChatsLeft[0],  pos: { top: '12%', left: '1%' },     rot: -2 },
+          { chat: waChatsLeft[1],  pos: { bottom: '20%', left: '1%' },  rot: 1.5 },
+          { chat: waChatsRight[0], pos: { top: '24%', left: '16%' },    rot: 2 },
+          { chat: waChatsRight[1], pos: { bottom: '30%', left: '14%' }, rot: -1.5 },
+        ].map(({ chat, pos, rot }, i) => (
+          <motion.div key={`wab-d${i}`} className="hidden lg:block absolute"
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 0.5, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+            style={pos}>
+            <div style={{ transform: `rotate(${rot}deg)` }}><WaBubble {...chat} /></div>
+          </motion.div>
+        ))}
+        <motion.div className="lg:hidden absolute"
+          initial={{ opacity: 0 }} animate={{ opacity: 0.55 }} transition={{ duration: 0.6, delay: 0.3 }}
+          style={{ top: '7vh', left: '2px', transform: 'scale(0.72)', transformOrigin: 'top left' }}>
+          <div style={{ transform: 'rotate(-2deg)' }}><WaBubble {...waChatsLeft[0]} /></div>
+        </motion.div>
+        <motion.div className="lg:hidden absolute"
+          initial={{ opacity: 0 }} animate={{ opacity: 0.55 }} transition={{ duration: 0.6, delay: 0.45 }}
+          style={{ top: '17vh', right: '2px', transform: 'scale(0.72)', transformOrigin: 'top right' }}>
+          <div style={{ transform: 'rotate(1.5deg)' }}><WaBubble {...waChatsRight[0]} /></div>
+        </motion.div>
+      </motion.div>
+
+      <motion.div className="absolute bottom-12 md:bottom-32 left-1/2 -translate-x-1/2 z-30" style={{ opacity: hint }}>
+        <motion.div
+          className="flex flex-col items-center gap-1"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.5 }}
+        >
+          <span className="text-sm font-medium" style={{ color: `${BRAND}80` }}>גללי לגלות</span>
+          <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}>
+            <ChevronDown className="w-5 h-5" style={{ color: `${BRAND}70` }} />
+          </motion.div>
+        </motion.div>
+      </motion.div>
+
+      {banner && <StoryBanner />}
+    </>
+  );
+}
+
+function StoryBanner() {
+  return (
+    <div className="hidden md:block absolute bottom-0 left-0 right-0 z-40" style={{ background: `${BRAND}ee` }}>
+      <p className="text-white text-center text-sm md:text-base font-medium py-3 px-6">
+       תוכנית תזונה מדויקת וממוקדת, ליווי אישי עם דיאטנית קלינית מהצוות שלנו, אפליקציה תומכת וקהילה סגורה
+      </p>
+    </div>
+  );
+}
+
+/* Section ids the page navigation links to (SectionNav). */
+export const STORY_SECTIONS = [
+  { id: 'story-hero', label: 'בית', flush: true },
+];
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Desktop: one pinned stage. The phases hand over inside it, locked to the
+   scroll position (PhaseLayer). On a wide screen there is room for Kim, the
+   artwork and the copy side by side, and the stage reads as a film.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Scroll budget per phase; the plate gets more because its burst is scrubbed
+   frame by frame. Order: hero, busy life, plate, 80:20, app, support. */
+const PHASE_WEIGHTS = [1, 1, 1.45, 1, 1, 1.1];
+const PHASE_STARTS = PHASE_WEIGHTS.reduce((acc, w, i) => {
+  if (i > 0) acc.push(acc[i - 1] + PHASE_WEIGHTS[i - 1]);
+  return acc;
+}, [0]).map((x) => x / PHASE_WEIGHTS.reduce((a, b) => a + b, 0));
+// Half-width of a hand-off, in stage progress.
+const HANDOFF = 0.04;
+const STAGE_SVH = 460;
+const PHASES = [PhaseHero, PhaseBusyLife, PhasePlate, PhaseRing, PhaseApp, PhaseSupport];
+const PHASE_IDS = ['story-hero', 'story-life', 'story-plate', 'story-balance', 'story-app', 'story-support'];
+
+/** One phase on the stage: -1 arriving, 0 settled, 1 leaving. */
+function PhaseLayer({ index, progress, active, children }) {
+  const reduce = useReducedMotion();
+  const start = PHASE_STARTS[index];
+  const end = PHASE_STARTS[index + 1];
+  const input = index > 0 ? [start - HANDOFF, start + HANDOFF] : [0];
+  const output = index > 0 ? [-1, 0] : [0];
+  if (end !== undefined) { input.push(end - HANDOFF, end + HANDOFF); output.push(0, 1); }
+  else { input.push(1); output.push(0); }
+  const local = useTransform(progress, input, output);
+  // Sequential: the outgoing phase is gone before the incoming one shows.
+  const opacity = useTransform(local, [-1, -0.42, -0.02, 0.02, 0.42, 1], [0, 0, 1, 1, 0, 0]);
+  const y = useTransform(local, [-1, 0, 1], reduce ? [0, 0, 0] : [56, 0, -56]);
+
+  return (
+    <motion.div
+      // Below the hero the navbar is showing, so later phases start under it.
+      className={`absolute inset-x-0 bottom-0 flex flex-col ${index === 0 ? 'top-0' : 'top-16'}`}
+      style={{ opacity, y, pointerEvents: active ? 'auto' : 'none', willChange: 'transform, opacity' }}
+      aria-hidden={active ? undefined : true}
+    >
+      <PhaseMotionContext.Provider value={local}>
+        {children}
+      </PhaseMotionContext.Provider>
+    </motion.div>
+  );
+}
+
+function mountedAt(v) {
+  const out = [];
+  PHASE_STARTS.forEach((s, i) => {
+    const e = PHASE_STARTS[i + 1] ?? 1;
+    if (v >= s - 2 * HANDOFF && v <= e + 2 * HANDOFF) out.push(i);
   });
+  return out.join(',');
+}
+
+function phaseAt(v) {
+  let i = 0;
+  while (i < PHASE_STARTS.length - 1 && v >= PHASE_STARTS[i + 1]) i++;
+  return i;
+}
+
+function StageStory() {
+  const sectionRef = useRef(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] });
+  // Smooths mouse-wheel notches; stiff enough never to trail the input.
+  const progress = useSpring(scrollYProgress, { stiffness: 220, damping: 36, mass: 0.5, restDelta: 0.0001 });
 
   const [phase, setPhase] = useState(0);
-
+  const [mounted, setMounted] = useState('0');
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    // Hysteresis: switching phase backward requires scrolling a bit PAST the
-    // boundary. Without it, hovering right at a boundary while reversing
-    // direction swaps phases instantly (full enter/exit animation) — which
-    // reads as a "jump" on mobile.
-    const BACK_LAG = 0.015;
-    setPhase(p => {
-      let next = p;
-      while (next < PHASE_STARTS.length - 1 && v >= PHASE_STARTS[next + 1]) next++;
-      while (next > 0 && v < PHASE_STARTS[next] - BACK_LAG) next--;
-      return next;
-    });
+    setPhase(phaseAt(v));
+    const key = mountedAt(v);
+    setMounted((prev) => (prev === key ? prev : key));
   });
 
-  // ── Spring config for silky-smooth fade / scale on Kim and video layer ──
-  const springCfg = { stiffness: 60, damping: 20, restDelta: 0.001 };
-
-  /* These ramps are DERIVED from PHASE_STARTS rather than hard-coded.
-     They used to be literals ([0.25, 0.30, 0.39, 0.43] and friends) tuned to
-     the original uneven phase boundaries. Re-pacing the story changed those
-     boundaries but not the literals, so the plate video's fade-out landed in
-     the middle of its own phase and the plate simply was not there on the
-     screen that announces it. Expressed against the phase table, any future
-     pacing change carries the ramps with it. */
-  const P = PHASE_STARTS;                 // [hero, busy, plate, ring, app, support]
+  const P = PHASE_STARTS;
+  const H = HANDOFF;
   const PLATE_IN = P[2], PLATE_OUT = P[3];
-  const lead = 0.035;                     // how early a fade starts
 
-  // Kim fades out while the plate owns the screen, and returns for the Ring.
-  const _kimOpacity = useTransform(
-    scrollYProgress,
-    [0, P[1] - 0.02, P[1] + 0.01, PLATE_IN - lead, PLATE_IN, PLATE_OUT, PLATE_OUT + 0.05, P[4] - 0.03, P[4] + 0.02, 1],
-    [1,           1,         0.2,             0.2,        0,         0,             0.2,          0.2,           1, 1]
+  const kimOpacity = useTransform(
+    progress,
+    [0, P[1] - H, P[1] + H, PLATE_IN - H, PLATE_IN, PLATE_OUT, PLATE_OUT + H, P[4] - H, P[4] + H, 1],
+    [1, 1,        0.2,      0.2,          0,        0,         0.2,           0.2,      1,        1]
   );
-  const kimOpacity = useSpring(_kimOpacity, springCfg);
-  const _kimScale  = useTransform(scrollYProgress, [0, P[1], 0.85, 1], [1, 0.86, 0.86, 1]);
-  const kimScale   = useSpring(_kimScale, springCfg);
-  const kimY       = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const kimScale = useTransform(progress, [0, P[1] + H, 0.85, 1], [1, 0.86, 0.86, 1]);
+  const kimY     = useTransform(progress, [0, 1], reduce ? [0, 0] : [0, -60]);
 
-  // Plate video — visible for exactly the plate phase, in and out at its edges.
-  const plateScrollProgress = useTransform(scrollYProgress, [PLATE_IN, PLATE_OUT - 0.02], [0, 1]);
-  const _videoOpacity = useTransform(
-    scrollYProgress,
-    [PLATE_IN - lead, PLATE_IN + 0.01, PLATE_OUT - 0.02, PLATE_OUT],
-    [0, 1, 1, 0]
-  );
-  const videoOpacity = useSpring(_videoOpacity, springCfg);
+  const plateScrollProgress = useTransform(scrollYProgress, [PLATE_IN + H * 0.5, PLATE_OUT - H], [0, 1]);
+  const plateOpacity = useTransform(progress, [PLATE_IN - H * 0.4, PLATE_IN + H * 0.5, PLATE_OUT - H * 0.5, PLATE_OUT + H * 0.4], [0, 1, 1, 0]);
+  const plateScale   = useTransform(progress, [PLATE_IN - H, PLATE_IN + H, PLATE_OUT - H, PLATE_OUT + H], reduce ? [1, 1, 1, 1] : [0.84, 1, 1, 1.06]);
+  const plateY       = useTransform(progress, [PLATE_IN - H, PLATE_IN + H, PLATE_OUT - H, PLATE_OUT + H], reduce ? [0, 0, 0, 0] : [70, 0, 0, -70]);
+  const plateRotate  = useTransform(progress, [PLATE_IN - H, PLATE_IN + H], reduce ? [0, 0] : [-8, 0]);
 
-
-  // Phase 3 is PhaseRing (PhaseExploded removed)
-    const isWide = useIsWide();
-
-  const phases = [PhaseHero, PhaseBusyLife, PhasePlate, PhaseRing, PhaseApp, PhaseSupport];
-  const PhaseComponent = phases[phase];
+  const mountedSet = mounted.split(',').map(Number);
 
   return (
     <section
       ref={sectionRef}
       dir="rtl"
-      /* 560 -> 420 -> 520svh. The first cut was driven by page-length data and
-         it was too aggressive: at 420svh each phase held for 70svh and the
-         story read as flashing past rather than playing, which is what you saw
-         on the plate phase. 520svh with the even PHASE_STARTS gives every phase
-         ~87svh — still tighter than the original 78-123 spread, and the slack
-         still comes out of the two phases that were dawdling rather than off
-         all six evenly. */
-      style={{ height: '520svh', scrollSnapAlign: 'none', scrollSnapStop: 'normal', position: 'relative', background: BG }}
+      style={{ height: `${STAGE_SVH}svh`, position: 'relative', background: BG }}
     >
-      <div
-        className="sticky top-0 overflow-hidden"
-        style={{ height: '100svh', background: BG }}
-      >
-        {/* ── Kim desktop — physically LEFT, always behind text column ── */}
-        {isWide && (
+      {/* Navbar targets: each lands where its phase has fully settled. */}
+      {PHASE_IDS.map((id, i) => (
+        <div
+          key={id}
+          id={id}
+          tabIndex={-1}
+          aria-hidden="true"
+          className="absolute inset-x-0 h-px outline-none pointer-events-none"
+          style={{ top: `calc(${STAGE_SVH - 100}svh * ${i === 0 ? 0 : PHASE_STARTS[i] + HANDOFF})` }}
+        />
+      ))}
+
+      <div className="sticky top-0 overflow-hidden" style={{ height: '100svh', background: BG }}>
         <motion.div
-          className="absolute inset-y-0 left-0 hidden lg:flex items-end justify-center pointer-events-none z-10"
-          style={{ width: '80%', opacity: kimOpacity, y: kimY, scale: kimScale }}
+          className="absolute inset-y-0 left-0 flex items-end justify-center pointer-events-none z-10"
+          style={{ width: '80%', opacity: kimOpacity, y: kimY, scale: kimScale, transformOrigin: '50% 100%' }}
         >
-          {/* The LCP asset. eager + high priority per the asset spec, and the
-              only two images on the page that get either. */}
           <ResponsiveImage
             src={kimHero}
             stem="/src/assets/images/kim-hero-v1"
@@ -1952,140 +2087,61 @@ export default function ScrollStorySection() {
             fetchPriority="high"
           />
         </motion.div>
-        )}
 
-        {/* ── Kim mobile — top strip (fades out when video appears) ── */}
-        {/* pt-3 (12px) gives a little breathing room from the device top edge.
-            h-36 (144px) keeps Kim visible but compact → bottom of strip = 156px,
-            matching ContentPanel's pt-[156px] so text starts right below. */}
-        {!isWide && (
         <motion.div
-          className={`lg:hidden absolute top-0 left-0 right-0 flex justify-center pt-3 z-10 pointer-events-none ${phase >= 4 ? 'hidden' : ''}`}
-          style={{ opacity: kimOpacity }}
-        >
-          {/* Hidden in phases 4-5 (App/Support): on mobile the phone mockups own
-              the top strip, and Kim behind them muddied the heading legibility */}
-          {/* Mobile LCP. The box is height-driven (36svh, capped 320px) and
-              the width follows the aspect ratio, so `sizes` has to describe
-              the WIDTH that height implies. At 1.599 a 292px-tall box (36svh
-              on an 812px phone) is ~467css wide, which is ~934 device px at
-              dpr 2. The old 400px was written for the previous 16:9 asset and
-              now under-states it enough to pick the 800w file and upscale;
-              480px lands on 1200w, which is the honest one. */}
-          <ResponsiveImage
-            src={kimHero}
-            stem="/src/assets/images/kim-hero-v1"
-            sizes="480px"
-            alt="קים גפסון"
-            className="object-contain object-bottom w-auto"
-            style={{ height: '36svh', maxHeight: '320px' }}
-            width="1586"
-            height="992"
-            loading="eager"
-            fetchPriority="high"
-          />
-        </motion.div>
-        )}
-
-        {/* ── Video layer — responsive ──────────────────────────────────────────
-             Mobile  : top strip — 48vh so the plate fills a meaningful portion
-             Desktop : left column, 52% wide, full height                       */}
-        <motion.div
-          className="absolute pointer-events-none
-                     top-0 left-0 right-0 h-[44svh]
-                     lg:inset-y-0 lg:right-auto lg:h-auto lg:pt-0 lg:w-[52%]"
-          style={{ opacity: videoOpacity, zIndex: 11 }}
+          className="absolute pointer-events-none top-16 bottom-0 left-0 w-[52%]"
+          style={{ opacity: plateOpacity, scale: plateScale, y: plateY, rotate: plateRotate, zIndex: 11 }}
         >
           <ScrollVideoPlayer plateProgress={plateScrollProgress} />
         </motion.div>
 
-        {/* ── WhatsApp testimonial bubbles – phase 0 only (z-9 = behind Kim z-10) ── */}
-        <AnimatePresence>
-          {phase === 0 && (
-            <>
-              {/* Desktop: far-left beige strip */}
-              <motion.div key="wab-d0" className="hidden lg:block absolute pointer-events-none"
-                initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
-                style={{ zIndex: 9, top: '12%', left: '1%' }}>
-                <div style={{ transform: 'rotate(-2deg)' }}><WaBubble {...waChatsLeft[0]} /></div>
-              </motion.div>
-              <motion.div key="wab-d1" className="hidden lg:block absolute pointer-events-none"
-                initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
-                style={{ zIndex: 9, bottom: '20%', left: '1%' }}>
-                <div style={{ transform: 'rotate(1.5deg)' }}><WaBubble {...waChatsLeft[1]} /></div>
-              </motion.div>
-              <motion.div key="wab-d2" className="hidden lg:block absolute pointer-events-none"
-                initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
-                style={{ zIndex: 9, top: '24%', left: '16%' }}>
-                <div style={{ transform: 'rotate(2deg)' }}><WaBubble {...waChatsRight[0]} /></div>
-              </motion.div>
-              <motion.div key="wab-d3" className="hidden lg:block absolute pointer-events-none"
-                initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
-                style={{ zIndex: 9, bottom: '30%', left: '14%' }}>
-                <div style={{ transform: 'rotate(-1.5deg)' }}><WaBubble {...waChatsRight[1]} /></div>
-              </motion.div>
+        {phase <= 1 && <HeroExtras banner={false} />}
+        <StoryBanner />
 
-              {/* Mobile: mini chips beside Kim */}
-              <motion.div key="wab-m0" className="lg:hidden absolute pointer-events-none"
-                initial={{ opacity: 0 }} animate={{ opacity: 0.55 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
-                style={{ zIndex: 9, top: '7vh', left: '2px', transform: 'scale(0.72)', transformOrigin: 'top left' }}>
-                <div style={{ transform: 'rotate(-2deg)' }}><WaBubble {...waChatsLeft[0]} /></div>
-              </motion.div>
-              <motion.div key="wab-m1" className="lg:hidden absolute pointer-events-none"
-                initial={{ opacity: 0 }} animate={{ opacity: 0.55 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
-                style={{ zIndex: 9, top: '17vh', right: '2px', transform: 'scale(0.72)', transformOrigin: 'top right' }}>
-                <div style={{ transform: 'rotate(1.5deg)' }}><WaBubble {...waChatsRight[0]} /></div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-
-        {/* ── Phase content ── */}
         <div className="relative z-20 h-full">
-          <AnimatePresence mode="sync">
-            <PhaseComponent key={`phase-${phase}`} />
-          </AnimatePresence>
-        </div>
-
-        {/* ── Phase dots — layout-animated pill expansion ── */}
-        <div className="absolute bottom-4 md:bottom-[52px] left-1/2 -translate-x-1/2 flex gap-2 z-30">
-          {phases.map((_, i) => (
-            <motion.div
-              key={i}
-              layout
-              className="rounded-full h-1.5"
-              animate={{
-                width:      i === phase ? 22 : 6,
-                background: i === phase ? BRAND : `${BRAND}40`,
-              }}
-              transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-            />
-          ))}
-        </div>
-
-        {/* ── Scroll hint (phase 0) ── */}
-        <AnimatePresence>
-          {phase === 0 && (
-            <motion.div
-              className="absolute bottom-12 md:bottom-32 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-30"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ delay: 1.2, duration: 0.5 }}
-            >
-              <span className="text-sm font-medium" style={{ color: `${BRAND}80` }}>גללי לגלות</span>
-              <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}>
-                <ChevronDown className="w-5 h-5" style={{ color: `${BRAND}70` }} />
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── Bottom banner ── */}
-        <div className="hidden md:block absolute bottom-0 left-0 right-0 z-40" style={{ background: `${BRAND}ee` }}>
-          <p className="text-white text-center text-sm md:text-base font-medium py-3 px-6">
-           תוכנית תזונה מדויקת וממוקדת, ליווי אישי עם דיאטנית קלינית מהצוות שלנו, אפליקציה תומכת וקהילה סגורה
-          </p>
+          {mountedSet.map((i) => {
+            const Phase = PHASES[i];
+            return (
+              <PhaseLayer key={i} index={i} progress={progress} active={i === phase}>
+                <Phase />
+              </PhaseLayer>
+            );
+          })}
         </div>
       </div>
     </section>
   );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Phone: chapters in normal page flow, so the content moves with the finger.
+   A pinned stage on a phone reads as slides changing while the finger moves
+   and the page does not. Only the plate pins, because its burst needs scroll.
+   ───────────────────────────────────────────────────────────────────────── */
+function FlowStory() {
+  return (
+    <div dir="rtl" style={{ background: BG }}>
+      <Scene id="story-hero" label="קים גפסון" kim={1} kimMobile={1} eager padTop={false} extras={<HeroExtras />}>
+        <PhaseHero />
+      </Scene>
+      <Scene id="story-life" label="החיים שלך עמוסים">
+        <PhaseBusyLife />
+      </Scene>
+      <PlateScene />
+      <Scene id="story-balance" label="גישת 80:20">
+        <PhaseRing />
+      </Scene>
+      <Scene id="story-app" label="יומן אכילה">
+        <PhaseApp />
+      </Scene>
+      <Scene id="story-support" label="ליווי יומיומי">
+        <PhaseSupport />
+      </Scene>
+    </div>
+  );
+}
+
+export default function ScrollStorySection() {
+  const isWide = useIsWide();
+  return isWide ? <StageStory /> : <FlowStory />;
 }
