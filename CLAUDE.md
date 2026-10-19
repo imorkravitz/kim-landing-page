@@ -35,8 +35,8 @@ Landing page for **Kim Gafson**, clinical nutritionist. Built with **React 18 + 
 | Asset | Path | Used in |
 |-------|------|---------|
 | Kim hero photo | `src/assets/images/kim-hero.png` | ScrollStorySection (desktop + mobile) |
-| Full plate | `src/assets/images/start_frame.png` | PhasePlate, PhaseExploded (enter frame) |
-| Exploded plate | `src/assets/images/end_frame.png` | PhaseExploded (exit frame) |
+| Plate burst video | `src/assets/videos/plate-1440.mp4`, `plate-820.mp4` | Plate phase (canvas scrub via `useScrubVideo`) |
+| Stethoscope video | `src/assets/videos/stethoscope-1920.mp4`, `-1280.mp4` | `ScrollVideoBackground` |
 | KIM logo | `src/assets/icons/KIM - LOGO 2.png` | PhaseHero |
 | Kim icon | `src/assets/icons/kim-icon-1.png` | PhaseSupport chat |
 
@@ -44,22 +44,19 @@ Landing page for **Kim Gafson**, clinical nutritionist. Built with **React 18 + 
 
 ## Architecture — ScrollStorySection
 
-The component occupies **520vh** with a **sticky inner div** (`height: 100vh`). Scroll progress drives a 7-phase state machine:
+`ScrollStorySection` renders one of two layouts (`useIsWide`, 1024px):
 
-```
-PHASE_STARTS = [0, 0.15, 0.29, 0.43, 0.57, 0.72, 0.86]
-phases       = [Hero, BusyLife, Plate, Exploded, Ring, App, Support]
-```
+- **Desktop — `StageStory`:** a **460svh** section with a sticky 100svh stage. Six phases (hero, busy life, plate, 80:20, app, support) share the scroll by `PHASE_WEIGHTS`; `PHASE_STARTS` is derived from it. Each mounted phase is a `PhaseLayer` whose position (-1 arriving, 0 settled, 1 leaving) is a `useTransform` of progress across `±HANDOFF`: sequential fade, artwork and copy travelling at different rates. Invisible 1px markers (`story-*` ids) sit at each phase's settled scroll position for the navbar.
+- **Phone — `FlowStory`:** the same phase components as separate `Scene` sections in normal page flow, so content moves with the finger. Artwork lags the scroll slightly (depth); Kim appears in the hero only. Only `PlateScene` pins (230svh) while the burst scrubs.
 
-`AnimatePresence mode="wait"` handles enter/exit transitions between phases.
+Phase entrances use `whileInView` (`VIEW_ONCE`); the phone mockups mount on first sight (`MountInView`). Busy-life objects float (`Floating`: idle bob + per-object scroll depth).
 
-Kim's photo is **always visible** on the left half (desktop) / top strip (mobile), separate from the text column. It fades and **shrinks on scroll** via `kimOpacity`, `kimY`, and `kimScale` motion values.
+**Navbar — `SectionNav.jsx`:** adapted from 21st.dev "Scroll Spy". Appears after the hero, highlights the section in view with a sliding pill, click scrolls to it. Destinations (`NAV_SECTIONS` in `Home.jsx`): בית `story-hero`, השיטה `method`, על קים `about`, סיפורי הצלחה `results`, יוצאות לדרך `start`, האפליקציה `app`, תוכניות `pricing`, שאלות `faq`. Jumps use the layout offset (not the painted rect) so entrance transforms don't skew the landing.
 
-The **plate explode animation** (Phase 3) crossfades `start_frame.png → end_frame.png`:
-- start_frame fades **out** + scales up (burst)
-- end_frame fades **in** + settles from slight under-scale
+The **plate burst** is a real video scrubbed onto a canvas (`src/hooks/useScrubVideo.js`, shared with the stethoscope). It multiplies onto the cream background so the white backdrop disappears; the wrapper's radial mask feathers the crop edge.
 
----
+### Video encoding
+Scrub videos are H.264, `yuv420p`, no audio, `+faststart`. Plate: GOP 6 with no B-frames (cheap seeks at half the bytes of all-intra). Stethoscope: every frame a keyframe, studio backdrop lifted to pure white with `curves`. Never ship HEVC/10-bit: Chrome and Firefox do not reliably decode it.
 
 ## RTL Rules — CRITICAL
 
@@ -96,7 +93,7 @@ Use **physical** CSS padding to push text into the right half:
 4. **Update `memory.md`** with the change
 
 ## When modifying ScrollStorySection
-1. Keep `PHASE_STARTS` in sync with any phase additions/removals
+1. Keep `PHASE_WEIGHTS` and `PHASES` in sync with any phase additions/removals
 2. Each phase component is a self-contained `motion.div` with `pageVariants`
 3. Visual elements on the left half must stay within `left < 50%` to avoid overlapping Kim
 4. **Update `memory.md`** after changes
