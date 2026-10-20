@@ -120,6 +120,7 @@
 
 | Date | File | Change |
 |------|------|--------|
+| 2026-10-20 | `ScrollVideoBackground.jsx`, `public/steth-seq/` | Phones: stethoscope scrubs an image sequence instead of the video (iOS seeks stepped the scrub); verified smooth on a real iPhone. Desktop unchanged. |
 | 2026-10-20 | `ScrollStorySection.jsx`, `hooks/useFrameSequence.js`, `public/plate-seq/` | Mobile: plate no longer pinned, burst scrubs from an image sequence while the section scrolls; scenes sized to content (story 7.35 → 5.5 screens); reveals and phone mockups start before entering view. |
 | 2026-10-19 | `ScrollStorySection.jsx`, `SectionNav.jsx`, `Home.jsx` | Desktop keeps the pinned stage; phones get `FlowStory` (separate sections in page flow, Kim hero-only, plate pinned). Added scroll-spy navbar (21st.dev base) with section ids. Floating busy-life objects, light phone shadows, removed the skip-to-content link at the owner's request. Chapter colour tones tried and reverted. |
 | 2026-10-19 | `ScrollStorySection.jsx`, `ScrollVideoBackground.jsx`, `hooks/useScrubVideo.js` | Hero scrollytelling rebuilt: timed AnimatePresence phase swaps replaced by scroll-linked PhaseLayers (sequential fade + depth parallax), section 520→460svh with weighted phases, new 4K plate burst (square crop, 1440/820 encodes) and new stethoscope (HEVC→H.264, backdrop whitened), shared time-based scrub hook. E2E verified at 1440/1280/820/390/360 widths and reduced motion. |

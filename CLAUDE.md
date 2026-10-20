@@ -48,6 +48,7 @@ Landing page for **Kim Gafson**, clinical nutritionist. Built with **React 18 + 
 
 - **Desktop — `StageStory`:** a **460svh** section with a sticky 100svh stage. Six phases (hero, busy life, plate, 80:20, app, support) share the scroll by `PHASE_WEIGHTS`; `PHASE_STARTS` is derived from it. Each mounted phase is a `PhaseLayer` whose position (-1 arriving, 0 settled, 1 leaving) is a `useTransform` of progress across `±HANDOFF`: sequential fade, artwork and copy travelling at different rates. Invisible 1px markers (`story-*` ids) sit at each phase's settled scroll position for the navbar.
 - **Phone — `FlowStory`:** the same phase components as separate `Scene` sections in normal page flow, each as tall as its content (hero fills the screen), so content moves with the finger. Artwork lags the scroll slightly (depth); Kim appears in the hero only. Nothing pins: `PlateScene` scrubs the burst from the plate's own travel through the screen, using a 49-frame JPEG sequence (`public/plate-seq/`, `useFrameSequence`) because video seeking on iOS stutters.
+- **Stethoscope (`ScrollVideoBackground`):** desktop scrubs the video (`useScrubVideo`); phones and tablets (<1024px) scrub a 121-frame JPEG sequence (`public/steth-seq/`, `useFrameSequence`) for the same iOS reason. Never scrub a `<video>` on phones.
 
 Phase entrances use `whileInView` (`VIEW_ONCE`); the phone mockups mount on first sight (`MountInView`). Busy-life objects float (`Floating`: idle bob + per-object scroll depth).
 
