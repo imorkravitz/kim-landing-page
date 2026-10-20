@@ -13,6 +13,7 @@ import {
   motionValue,
 } from 'framer-motion';
 import useScrubVideo from '@/hooks/useScrubVideo';
+import useFrameSequence from '@/hooks/useFrameSequence';
 import { Button } from '@/components/ui/button';
 import { trackCTA } from '@/lib/analytics';
 import {
@@ -141,14 +142,18 @@ const STILL = motionValue(0);
 /* Entrances play once, the first time a block is a quarter on screen. With
    the story now in normal page flow every scene is mounted from the start,
    so mount-time animations would finish before anyone saw them. */
-const VIEW_ONCE = { once: true, amount: 0.25 };
+// Starts as the block's top edge comes into view, not once a quarter of it
+// is on screen: on a phone a tall block waited so long the scroll showed
+// empty cream first.
+const VIEW_ONCE = { once: true, amount: 0, margin: '0px 0px -6% 0px' };
 
 /* The phone mockups run a scripted timeline (screens, typing, replies) from
    the moment they mount. They mount on first sight instead, into a box of
    their own size so nothing moves when they arrive. */
 function MountInView({ width, height, children }) {
   const ref = useRef(null);
-  const seen = useInView(ref, { once: true, amount: 0.3 });
+  // Mounts a little before it scrolls in, so the phone is never an empty box.
+  const seen = useInView(ref, { once: true, margin: '0px 0px 35% 0px' });
   return <div ref={ref} style={{ width, minHeight: height }}>{seen ? children : null}</div>;
 }
 // Stagger gives the text-children a gentle rise-in without fighting the exit
@@ -184,7 +189,7 @@ const item = {
  * had, the text no longer clings to the top of the leftover, and short and
  * long phases both sit evenly on the screen. Desktop is unchanged.
  */
-function ContentPanel({ children, mobilePt = 'pt-[24svh]', mobileAlign = 'items-start', mobilePb = 'pb-16' }) {
+function ContentPanel({ children, mobilePt = 'pt-[24svh]', mobileAlign = 'items-start', mobilePb = 'pb-8' }) {
   // the offsets are authored as Tailwind arbitrary values; read the length back
   const reserve = ((mobilePt.match(/\[([^\]]+)\]/) || [, null])[1] || '').replace(/_/g, ' ')
     || { 'pt-2': '0.5rem', 'pt-3': '0.75rem' }[mobilePt]
@@ -569,13 +574,15 @@ const lifestyleItems = [
 ];
 
 // Mobile positions — 3 left / 3 right, all within the top 42vh (Kim's strip height)
+// In svh, not %: on a phone the section is as tall as its content, so a
+// percentage would drift with the copy length.
 const mobileLifestylePositions = [
-  { left: '4%',  top: '3%'  },
-  { right: '4%', top: '7%'  },
-  { left: '2%',  top: '20%' },
-  { right: '3%', top: '22%' },
-  { left: '4%',  top: '37%' },
-  { right: '4%', top: '36%' },
+  { left: '4%',  top: '3svh'  },
+  { right: '4%', top: '7svh'  },
+  { left: '2%',  top: '20svh' },
+  { right: '3%', top: '22svh' },
+  { left: '4%',  top: '37svh' },
+  { right: '4%', top: '36svh' },
 ];
 
 /* Weightless drift for the busy-life objects. Two motions stacked: a slow
@@ -789,10 +796,10 @@ function ScrollVideoPlayer({ plateProgress }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Phase 2 · The Plate  (left visual = video player from root; only text here)
 // ─────────────────────────────────────────────────────────────────────────────
-function PhasePlate() {
+function PhasePlate({ reserve = 'pt-[calc(56px_+_44svh)]' }) {
   return (
     <motion.div className="relative flex-1 flex flex-col">
-      <ContentPanel mobilePt="pt-[calc(56px_+_44svh)]">
+      <ContentPanel mobilePt={reserve}>
         <motion.div variants={stagger} initial="initial" whileInView="animate" viewport={VIEW_ONCE}>
           {/* One responsive heading: inline on mobile, stacked on desktop */}
           <PhaseHeading>הכל<br className="hidden lg:block" />{' '}<Accent>מתחיל בצלחת.</Accent></PhaseHeading>
@@ -1811,8 +1818,7 @@ function Scene({ id, label, kim = 0, kimMobile = 0, eager = false, padTop = true
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const local = useSceneProgress(ref);
-  const artY = useTransform(local, [-1, 0, 1], reduce ? [0, 0, 0] : [-70, 0, 70]);
-  const opacity = useTransform(local, [-1, -0.55, 0.55, 1], [0.55, 1, 1, 0.55]);
+  const artY = useTransform(local, [-1, 0, 1], reduce ? [0, 0, 0] : [-36, 0, 36]);
 
   return (
     <section
@@ -1820,12 +1826,14 @@ function Scene({ id, label, kim = 0, kimMobile = 0, eager = false, padTop = true
       id={id}
       aria-label={label}
       tabIndex={-1}
-      className={`relative overflow-hidden outline-none flex flex-col min-h-[100svh] ${padTop ? 'pt-14' : ''}`}
+      /* As tall as its content (the hero fills the screen): a fixed 100svh
+         per chapter left a band of empty cream under every short one. */
+      className={`relative overflow-hidden outline-none flex flex-col ${padTop ? 'pt-12' : 'min-h-[100svh]'}`}
       style={{ background: BG }}
     >
       <KimBackdrop local={local} desktop={kim} mobile={kimMobile} eager={eager} />
       {extras}
-      <motion.div className="relative z-20 flex-1 flex flex-col" style={{ y: artY, opacity }}>
+      <motion.div className="relative z-20 flex-1 flex flex-col" style={{ y: artY }}>
         <PhaseMotionContext.Provider value={local}>
           {children}
         </PhaseMotionContext.Provider>
@@ -1834,26 +1842,28 @@ function Scene({ id, label, kim = 0, kimMobile = 0, eager = false, padTop = true
   );
 }
 
+const PLATE_FRAMES = Array.from({ length: 49 }, (_, i) => `/plate-seq/f${String(i + 1).padStart(2, '0')}.jpg`);
+
 /**
- * The plate burst: the one pinned chapter. The plate drops in turned and
- * small, settles, then bursts frame by frame while the section is held.
+ * The plate burst on a phone. Not pinned: the section scrolls like any other
+ * and the burst is driven by its own travel through the screen, so every bit
+ * of finger movement both moves the page and advances the burst. (Pinned, the
+ * page stood still for over a screen of scrolling while the burst caught up.)
+ * Frames come from an image sequence (useFrameSequence), which scrubs
+ * smoothly on iOS where seeking a video does not.
  */
 function PlateScene() {
   const ref = useRef(null);
+  const plateRef = useRef(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress: enter } = useScroll({ target: ref, offset: ['start end', 'start start'] });
-  const { scrollYProgress: pin }   = useScroll({ target: ref, offset: ['start start', 'end end'] });
-  const { scrollYProgress: leave } = useScroll({ target: ref, offset: ['end end', 'end start'] });
-
-  // Burst plays across the pin, finishing a little early so the last frame holds.
-  const scrub   = useTransform(pin, [0.04, 0.88], [0, 1]);
-  const opacity = useTransform(enter, [0.15, 0.65], [0, 1]);
-  const inScale = useTransform(enter, [0, 1], reduce ? [1, 1] : [0.8, 1]);
-  const rotate  = useTransform(enter, [0, 1], reduce ? [0, 0] : [-10, 0]);
-  const outScale = useTransform(leave, [0, 1], reduce ? [1, 1] : [1, 1.08]);
-  const outY     = useTransform(leave, [0, 1], reduce ? [0, 0] : [0, -40]);
-  // Copy rides in with the entrance and out with the exit.
-  const local = useTransform([enter, leave], ([a, b]) => (a < 1 ? a - 1 : b));
+  // 0 as the plate's top enters at the bottom of the screen, 1 as its
+  // bottom reaches the navbar: the burst spans the whole time it is in view.
+  const { scrollYProgress: travel } = useScroll({ target: plateRef, offset: ['start end', 'end 64px'] });
+  const scrub  = useTransform(travel, [0.12, 0.92], [0, 1]);
+  const scale  = useTransform(travel, [0, 0.4], reduce ? [1, 1] : [0.88, 1]);
+  const rotate = useTransform(travel, [0, 0.4], reduce ? [0, 0] : [-7, 0]);
+  const local  = useSceneProgress(ref);
+  const canvasRef = useFrameSequence({ frames: PLATE_FRAMES, progress: scrub, fill: '#ffffff' });
 
   return (
     <section
@@ -1861,26 +1871,30 @@ function PlateScene() {
       id="story-plate"
       aria-label="הכל מתחיל בצלחת"
       tabIndex={-1}
-      className="relative outline-none h-[230svh]"
+      className="relative outline-none overflow-hidden pt-12"
       style={{ background: BG }}
     >
-      <div className="sticky top-0 h-[100svh] overflow-hidden">
-        {/* Mobile: square under the nav bar. Desktop: the left column. */}
-        <motion.div
-          className="absolute pointer-events-none z-[11]
-                     top-[56px] left-0 right-0 h-[44svh]
-                     lg:top-16 lg:bottom-0 lg:right-auto lg:h-auto lg:w-[52%]"
-          style={{ opacity, scale: outScale, y: outY }}
-        >
-          <motion.div className="w-full h-full" style={{ scale: inScale, rotate }}>
-            <ScrollVideoPlayer plateProgress={scrub} />
-          </motion.div>
-        </motion.div>
-        <div className="relative z-20 h-full flex flex-col lg:pt-16">
-          <PhaseMotionContext.Provider value={local}>
-            <PhasePlate />
-          </PhaseMotionContext.Provider>
-        </div>
+      <motion.div
+        ref={plateRef}
+        className="relative mx-auto w-full max-w-[460px] aspect-square pointer-events-none"
+        style={{
+          scale, rotate,
+          background: BG,
+          isolation: 'isolate',
+          WebkitMaskImage: 'radial-gradient(closest-side, #000 80%, transparent 100%)',
+          maskImage: 'radial-gradient(closest-side, #000 80%, transparent 100%)',
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          aria-hidden="true"
+          style={{ display: 'block', width: '100%', height: '100%', mixBlendMode: 'multiply' }}
+        />
+      </motion.div>
+      <div className="relative z-20 flex flex-col">
+        <PhaseMotionContext.Provider value={local}>
+          <PhasePlate reserve="pt-0" />
+        </PhaseMotionContext.Provider>
       </div>
     </section>
   );

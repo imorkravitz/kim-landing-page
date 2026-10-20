@@ -48,3 +48,7 @@ dist-ssr
 #   node scripts/make-image-variants.mjs <image master> --stem <name> --widths ...
 #   (video encoding commands are documented in scripts/README.md)
 masters/
+
+# Local production working files (old video sources and frames), not shipped
+ANIMATION-PRODUCTION-SPEC.md
+creative-inputs/
