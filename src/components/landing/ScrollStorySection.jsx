@@ -915,12 +915,62 @@ function FoodSticker({ src, style, delay = 0, rotate = 0, size = 72, floatAmp = 
 // Ring rendered at 480 px — 1.6× original, more dominant in left column
 const RING_SIZE = 480;
 
+/* The 80:20 ring's arcs. They draw when `seen` flips, and `seen` comes from
+   an HTML wrapper (useInView), not from the <circle> elements themselves:
+   iOS Safari does not reliably report SVG children to IntersectionObserver,
+   so on iPhones a whileInView on the circles never fired and the ring stayed
+   an empty grey track. */
+function RingArcs({ seen, compact = false }) {
+  return (
+    <>
+      <circle cx="100" cy="100" r="72" fill="none" stroke="#ddd6bc" strokeWidth="14" />
+      {/* 80% arc */}
+      <motion.circle
+        cx="100" cy="100" r="72" fill="none" stroke={BRAND}
+        strokeWidth="14" strokeLinecap="round"
+        strokeDasharray={CIRC}
+        initial={{ strokeDashoffset: CIRC }}
+        animate={{ strokeDashoffset: seen ? CIRC * 0.2 : CIRC }}
+        transition={{ duration: compact ? 1.2 : 1.4, delay: compact ? 0.2 : 0.3, ease }}
+        transform="rotate(-90 100 100)"
+      />
+      {/* 20% arc */}
+      <motion.circle
+        cx="100" cy="100" r="72" fill="none" stroke="#C49A7A"
+        strokeWidth="14" strokeLinecap="round"
+        strokeDasharray={`${CIRC * 0.2} ${CIRC * 0.8}`}
+        strokeDashoffset={`${-CIRC * 0.8}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: seen ? 1 : 0 }}
+        transition={{ duration: 0.5, delay: compact ? 1.0 : 1.1 }}
+        transform="rotate(-90 100 100)"
+      />
+      {compact ? (
+        <>
+          <text x="100" y="88" textAnchor="middle" fill={BRAND} fontSize="36" fontWeight="900" fontFamily="Heebo, sans-serif">80:20</text>
+          <text x="100" y="113" textAnchor="middle" fill="#6e6e6e" fontSize="12" fontFamily="Heebo,sans-serif">הגישה שלנו</text>
+        </>
+      ) : (
+        <>
+          <text x="100" y="92" textAnchor="middle" fill={BRAND} fontSize="28" fontWeight="900" fontFamily="Heebo, sans-serif">80:20</text>
+          <text x="100" y="116" textAnchor="middle" fill="#6e6e6e" fontSize="11" fontFamily="Heebo">הגישה שלנו</text>
+        </>
+      )}
+    </>
+  );
+}
+
 function PhaseRing() {
+  const deskRef = useRef(null);
+  const mobRef = useRef(null);
+  const deskSeen = useInView(deskRef, { once: true, amount: 0.3 });
+  const mobSeen = useInView(mobRef, { once: true, amount: 0.3 });
   return (
     <motion.div className="relative flex-1 flex flex-col">
 
       {/* ── Desktop: ring — left visual column, scaled 1.6× for prominence ── */}
       <motion.div
+        ref={deskRef}
         className="absolute hidden lg:flex flex-col items-center pointer-events-none z-[13]"
         style={{
           left: '6%',
@@ -933,31 +983,7 @@ function PhaseRing() {
       >
         {/* SVG scales to RING_SIZE; viewBox stays 200×200 → all radii / text scale */}
         <svg width={RING_SIZE} height={RING_SIZE} viewBox="0 0 200 200">
-          {/* Track */}
-          <circle cx="100" cy="100" r="72" fill="none" stroke="#ddd6bc" strokeWidth="14" />
-          {/* 80 % arc — gold */}
-          <motion.circle
-            cx="100" cy="100" r="72" fill="none" stroke={BRAND}
-            strokeWidth="14" strokeLinecap="round"
-            strokeDasharray={CIRC}
-            initial={{ strokeDashoffset: CIRC }}
-            viewport={VIEW_ONCE} whileInView={{ strokeDashoffset: CIRC * 0.2 }}
-            transition={{ duration: 1.4, delay: 0.3, ease }}
-            transform="rotate(-90 100 100)"
-          />
-          {/* 20 % arc — terracotta */}
-          <motion.circle
-            cx="100" cy="100" r="72" fill="none" stroke="#C49A7A"
-            strokeWidth="14" strokeLinecap="round"
-            strokeDasharray={`${CIRC * 0.2} ${CIRC * 0.8}`}
-            strokeDashoffset={`${-CIRC * 0.8}`}
-            initial={{ opacity: 0 }} viewport={VIEW_ONCE} whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1.1 }}
-            transform="rotate(-90 100 100)"
-          />
-          {/* Centre labels */}
-          <text x="100" y="92" textAnchor="middle" fill={BRAND} fontSize="28" fontWeight="900" fontFamily="Heebo, sans-serif">80:20</text>
-          <text x="100" y="116" textAnchor="middle" fill="#6e6e6e" fontSize="11" fontFamily="Heebo">הגישה שלנו</text>
+          <RingArcs seen={deskSeen} />
         </svg>
 
         {/* Legend below the ring — no absolute overflow */}
@@ -1002,7 +1028,7 @@ function PhaseRing() {
               Ring rendered radius = 72/200×240 = 86.4px from center.
               Sticker centers (size/2 = 40px offset) placed ON the ring circumference at 8 positions.
             */}
-            <div style={{
+            <div ref={mobRef} style={{
               position: 'relative',
               width: 'min(92vw, 340px)',
               height: 'min(90vw, 330px)',
@@ -1012,20 +1038,7 @@ function PhaseRing() {
                 style={{ width: 'min(68vw, 240px)', height: 'min(68vw, 240px)', flexShrink: 0, position: 'relative', zIndex: 1 }}
                 viewBox="0 0 200 200"
               >
-                <circle cx="100" cy="100" r="72" fill="none" stroke="#ddd6bc" strokeWidth="14" />
-                <motion.circle cx="100" cy="100" r="72" fill="none" stroke={BRAND}
-                  strokeWidth="14" strokeLinecap="round" strokeDasharray={CIRC}
-                  initial={{ strokeDashoffset: CIRC }} viewport={VIEW_ONCE} whileInView={{ strokeDashoffset: CIRC * 0.2 }}
-                  transition={{ duration: 1.2, delay: 0.2, ease }} transform="rotate(-90 100 100)"
-                />
-                <motion.circle cx="100" cy="100" r="72" fill="none" stroke="#C49A7A"
-                  strokeWidth="14" strokeLinecap="round"
-                  strokeDasharray={`${CIRC * 0.2} ${CIRC * 0.8}`} strokeDashoffset={`${-CIRC * 0.8}`}
-                  initial={{ opacity: 0 }} viewport={VIEW_ONCE} whileInView={{ opacity: 1 }} transition={{ delay: 1.0 }}
-                  transform="rotate(-90 100 100)"
-                />
-                <text x="100" y="88" textAnchor="middle" fill={BRAND} fontSize="36" fontWeight="900" fontFamily="Heebo, sans-serif">80:20</text>
-                <text x="100" y="113" textAnchor="middle" fill="#aaa" fontSize="12" fontFamily="Heebo,sans-serif">הגישה שלנו</text>
+                <RingArcs seen={mobSeen} compact />
               </svg>
 
               {/* 8 stickers — centers placed on ring circumference (top → clockwise) */}
@@ -1045,6 +1058,24 @@ function PhaseRing() {
               <FoodSticker src={nt3}  style={{ left: '2%', top: '18%'    }} delay={0.40} rotate={-10} size={84} floatAmp={6} />
               {/* Top-left 225°: wine */}
               <FoodSticker src={nt2}  style={{ left: '15%', top: '3%'    }} delay={0.50} rotate={-15}   size={90} floatAmp={5} />
+            </div>
+
+            {/* Legend, as on desktop: what the two arc colours mean. */}
+            <div className="flex items-center justify-center gap-6 mt-3" dir="rtl">
+              <motion.div className="flex items-center gap-2"
+                initial={{ opacity: 0, y: 6 }} animate={mobSeen ? { opacity: 1, y: 0 } : undefined}
+                transition={{ delay: 0.9, duration: 0.35 }}
+              >
+                <div className="w-3 h-3 rounded-full shrink-0" style={{ background: BRAND }} />
+                <span className="text-lg font-semibold" style={{ color: TEXT }}>80% עקביות</span>
+              </motion.div>
+              <motion.div className="flex items-center gap-2"
+                initial={{ opacity: 0, y: 6 }} animate={mobSeen ? { opacity: 1, y: 0 } : undefined}
+                transition={{ delay: 1.15, duration: 0.35 }}
+              >
+                <div className="w-3 h-3 rounded-full shrink-0" style={{ background: '#C49A7A' }} />
+                <span className="text-lg font-semibold" style={{ color: TEXT }}>20% גמישות</span>
+              </motion.div>
             </div>
           </motion.div>
 
