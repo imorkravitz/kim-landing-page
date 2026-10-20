@@ -11,8 +11,9 @@ import { useMotionValueEvent } from 'framer-motion';
  * directions. Between two frames the next one is blended in by the fraction,
  * which is what makes ~50 frames read as continuous motion.
  *
- * Frames load once the canvas is within two screens, first frame first, the
- * rest in order; until a frame arrives the nearest loaded one is drawn.
+ * Frames load once the canvas is within four screens, coarse to fine and
+ * several at a time; until the gaps fill, the nearest loaded frames either
+ * side are blended, so the motion is continuous from the first second.
  *
  * @param {object}   opts
  * @param {string[]} opts.frames   frame URLs in order
@@ -41,27 +42,55 @@ export default function useFrameSequence({ frames, progress, fill = '#ffffff', t
     let drawn = -1;
     let visible = false;
 
-    const load = async () => {
+    /* Coarse to fine, several at a time. Loading one frame after another
+       ran at the network's round-trip rate: on a 4G phone about 15 of the
+       stethoscope's 121 frames had arrived when the visitor reached it, so
+       the canvas sat on the same picture while the page scrolled. Every
+       16th frame first, then every 8th, 4th, 2nd and the rest: the whole
+       motion is drawable within the first few requests and sharpens as the
+       gaps fill. */
+    const order = [];
+    const queued = new Set();
+    for (const stride of [16, 8, 4, 2, 1]) {
+      for (let i = 0; i < frames.length; i += stride) {
+        if (!queued.has(i)) { queued.add(i); order.push(i); }
+      }
+      const lastIdx = frames.length - 1;
+      if (!queued.has(lastIdx)) { queued.add(lastIdx); order.push(lastIdx); }
+    }
+    const load = () => {
       if (started) return;
       started = true;
-      for (let i = 0; i < frames.length && !cancelled; i++) {
-        const img = new Image();
-        img.decoding = 'async';
-        img.src = frames[i];
-        try { await img.decode(); } catch { continue; }
-        if (cancelled) return;
-        images[i] = img;
-        drawn = -1; // a newly arrived frame may be nearer than the one shown
-      }
+      let next = 0;
+      const worker = async () => {
+        while (!cancelled && next < order.length) {
+          const i = order[next++];
+          const img = new Image();
+          img.decoding = 'async';
+          img.src = frames[i];
+          try { await img.decode(); } catch { continue; }
+          if (cancelled) return;
+          images[i] = img;
+          drawn = -1; // a newly arrived frame may sit closer than the ones shown
+        }
+      };
+      for (let k = 0; k < 6; k++) worker();
     };
 
-    const nearest = (i) => {
-      if (images[i]) return images[i];
-      for (let d = 1; d < images.length; d++) {
-        if (images[i - d]) return images[i - d];
-        if (images[i + d]) return images[i + d];
-      }
-      return null;
+    // The loaded frames either side of a position, for blending across gaps.
+    const bracket = (exact) => {
+      let lo = Math.floor(exact), hi = Math.ceil(exact);
+      while (lo >= 0 && !images[lo]) lo--;
+      while (hi < images.length && !images[hi]) hi++;
+      if (lo < 0 && hi >= images.length) return null;
+      if (lo < 0) return [hi, hi, 0];
+      if (hi >= images.length) return [lo, lo, 0];
+      if (hi === lo) return [lo, lo, 0];
+      /* Blend only across a short gap, where it reads as motion. Across a
+         wide one (early on a slow network) the two poses are far apart and a
+         crossfade shows both at once, a ghost; snap to the nearer instead. */
+      if (hi - lo > 4) { const n = exact - lo < hi - exact ? lo : hi; return [n, n, 0]; }
+      return [lo, hi, (exact - lo) / (hi - lo)];
     };
 
     const size = () => {
@@ -75,12 +104,12 @@ export default function useFrameSequence({ frames, progress, fill = '#ffffff', t
     const paint = (pos) => {
       const { w, h } = size();
       const exact = pos * (frames.length - 1);
-      const i = Math.floor(exact);
-      const frac = exact - i;
       const key = Math.round(exact * 20); // redraw only when it visibly changes
       if (key === drawn) return;
-      const a = nearest(i);
-      if (!a) return;
+      const br = bracket(exact);
+      if (!br) return;
+      const [lo, hi, frac] = br;
+      const a = images[lo];
       drawn = key;
       const scale = Math.min(w / a.naturalWidth, h / a.naturalHeight);
       const dw = a.naturalWidth * scale, dh = a.naturalHeight * scale;
@@ -91,8 +120,8 @@ export default function useFrameSequence({ frames, progress, fill = '#ffffff', t
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(a, x, y, dw, dh);
-      const b = images[i + 1];
-      if (b && frac > 0.02) {
+      const b = images[hi];
+      if (hi !== lo && frac > 0.02) {
         ctx.globalAlpha = frac;
         ctx.drawImage(b, x, y, dw, dh);
         ctx.globalAlpha = 1;
@@ -113,7 +142,7 @@ export default function useFrameSequence({ frames, progress, fill = '#ffffff', t
     const io = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting;
       if (e.isIntersecting) load();
-    }, { rootMargin: '200% 0px' });
+    }, { rootMargin: '400% 0px' }); // start well ahead: ~4 screens of lead
     io.observe(canvas);
     const ro = new ResizeObserver(() => { drawn = -1; });
     ro.observe(canvas.parentElement || canvas);

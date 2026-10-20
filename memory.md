@@ -120,6 +120,7 @@
 
 | Date | File | Change |
 |------|------|--------|
+| 2026-10-20 | `hooks/useFrameSequence.js` | Phone scrubs (stethoscope + plate) loaded frames one at a time, so on 4G only ~15/121 stethoscope frames had arrived when reached and it looked static. Now 6 parallel, coarse-to-fine (stride 16→1), 4-screen lead, blends across gaps ≤4 frames and snaps across wider ones. Verified Android Fast/Slow 4G + iPhone WebKit. |
 | 2026-10-20 | `ScrollVideoBackground.jsx`, `public/steth-seq/` | Phones: stethoscope scrubs an image sequence instead of the video (iOS seeks stepped the scrub); verified smooth on a real iPhone. Desktop unchanged. |
 | 2026-10-20 | `ScrollStorySection.jsx`, `hooks/useFrameSequence.js`, `public/plate-seq/` | Mobile: plate no longer pinned, burst scrubs from an image sequence while the section scrolls; scenes sized to content (story 7.35 → 5.5 screens); reveals and phone mockups start before entering view. |
 | 2026-10-19 | `ScrollStorySection.jsx`, `SectionNav.jsx`, `Home.jsx` | Desktop keeps the pinned stage; phones get `FlowStory` (separate sections in page flow, Kim hero-only, plate pinned). Added scroll-spy navbar (21st.dev base) with section ids. Floating busy-life objects, light phone shadows, removed the skip-to-content link at the owner's request. Chapter colour tones tried and reverted. |
