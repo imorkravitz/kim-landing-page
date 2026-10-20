@@ -559,14 +559,20 @@ function PhaseHero() {
 // ─────────────────────────────────────────────────────────────────────────────
 // All items kept at left ≤ 22 % — safely to Kim's left (her body starts ~28 %).
 // Two loose columns (left edge ~2 % and inner ~17 %) alternating top→bottom.
+/* Desktop positions are the CENTRE of each object, as a percentage of the
+   left-hand artwork area (see PhaseBusyLife), not of the whole screen. As
+   screen percentages they ran up to 50% + the object's width, so on a
+   1000-1300px window the right-hand column sat on top of the copy. Two
+   staggered columns, inner one kept a half-object clear of the area's edge. */
 const lifestyleItems = [
-  { src: imgNoTime,         label: 'לו״ז עמוס', style: { left: '28%',  top: '5%'  }, delay: 0    },
-  { src: imgWork,           label: 'שעות עבודה ארוכות',   style: { left: '45%', top: '10%'  }, delay: 0.1  },
-  { src: imgMessages,       label: 'גירויים אינסופיים במהלך היום',  style: { left: '15%',  top: '25%' }, delay: 0.22 },
-  { src: imgKids,           label: 'ילדים והרצון שלך להיות אמא נוכחת',   style: { left: '46%', top: '35%' }, delay: 0.15 },
-  { src: imgTierd,          label: 'עייפות מצטברת',  style: { left: '18%',  top: '48%' }, delay: 0.18 },
-  { src: imgStressCalendar, label: 'ריבוי משימות',     style: { left: '50%', top: '55%' }, delay: 0.12 },
+  { src: imgNoTime,         label: 'לו״ז עמוס', style: { left: '34%', top: '6%'  }, delay: 0    },
+  { src: imgWork,           label: 'שעות עבודה ארוכות',   style: { left: '76%', top: '12%' }, delay: 0.1  },
+  { src: imgMessages,       label: 'גירויים אינסופיים במהלך היום',  style: { left: '26%', top: '33%' }, delay: 0.22 },
+  { src: imgKids,           label: 'ילדים והרצון שלך להיות אמא נוכחת',   style: { left: '74%', top: '40%' }, delay: 0.15 },
+  { src: imgTierd,          label: 'עייפות מצטברת',  style: { left: '30%', top: '60%' }, delay: 0.18 },
+  { src: imgStressCalendar, label: 'ריבוי משימות',     style: { left: '76%', top: '66%' }, delay: 0.12 },
 ];
+const ITEM_BOX = 200; // px; each object is centred in a box this wide
 
 // Mobile positions — 3 left / 3 right, all within the top 42vh (Kim's strip height)
 const mobileLifestylePositions = [
@@ -605,12 +611,14 @@ function PhaseBusyLife() {
   return (
     <motion.div className="relative flex-1 flex flex-col">
 
-      {/* Desktop: lifestyle items floating around Kim */}
+      {/* Desktop: objects float in the left-hand artwork area only. The copy
+          column starts at 50% (ContentPanel), so the area stops short of it. */}
+      <div className="absolute hidden lg:block inset-y-0 left-0 w-[47%] z-10 pointer-events-none">
       {lifestyleItems.map(({ src, label, style, delay }, i) => (
         <motion.div
           key={i}
-          className="absolute hidden lg:flex flex-col items-center gap-1.5 z-10"
-          style={style}
+          className="absolute flex flex-col items-center gap-1.5"
+          style={{ ...style, width: ITEM_BOX, marginLeft: -ITEM_BOX / 2 }}
           initial={{ opacity: 0, scale: 0.55, y: 24 }}
           viewport={VIEW_ONCE} whileInView={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 0.25 + delay, duration: 0.5, ease }}
@@ -623,11 +631,12 @@ function PhaseBusyLife() {
               height="128"
               loading="lazy"
               decoding="async"
-              className="w-32 h-32 object-contain"
-              style={{ filter: 'drop-shadow(0 10px 14px rgba(60,50,20,0.16))' }}
+              className="object-contain"
+              // Shrinks a little on narrower desktops so two columns still fit.
+              style={{ width: 'clamp(88px, 8.5vw, 128px)', height: 'clamp(88px, 8.5vw, 128px)', filter: 'drop-shadow(0 10px 14px rgba(60,50,20,0.16))' }}
             />
             <span
-              className="text-sm font-semibold bg-white/75 px-3 py-1 rounded-full backdrop-blur-sm shadow-sm"
+              className="text-sm font-semibold bg-white/75 px-3 py-1 rounded-2xl backdrop-blur-sm shadow-sm text-center leading-snug max-w-[190px] [text-wrap:balance]"
               style={{ color: TEXT }}
             >
               {label}
@@ -635,6 +644,7 @@ function PhaseBusyLife() {
           </Floating>
         </motion.div>
       ))}
+      </div>
 
       {/* Mobile: lifestyle items scattered around Kim in the top 42vh */}
       {lifestyleItems.map(({ src, label, delay }, i) => (
@@ -1370,7 +1380,11 @@ function PhaseApp() {
       {/* Desktop: phone mockup floats left */}
       <motion.div
         className="absolute hidden lg:flex items-center justify-center pointer-events-none z-10"
-        style={{ left: '15%', top: '30%', transform: 'translateY(-50%)' , height: '60vh', width: '25vw' }}
+        /* Centred between the navbar and the bottom banner, nearer the left
+           edge. A translateY(-50%) here never applied: the entrance animates
+           y, which replaces the whole transform, so the phone sat low and
+           ran into the banner. Flex centring does not use transform. */
+        style={{ left: '6%', top: 0, bottom: 56, width: '25vw' }}
         initial={{ opacity: 0, y: 40, scale: 1.86 }}
         viewport={VIEW_ONCE} whileInView={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.65, delay: 0.1, ease: [0.34, 1.2, 0.64, 1] }}
@@ -1670,7 +1684,11 @@ function PhaseSupport() {
       {/* ── Desktop: iPhone WA mockup in left column ── */}
       <motion.div
         className="absolute hidden lg:flex items-center justify-center pointer-events-none z-10"
-        style={{ left: '17%', top: '30%', transform: 'translateY(-50%)' }}
+        /* Centred between the navbar and the bottom banner, nearer the left
+           edge. A translateY(-50%) here never applied: the entrance animates
+           y, which replaces the whole transform, so the phone sat low and
+           ran into the banner. Flex centring does not use transform. */
+        style={{ left: '8%', top: 0, bottom: 56 }}
         initial={{ opacity: 0, y: 36, scale: 0.88 }}
         viewport={VIEW_ONCE} whileInView={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.65, delay: 0.08, ease: [0.34, 1.2, 0.64, 1] }}
@@ -2042,7 +2060,6 @@ function StageStory() {
     [1, 1,        0.2,      0.2,          0,        0,         0.2,           0.2,      1,        1]
   );
   const kimScale = useTransform(progress, [0, P[1] + H, 0.85, 1], [1, 0.86, 0.86, 1]);
-  const kimY     = useTransform(progress, [0, 1], reduce ? [0, 0] : [0, -60]);
 
   const plateScrollProgress = useTransform(scrollYProgress, [PLATE_IN + H * 0.5, PLATE_OUT - H], [0, 1]);
   const plateOpacity = useTransform(progress, [PLATE_IN - H * 0.4, PLATE_IN + H * 0.5, PLATE_OUT - H * 0.5, PLATE_OUT + H * 0.4], [0, 1, 1, 0]);
@@ -2073,7 +2090,7 @@ function StageStory() {
       <div className="sticky top-0 overflow-hidden" style={{ height: '100svh', background: BG }}>
         <motion.div
           className="absolute inset-y-0 left-0 flex items-end justify-center pointer-events-none z-10"
-          style={{ width: '80%', opacity: kimOpacity, y: kimY, scale: kimScale, transformOrigin: '50% 100%' }}
+          style={{ width: '80%', opacity: kimOpacity, scale: kimScale, transformOrigin: '50% 100%' }}
         >
           <ResponsiveImage
             src={kimHero}
