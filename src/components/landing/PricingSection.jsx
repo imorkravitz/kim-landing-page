@@ -195,7 +195,9 @@ export default function PricingSection() {
            }}>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      
+      <div className="relative z-10 mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8">
+
         {/* This section had no <h2> at all: a 320px-tall logo stood where the
             heading belonged, so the document went from the page H1 straight to
             the plan names as H3, and screen-reader and search-engine users had
@@ -221,7 +223,9 @@ export default function PricingSection() {
             </p>
 
           </div>
-        <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-7xl mx-auto lg:px-20 mt-6">
+
+          
+          <div className="mx-auto mt-6 grid w-full max-w-[1380px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 items-stretch">
           {plans.map((plan, index) => (
             <div
               key={plan.name}
