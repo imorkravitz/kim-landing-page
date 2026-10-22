@@ -364,7 +364,7 @@ export default function TestimonialsSection() {
             כשהמסגרת חכמה והליווי עקבי <br></br><span className="text-[var(--brand-ink)]">השינוי מגיע</span>
           </h2>
           <p className="text-xl text-slate-700 max-w-3xl mx-auto">
-            התוצאות מדברות בעד עצמן.<br></br> צילומי מסך ושיתופים של לקוחות מרוצות שהצליחו לשנות את אורח החיים שלהןד
+            התוצאות מדברות בעד עצמן.<br></br> צילומי מסך ושיתופים של לקוחות מרוצות שהצליחו לשנות את אורח החיים שלהן
           </p>
         </motion.div>
 
